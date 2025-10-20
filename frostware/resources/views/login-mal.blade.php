@@ -10,16 +10,14 @@
         href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
         rel="stylesheet">
     <title>tes login</title>
-    <!-- <style>
-        body {
-            padding: 0px;
-            margin: 0px;
-        }
-    </style> -->
     <style>
         * {
             font-family: Parkinsans;
             /* font-family: Figtree; */
+        }
+
+         a {
+            text-decoration: none;
         }
 
         h1,
@@ -271,7 +269,7 @@
             </div>
             <div class="register-section">
                 <div class="register-text">Belum punya akun?</div>
-                <div class="register-link">Daftar</div>
+                <a class="register-link" href="{{ route('register') }}">Daftar</a>
             </div>
         </div>
     </div>
