@@ -109,7 +109,7 @@
             border-radius: 9999px;
         }
 
-        .form-box-register {
+        .form-box {
             padding: 40px 30px;
             left: 713px;
             top: calc(50vh - 300px);
@@ -132,7 +132,7 @@
             display: flex;
         }
 
-        .form-label-register {
+        .form-label {
             color: black;
             font-size: 14px;
             font-weight: 400;
@@ -140,7 +140,7 @@
             word-wrap: break-word;
         }
 
-        .form-input-register {
+        .form-input {
             align-self: stretch;
             height: 36px;
             padding: 4px 12px;
@@ -207,7 +207,7 @@
             text-decoration: underline;
         }
 
-        .content-title-register {
+        .content-title {
             width: 413px;
             left: 108px;
             top: 189px;
@@ -218,7 +218,7 @@
             word-wrap: break-word;
         }
 
-        .content-subtitle-register {
+        .content-subtitle {
             width: 413px;
             left: 108px;
             top: 252px;
@@ -229,7 +229,7 @@
             word-wrap: break-word;
         }
 
-        .content-text-register {
+        .content-text {
             width: 502px;
             left: 108px;
             top: 315px;
@@ -254,33 +254,33 @@
         </div>
 
 
-        <h1 class="content-title-register">Halo Customer!</h1>
-        <h1 class="content-subtitle-register">Silakan lengkapi data Anda dan klik daftar untuk membuat akun baru!</h1>
-        <p class="content-text-register">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        <h1 class="content-title">Halo Customer!</h1>
+        <h1 class="content-subtitle">Silakan lengkapi data Anda dan klik daftar untuk membuat akun baru!</h1>
+        <p class="content-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
             tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
             ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
             velit esse cillum dolore eu fugiat nulla pariatur.</p>
 
-        <div class="form-box-register">
+        <div class="form-box">
             <div class="form-group">
-                <div class="form-label-register">Nama Lengkap</div>
-                    <input class="form-input-register" type="text" placeholder="Masukkan nama lengkap">
+                <div class="form-label">Nama Lengkap</div>
+                    <input class="form-input" type="text" placeholder="Masukkan nama lengkap">
             </div>
             <div class="form-group">
-                <div class="form-label-register">Email</div>
-                    <input class="form-input-register" type="email" placeholder="Masukkan alamat email">
+                <div class="form-label">Email</div>
+                    <input class="form-input" type="email" placeholder="Masukkan alamat email">
             </div>
             <div class="form-group">
-                <div class="form-label-register">Nomor Telepon</div>
-                    <input class="form-input-register" type="tel" placeholder="Masukkan nomor telepon">
+                <div class="form-label">Nomor Telepon</div>
+                    <input class="form-input" type="tel" placeholder="Masukkan nomor telepon">
             </div>
             <div class="form-group">
-                <div class="form-label-register">Password</div>
-                    <input class="form-input-register" type="password" placeholder="Masukkan password">
+                <div class="form-label">Password</div>
+                    <input class="form-input" type="password" placeholder="Masukkan password">
             </div>
             <div class="form-group">
-                <div class="form-label-register">Konfirmasi Password</div>
-                    <input class="form-input-register" type="password" placeholder="Ulangi password">
+                <div class="form-label">Konfirmasi Password</div>
+                    <input class="form-input" type="password" placeholder="Ulangi password">
             </div>
             <button class="btn-register">
                 <div class="btn-text-register">Daftar</div>
