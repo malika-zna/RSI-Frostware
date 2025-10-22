@@ -14,6 +14,10 @@ Route::get('/login', function () {
     return view('login-mal');
 })->name('login');
 
+// Route untuk halaman produksi (setelah login) -- Fad Bingung
+// Route::get('/produksi', function () {
+//     return view('produksi-fad');
+// })->name('produksi')->middleware('auth');
 
 // ini bawaan laravel -mal
 
