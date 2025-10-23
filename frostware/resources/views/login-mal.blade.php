@@ -265,7 +265,7 @@
                 <input class="form-input" type="text" placeholder="Masukkan password">
             </div>
             <div class="btn-login">
-                <div class="btn-text">Login</div>
+                <a class="btn-text" href="{{ route('produksi') }}">Login</a>
             </div>
             <div class="register-section">
                 <div class="register-text">Belum punya akun?</div>
