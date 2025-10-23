@@ -16,7 +16,7 @@
             /* font-family: Figtree; */
         }
 
-        a {
+         a {
             text-decoration: none;
         }
 
@@ -264,13 +264,9 @@
                 <div class="form-label">Password</div>
                 <input class="form-input" type="text" placeholder="Masukkan password">
             </div>
-            <!-- Tambahan Fadilah -->
-            <form action="{{ route('produksi') }}" method="GET">
-                <div class="btn-login">
-                    <button type="submit" class="btn-text">Login</button>
-                </div>
-            </form>
-            <!-- Sampai sini -->
+            <div class="btn-login">
+                <a class="btn-text" href="{{ route('produksi') }}">Login</a>
+            </div>
             <div class="register-section">
                 <div class="register-text">Belum punya akun?</div>
                 <a class="register-link" href="{{ route('register') }}">Daftar</a>
