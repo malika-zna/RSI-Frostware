@@ -13,11 +13,23 @@
       box-sizing: border-box;
     }
 
+    :root{
+      --header-h: 72px; /* approximate header height used for layout */
+    }
+
+    html{background:#fff;height:100%;}
+    html, body {
+      height: 100%;
+    }
+
     body {
       margin: 0;
       padding: 0;
+      /* page background should be white so bottom area stays white */
       background: #fff;
       color: #000;
+      /* support device notches */
+      padding-top: env(safe-area-inset-top);
     }
 
     /* Header */
@@ -27,9 +39,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      /* move the blue bar down a bit and make it a little taller */
-      margin-top: 12px;
+      /* pin the navbar to the top so it always fills the top edge */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin-top: 0;
       padding: 18px 30px;
+      z-index: 1000;
       /* ensure the text inside stays centered vertically */
     }
 
@@ -57,7 +74,7 @@
       color: inherit;
       text-decoration: none;
       padding: 6px 8px;
-      border-radius: 6px;
+      border-radius: 0;
     }
 
     .back-link:hover {
@@ -78,7 +95,14 @@
 
     /* Main Section */
     .main {
-      padding: 30px 100px;
+      /* white sheet that sits directly under the blue navbar */
+      background: #fff;
+      margin: 0;
+      padding: 18px 100px;
+      /* push content below the fixed navbar (approx header height) */
+      margin-top: var(--header-h);
+      /* fill remaining viewport so bottom stays white */
+      min-height: calc(100vh - var(--header-h));
     }
 
     .main h2 {
@@ -92,6 +116,7 @@
     @media (max-width: 480px) {
       .main {
         padding: 20px 18px;
+        margin-top: 64px;
       }
       .main h2 {
         font-size: 22px;
@@ -114,7 +139,7 @@
       color: #fff;
       border: none;
       padding: 8px 12px;
-      border-radius: 8px;
+      border-radius: 0;
       font-size: 13px;
       cursor: pointer;
       box-shadow: 0 2px 0 rgba(0,0,0,0.08);
@@ -125,7 +150,7 @@
       color: #fff;
       border: none;
       padding: 8px 18px;
-      border-radius: 999px;
+      border-radius: 0;
       font-size: 13px;
       cursor: pointer;
       box-shadow: 0 4px 0 rgba(0,0,0,0.06);
@@ -138,7 +163,7 @@
     /* Cards */
     .card {
       border: 1px solid #cfcfcf;
-      border-radius: 6px;
+      border-radius: 0;
       padding: 20px 30px;
       margin-bottom: 20px;
       display: flex;
@@ -184,7 +209,7 @@
       background-color: #00C950; /* updated to requested green */
       color: white;
       padding: 8px 18px;
-      border-radius: 999px;
+      border-radius: 0;
       border: none;
       font-weight: 600;
       cursor: pointer;
