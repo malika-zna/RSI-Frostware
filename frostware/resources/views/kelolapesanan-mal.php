@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
+        rel="stylesheet">
+
+    <title>kelola pesanan</title>
+    <style>
+        * {
+            font-family: Figtree;
+            color: black;
+        }
+
+        h1,
+        h2,
+        p {
+            margin: 0px;
+        }
+
+        h1,
+        .head-title,
+        h2 {
+            font-family: Parkinsans;
+        }
+
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        header {
+            background-color: #1C398E;
+            box-shadow: -5px 5px 8px rgba(0, 0, 0, 0.25);
+            width: 100vw;
+            box-sizing: border-box;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            padding: 20px 40px;
+            display: flex;
+            flex-direction: row;
+            z-index: 100;
+
+            .head-title {
+                color: white;
+                font-size: 28px;
+                font-weight: 700;
+                margin-right: auto;
+            }
+
+            .head-info {
+                display: inline-flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 5px;
+            }
+
+            .user-info {
+                border: none;
+                background: none;
+                display: inline-flex;
+                flex-direction: row;
+                gap: 5px;
+
+                .user {
+                    color: white;
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+
+                svg {
+                    width: 10px;
+                }
+            }
+
+            .user-info:hover {
+                cursor: pointer;
+                .user {
+                    text-decoration: underline;
+                }
+            }
+
+
+            .date {
+                display: inline-flex;
+                flex-direction: row;
+                gap: 5px;
+
+                p {
+                    color: rgba(255, 255, 255, 0.60);
+                    font-size: 12px;
+                    font-weight: 400;
+                }
+            }
+
+        }
+
+        .container {
+            margin: 120px 40px;
+            /* border: 1px solid black; */
+            display: flex;
+            flex-direction: row;
+        }
+
+        .order-list {
+            margin-right: 30px;
+            border: 1px solid #AAA;
+            border-radius: 15px;
+            width: fit-content;
+            height: fit-content;
+            padding: 20px;
+            display: inline-flex;
+            flex-direction: column;
+            gap: 25px;
+
+            .order-list-title {
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .order-list-content {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .table-header {
+                display: flex;
+                flex-direction: row;
+                border-bottom: 0.7px rgba(0, 0, 0, 0.10) solid;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 20px;
+                display: inline-flex;
+            }
+
+            .table-body {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .header-col {
+                font-size: 14px;
+                padding-bottom: 8px;
+            }
+
+            .col-id {
+                width: 75px;
+            }
+
+            .col-customer {
+                width: 140px;
+            }
+
+            .col-qty {
+                width: 47px;
+            }
+
+            .col-order-date {
+                width: 95px;
+            }
+
+            .col-ship-date {
+                width: 86px;
+            }
+
+            .col-status {
+                width: 120px;
+            }
+
+            .col-action {
+                width: 126px;
+            }
+
+            .table-row {
+                padding-bottom: 8px;
+                border-bottom: 1px #EEEEEE solid;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 20px;
+                display: inline-flex;
+            }
+
+            .cell-text {
+                font-size: 14px;
+            }
+
+            .customer-info {
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                display: flex;
+
+
+                .customer-name {
+                    width: 140px;
+                    color: #0A0A0A;
+                    font-size: 14px;
+                }
+
+                .customer-phone {
+                    color: #666;
+                    font-size: 14px;
+                    line-height: 20px;
+                }
+            }
+
+            .status-badge {
+                padding: 4px 10px;
+                border-radius: 8px;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                display: inline-flex;
+            }
+
+            .status-badge[data-status="Belum Diverifikasi"] {
+                background: #ECEEF2;
+
+                .status-text {
+                    color: #030213;
+                }
+            }
+
+            .status-badge[data-status="Diterima"] {
+                background: #00C950;
+
+                .status-text {
+                    color: white;
+                }
+            }
+
+            .status-badge[data-status="Ditolak"] {
+                background: #D4183D;
+
+                .status-text {
+                    color: white;
+                }
+            }
+
+            .status-text {
+                font-size: 12px;
+            }
+
+            .action-button {
+                border: none;
+                background: none;
+                width: fit-content;
+                display: flex;
+                padding: 8px 12px;
+                background-color: black;
+                border-radius: 8px;
+                justify-content: center;
+                align-items: center;
+
+                .action-button-text {
+                    color: white;
+                    font-size: 12px;
+                }
+            }
+
+            .action-button:hover {
+                cursor: pointer;
+                background-color: #1C398E;
+            }
+        }
+
+        .summary-container {
+            position: fixed;
+            right: 40px;
+            min-width: 240px;
+            max-width: 260px;
+            height: fit-content;
+            padding: 20px;
+            background: #1C398E;
+            border-radius: 15px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 10px;
+
+
+            .summary-title {
+                color: white;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .summary-description {
+                color: white;
+                font-size: 12px;
+            }
+
+            .summary-list {
+                width: 100%;
+                padding-right: 20px;
+                box-sizing: border-box;
+                margin-top: 5px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 8px;
+
+                .summary-item {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 5px 10px;
+                    border-bottom: 1px #EEEEEE solid;
+                }
+
+                .summary-date {
+                    color: white;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-right: auto;
+                }
+
+                .summary-qty {
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 8px;
+                    display: flex;
+
+                    .number {
+                        color: white;
+                        font-size: 20px;
+                        font-weight: 700;
+                    }
+
+                    .unit {
+                        color: white;
+                        font-size: 16px;
+                    }
+                }
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="head-title">
+            Frostware
+        </div>
+        <div class="head-info">
+            <button class="user-info">
+                <h2 class="user">
+                    Resepsionis
+                </h2>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#FFF" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                </svg>
+            </button>
+            <div class="date">
+                <p class="hari">Minggu, </p>
+                <p class="tanggal">25/10/2025</p>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="order-list">
+            <div class="order-list-header">
+                <div class="order-list-title">Daftar Pesanan Masuk</div>
+            </div>
+            <div class="order-list-content">
+                <div class="table-header-container">
+                    <div class="table-header">
+                        <div class="col-id">
+                            <div class="header-col">ID Pesanan</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="header-col">Pelanggan</div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="header-col">Jumlah</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="header-col">Tanggal Pesan</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="header-col">Tanggal Kirim</div>
+                        </div>
+                        <div class="col-status">
+                            <div class="header-col">Status</div>
+                        </div>
+                        <div class="col-action">
+                            <div class="header-col">Aksi</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-body">
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Belum Diverifikasi" class="status-badge">
+                                <div class="status-text">Belum Diverifikasi</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="belum" class="action-button">
+                                <div class="action-button-text">Verifikasi Pesanan</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-status="belum verif" class="table-row">
+                        <div class="col-id">
+                            <div class="cell-text">ORD001</div>
+                        </div>
+                        <div class="col-customer">
+                            <div class="customer-info">
+                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
+                                <div class="customer-phone cell-text">089765432100</div>
+                            </div>
+                        </div>
+                        <div class="col-qty">
+                            <div class="cell-text">120</div>
+                        </div>
+                        <div class="col-order-date">
+                            <div class="cell-text">15/09/2025</div>
+                        </div>
+                        <div class="col-ship-date">
+                            <div class="cell-text">25/10/2025</div>
+                        </div>
+                        <div class="col-status">
+                            <div data-status="Diterima" class="status-badge">
+                                <div class="status-text">Diterima</div>
+                            </div>
+                        </div>
+                        <div class="col-action">
+                            <button data-sudah-verif="sudah" class="action-button">
+                                <div class="action-button-text">Lihat Verifikasi</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="summary-container">
+            <div class="summary-title">
+                Ringkasan Tanggal Pengiriman
+            </div>
+            <div class="summary-description">Tanggal pengiriman dan jumlah pesanan yang diterima</div>
+            <div class="summary-list">
+                <div class="summary-item">
+                    <div class="summary-date">25/10/2025</div>
+                    <div class="summary-qty">
+                        <div class="number">810</div>
+                        <div class="unit">balok</div>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-date">25/10/2025</div>
+                    <div class="summary-qty">
+                        <div class="number">810</div>
+                        <div class="unit">balok</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

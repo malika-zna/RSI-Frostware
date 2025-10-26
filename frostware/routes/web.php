@@ -14,6 +14,10 @@ Route::get('/login', function () {
     return view('login-mal');
 })->name('login');
 
+Route::get('/kelolapesanan', function () {
+    return view('kelolapesanan-mal');
+})->name('kelolapesanan');
+
 // Route untuk halaman produksi (setelah login) -- Fad Bingung
 Route::get('/produksi', function () {
     return view('produksi-fad');
