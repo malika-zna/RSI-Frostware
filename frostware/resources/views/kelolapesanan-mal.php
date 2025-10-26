@@ -49,8 +49,8 @@
 
             .head-title {
                 color: white;
-                font-size: 28px;
-                font-weight: 700;
+                font-size: 26px;
+                font-weight: 600;
                 margin-right: auto;
             }
 
@@ -81,13 +81,12 @@
 
             .user-info:hover {
                 cursor: pointer;
-                .user {
-                    text-decoration: underline;
-                }
+                background-color: rgba(255,255,255,0.06);;
             }
 
 
             .date {
+                padding-right: 8px;
                 display: inline-flex;
                 flex-direction: row;
                 gap: 5px;
