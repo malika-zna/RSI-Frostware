@@ -9,7 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
         rel="stylesheet">
-    <title>tes login</title>
+    <title>Login</title>
     <style>
         * {
             font-family: Parkinsans;

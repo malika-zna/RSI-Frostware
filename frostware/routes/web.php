@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegistrasiController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -9,6 +10,8 @@ Route::get('/', function () {
 Route::get('/register', function () {
     return view('regist-mal');
 })->name('register');
+
+Route::post('/register', [RegistrasiController::class, 'registrasiAkun'])->name('register.post');
 
 Route::get('/login', function () {
     return view('login-mal');
