@@ -81,7 +81,8 @@
 
             .user-info:hover {
                 cursor: pointer;
-                background-color: rgba(255,255,255,0.06);;
+                background-color: rgba(255, 255, 255, 0.06);
+                ;
             }
 
 
@@ -851,6 +852,92 @@
             </div>
         </div>
     </div>
+
+
+    @include('partials.popupverifpesanan-mal')
+    @include('partials.popupinputketerangan-mal')
+
+    <script>
+        (function () {
+            const modalRoot = document.getElementById('modal-root');
+            const keteranganRoot = document.getElementById('modal-keterangan-root');
+
+            function closeModal() {
+                if (!modalRoot) return;
+                modalRoot.style.display = 'none';
+                document.body.style.overflow = '';
+                modalRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
+            }
+
+            function openKeterangan() {
+                if (!keteranganRoot) return;
+                keteranganRoot.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                keteranganRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
+            }
+
+            function closeKeterangan() {
+                if (!keteranganRoot) return;
+                keteranganRoot.style.display = 'none';
+                document.body.style.overflow = '';
+                keteranganRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
+            }
+
+            function openModalWithData() {
+                if (!modalRoot) return;
+                // tampilkan
+                modalRoot.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                modalRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
+            }
+
+            // attach click ke semua tombol Verifikasi / Lihat Verifikasi
+            document.querySelectorAll('.action-button').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const row = btn.closest('.table-row');
+                    if (!row) return;
+                    // const id = row.querySelector('.col-id .cell-text')?.textContent?.trim() || '';
+                    // const customerName = row.querySelector('.col-customer .customer-name')?.textContent?.trim() || '';
+                    // const orderDate = row.querySelector('.col-order-date .cell-text')?.textContent?.trim() || '';
+                    // const qty = row.querySelector('.col-qty .cell-text')?.textContent?.trim() || '';
+                    // const phone = row.querySelector('.col-customer .customer-phone')?.textContent?.trim() || '';
+                    // // jika butuh alamat/email, ambil dari dataset atau fetch via API
+                    openModalWithData();
+                });
+            });
+
+            // close handlers (backdrop & close button)
+            modalRoot?.addEventListener('click', function (e) {
+                if (e.target.hasAttribute('data-close') || e.target.closest('.icon-close')) {
+                    closeModal();
+                    return;
+                }
+                // jika tombol tolak diklik di dalam popup verif -> buka modal keterangan
+                if (e.target.closest('.btn-tolak')) {
+                    // closeModal();
+                    openKeterangan();
+                    return;
+                }
+            });
+
+            // close handlers for keterangan modal (backdrop & cancel button)
+            keteranganRoot?.addEventListener('click', function (e) {
+                if (e.target.hasAttribute('data-close') || e.target.closest('.btn-cancel') || e.target.closest('.btn-save')) {
+                    closeKeterangan();
+                }
+            });
+
+
+            // optional: escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    closeKeterangan();
+                }
+            });
+        })();
+    </script>
+
 </body>
 
 </html>

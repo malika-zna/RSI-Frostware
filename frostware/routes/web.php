@@ -18,6 +18,14 @@ Route::get('/kelolapesanan', function () {
     return view('kelolapesanan-mal');
 })->name('kelolapesanan');
 
+// Route::get('/verifpesanan', function () {
+//     return view('popupverifpesanan-mal');
+// })->name('verifpesanan');
+
+Route::get('/inputketerangan', function () {
+    return view('popupinputketerangan-mal');
+})->name('inputketerangan');
+
 // Route untuk halaman produksi (setelah login) -- Fad Bingung
 Route::get('/produksi', function () {
     return view('produksi-fad');
