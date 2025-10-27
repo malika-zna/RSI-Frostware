@@ -33,14 +33,6 @@
             background: rgba(0, 0, 0, .45);
         }
 
-        /* .modal {
-            position: relative;
-            z-index: 10001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        } */
-
         .popupketerangan.modal {
             position: relative;
             z-index: 10001;

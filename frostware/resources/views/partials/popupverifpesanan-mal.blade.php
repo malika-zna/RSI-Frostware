@@ -106,8 +106,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* max-width: 520px;
-            width: calc(100% - 40px) */
         }
 
         .popupverif {
