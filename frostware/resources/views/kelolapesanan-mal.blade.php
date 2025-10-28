@@ -29,6 +29,11 @@
             font-family: Parkinsans;
         }
 
+        button {
+            background: none;
+            border: none;
+        }
+
         body {
             padding: 0px;
             margin: 0px;
@@ -45,7 +50,7 @@
             padding: 20px 40px;
             display: flex;
             flex-direction: row;
-            z-index: 100;
+            z-index: 1;
 
             .head-title {
                 color: white;
@@ -82,7 +87,6 @@
             .user-info:hover {
                 cursor: pointer;
                 background-color: rgba(255, 255, 255, 0.06);
-                ;
             }
 
 
@@ -99,6 +103,92 @@
                 }
             }
 
+        }
+
+        .user-panel {
+            width: 280px;
+            height: fit-content;
+            padding: 20px 25px 15px 25px;
+            background: #000;
+            /* display: inline-flex; */
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 5px;
+            box-sizing: border-box;
+            position: fixed;
+            right: 20px;
+            top: 50px;
+            z-index: 100;
+
+            .user-role {
+                color: #fff;
+                font-size: 16px;
+                font-family: Parkinsans;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
+                font-weight: 600;
+                margin-bottom: 5px;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
+            }
+
+            .user-email {
+                color: rgba(255, 255, 255, 0.60);
+                font-size: 12px;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
+                font-weight: 400;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
+            }
+
+            .user-name {
+                color: #fff;
+                font-size: 14px;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
+                font-weight: 400;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
+            }
+
+            .user-divider {
+                align-self: stretch;
+                height: 5px;
+                /* position: relative; */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.60);
+                box-sizing: border-box;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            form {
+                margin-left: auto;
+            }
+
+            .user-actions {
+                /* overflow: hidden; */
+                display: inline-flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 10px;
+                margin-left: auto;
+                padding: 5px 10px;
+                border-radius: 3px;
+            }
+
+            button.user-actions:hover {
+                cursor: pointer;
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .logout-text {
+                color: #fff;
+                font-size: 14px;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
+                font-weight: 400;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
+            }
         }
 
         .container {
@@ -354,6 +444,18 @@
 </head>
 
 <body>
+    <div class="user-panel">
+        <div class="user-role">{{ session('role', 'Role') }}</div>
+        <div class="user-name">{{ session('nama', 'nama pengguna') }}</div>
+        <div class="user-email">{{ session('email', 'email') }}</div>
+        <div class="user-divider"></div>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button class="user-actions" type="submit" logout>
+                <div class="logout-text">Logout</div>
+            </button>
+        </form>
+    </div>
     <header>
         <div class="head-title">
             Frostware
@@ -861,6 +963,54 @@
         (function () {
             const modalRoot = document.getElementById('modal-root');
             const keteranganRoot = document.getElementById('modal-keterangan-root');
+            const userInfoBtn = document.querySelector('.user-info');
+            const userPanelEl = document.querySelector('.user-panel');
+
+            // hari dan tanggal
+            function updateDate() {
+                const now = new Date();
+                const hariId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const hari = hariId[now.getDay()];
+                const dd = String(now.getDate()).padStart(2, '0');
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const yyyy = now.getFullYear();
+                const hariEl = document.querySelector('.date .hari');
+                const tanggalEl = document.querySelector('.date .tanggal');
+                if (hariEl) hariEl.textContent = hari + ', ';
+                if (tanggalEl) tanggalEl.textContent = `${dd}/${mm}/${yyyy}`;
+            }
+
+            updateDate();
+
+            function showUserPanel() {
+                if (!userPanelEl) return;
+                userPanelEl.style.display = 'inline-flex';
+                userPanelEl.setAttribute('data-open', 'true');
+            }
+
+            function hideUserPanel() {
+                if (!userPanelEl) return;
+                userPanelEl.style.display = 'none';
+                userPanelEl.setAttribute('data-open', 'false');
+            }
+
+            // toggle when user-info button clicked
+            userInfoBtn?.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (!userPanelEl) return;
+                const isOpen = userPanelEl.getAttribute('data-open') === 'true';
+                isOpen ? hideUserPanel() : showUserPanel();
+            });
+
+            // prevent clicks inside panel from bubbling (so document click doesn't close immediately)
+            userPanelEl?.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
+            // click outside closes the panel (and modals)
+            document.addEventListener('click', function () {
+                hideUserPanel();
+            });
 
             function closeModal() {
                 if (!modalRoot) return;

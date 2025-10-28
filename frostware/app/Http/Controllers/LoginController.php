@@ -41,7 +41,7 @@ class LoginController extends Controller
             'email' => $akun->email,
             'idRole' => $akun->idRole,
             // role didapatkan dengan eager load
-            'role' => $akun->role?->role,
+            'role' => mb_convert_case($akun->role?->role, MB_CASE_TITLE, 'UTF-8')
         ]);
     }
 
@@ -90,7 +90,8 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         // hapus semua data session user dan regenerasi token CSRF
-        $request->session()->flush();
+        // $request->session()->flush(); bingung?????
+        $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('login');

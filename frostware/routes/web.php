@@ -16,6 +16,8 @@ Route::post('/register', [RegistrasiController::class, 'registrasiAkun'])->name(
 
 Route::post('/login', [LoginController::class, 'periksaLogin'])->name('login.post');
 
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 Route::get('/login', function () {
     return view('login-mal');
 })->name('login');
