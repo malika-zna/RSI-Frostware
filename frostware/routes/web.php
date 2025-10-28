@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PesananController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -22,9 +23,7 @@ Route::get('/login', function () {
     return view('login-mal');
 })->name('login');
 
-Route::get('/kelolapesanan', function () {
-    return view('kelolapesanan-mal');
-})->name('kelolapesanan');
+Route::get('/kelolapesanan', [PesananController::class, 'daftarPesanan'])->name('kelolapesanan');
 
 // Route::get('/verifpesanan', function () {
 //     return view('popupverifpesanan-mal');

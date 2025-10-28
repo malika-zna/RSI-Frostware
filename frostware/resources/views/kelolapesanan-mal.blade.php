@@ -508,426 +508,54 @@
                     </div>
                 </div>
                 <div class="table-body">
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso</div>
-                                <div class="customer-phone cell-text">089765432100</div>
+                    @forelse($pesanan as $p)
+                        <div data-status="{{ $p->status }}" class="table-row">
+                            <div class="col-id">
+                                <div class="cell-text">ORD{{ $p->idPesanan }}</div>
+                            </div>
+                            <div class="col-customer">
+                                <div class="customer-info">
+                                    <div class="customer-name cell-text">
+                                        {{ $p->pelanggan->nama }}
+                                    </div>
+                                    <div class="customer-phone cell-text">
+                                        {{ $p->pelanggan->nomorTelepon }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-qty">
+                                <div class="cell-text">{{ $p->jumlahBalok }}</div>
+                            </div>
+                            <div class="col-order-date">
+                                <div class="cell-text">
+                                      {{ $p->tanggalPesan->format('d/m/Y') }}
+                                </div>
+                            </div>
+                            <div class="col-ship-date">
+                                <div class="cell-text">{{ $p->tanggalKirim->format('d/m/Y') }}</div>
+                            </div>
+                            <div class="col-status">
+                                <div data-status="{{ ucwords($p->status) }}" class="status-badge">
+                                    <div class="status-text">{{ ucwords($p->status) }}</div>
+                                </div>
+                            </div>
+                            <div class="col-action">
+                                @if(trim(strtolower($p->status)) === 'belum diverifikasi')
+                                    <button data-sudah-verif="belum" class="action-button">
+                                        <div class="action-button-text">Verifikasi Pesanan</div>
+                                    </button>
+                                @else
+                                    <button data-sudah-verif="sudah" class="action-button">
+                                        <div class="action-button-text">Lihat Verifikasi</div>
+                                    </button>
+                                @endif
                             </div>
                         </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Belum Diverifikasi" class="status-badge">
-                                <div class="status-text">Belum Diverifikasi</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="belum" class="action-button">
-                                <div class="action-button-text">Verifikasi Pesanan</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
-                    <div data-status="belum verif" class="table-row">
-                        <div class="col-id">
-                            <div class="cell-text">ORD001</div>
-                        </div>
-                        <div class="col-customer">
-                            <div class="customer-info">
-                                <div class="customer-name cell-text">Budi Santoso lailala dhkahdjks kahda shdabsd</div>
-                                <div class="customer-phone cell-text">089765432100</div>
-                            </div>
-                        </div>
-                        <div class="col-qty">
-                            <div class="cell-text">120</div>
-                        </div>
-                        <div class="col-order-date">
-                            <div class="cell-text">15/09/2025</div>
-                        </div>
-                        <div class="col-ship-date">
-                            <div class="cell-text">25/10/2025</div>
-                        </div>
-                        <div class="col-status">
-                            <div data-status="Diterima" class="status-badge">
-                                <div class="status-text">Diterima</div>
-                            </div>
-                        </div>
-                        <div class="col-action">
-                            <button data-sudah-verif="sudah" class="action-button">
-                                <div class="action-button-text">Lihat Verifikasi</div>
-                            </button>
-                        </div>
-                    </div>
+                    @empty
+                        <div class="table-row">
+                            <div class="cell-text">Belum ada pesanan.</div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
