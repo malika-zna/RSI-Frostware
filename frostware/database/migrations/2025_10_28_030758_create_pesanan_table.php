@@ -15,16 +15,17 @@ return new class extends Migration {
             $table->foreignId('idPelanggan');
             $table->date('tanggalPesan');
             $table->date('tanggalKirim');
+            $table->string('alamatKirim');
             $table->integer('jumlahBalok');
             $table->decimal('totalHarga');
             $table->enum('status', [
-                'belum diverifikasi',
-                'diterima',
-                'ditolak',
-                'selesai produksi',
-                'siap dikirim',
-                'selesai'
-            ])->default('belum diverifikasi');
+                'Belum Diverifikasi',
+                'Diterima',
+                'Ditolak',
+                'Selesai Produksi',
+                'Siap Dikirim',
+                'Selesai'
+            ])->default('Belum Diverifikasi');
             $table->string('keteranganPenolakan')->nullable();
 
             $table->foreign('idPelanggan')->references('idAkun')->on('akun')->onDelete('cascade');

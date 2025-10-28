@@ -324,7 +324,7 @@
             }
 
             .status-badge[data-status="Diterima"] {
-                background: #00C950;
+                background: #00B940;
 
                 .status-text {
                     color: white;
@@ -509,17 +509,17 @@
                 </div>
                 <div class="table-body">
                     @forelse($pesanan as $p)
-                        <div data-status="{{ $p->status }}" class="table-row">
+                        <div data-status="{{ $p->status }}" data-id="{{ $p->idPesanan }}" class="table-row">
                             <div class="col-id">
                                 <div class="cell-text">ORD{{ $p->idPesanan }}</div>
                             </div>
                             <div class="col-customer">
                                 <div class="customer-info">
                                     <div class="customer-name cell-text">
-                                        {{ $p->pelanggan->nama }}
+                                        {{ $p->pelanggan->nama ?? '-' }}
                                     </div>
                                     <div class="customer-phone cell-text">
-                                        {{ $p->pelanggan->nomorTelepon }}
+                                        {{ $p->pelanggan->nomorTelepon ?? '-' }}
                                     </div>
                                 </div>
                             </div>
@@ -528,15 +528,15 @@
                             </div>
                             <div class="col-order-date">
                                 <div class="cell-text">
-                                      {{ $p->tanggalPesan->format('d/m/Y') }}
+                                    {{ $p->tanggalPesan->format('d/m/Y') }}
                                 </div>
                             </div>
                             <div class="col-ship-date">
                                 <div class="cell-text">{{ $p->tanggalKirim->format('d/m/Y') }}</div>
                             </div>
                             <div class="col-status">
-                                <div data-status="{{ ucwords($p->status) }}" class="status-badge">
-                                    <div class="status-text">{{ ucwords($p->status) }}</div>
+                                <div data-status="{{ $p->status }}" class="status-badge">
+                                    <div class="status-text">{{ $p->status }}</div>
                                 </div>
                             </div>
                             <div class="col-action">
@@ -674,13 +674,42 @@
                 btn.addEventListener('click', function () {
                     const row = btn.closest('.table-row');
                     if (!row) return;
-                    // const id = row.querySelector('.col-id .cell-text')?.textContent?.trim() || '';
-                    // const customerName = row.querySelector('.col-customer .customer-name')?.textContent?.trim() || '';
-                    // const orderDate = row.querySelector('.col-order-date .cell-text')?.textContent?.trim() || '';
-                    // const qty = row.querySelector('.col-qty .cell-text')?.textContent?.trim() || '';
-                    // const phone = row.querySelector('.col-customer .customer-phone')?.textContent?.trim() || '';
-                    // // jika butuh alamat/email, ambil dari dataset atau fetch via API
-                    openModalWithData();
+                    const id = row.dataset.id;
+                    if (!id) return openModalWithData();
+
+                    fetch(`{{ url('/pesanan') }}/${id}`, { headers: { Accept: 'application/json' } })
+                        .then(res => {
+                            if (!res.ok) {
+                                openModalWithData();
+                                throw new Error('fetch failed');
+                            }
+                            return res.json();
+                        })
+                        .then(data => {
+                            modalRoot.querySelector('.id-ord').textContent = 'ORD' + (data.idPesanan);
+                            modalRoot.querySelector('.nama-pelanggan').textContent = data.nama;
+                            modalRoot.querySelector('.tanggal-pesanan').textContent = data.tanggalPesan;
+                            modalRoot.querySelector('.email-pelanggan').textContent = data.email;
+                            modalRoot.querySelector('.jumlah-pesanan').textContent = data.jumlahBalok;
+                            modalRoot.querySelector('.telepon-pelanggan').textContent = data.nomorTelepon;
+                            modalRoot.querySelector('.tanggal-kirim').textContent = data.tanggalKirim;
+                            modalRoot.querySelector('.alamat-pengiriman').textContent = data.alamatKirim;
+
+                            const badge = modalRoot.querySelector('.status-badge');
+                            const actions = modalRoot.querySelector('.actions');
+
+                            if (badge) {
+                                const statusLabel = data.status;
+                                badge.setAttribute('data-status', statusLabel);
+                                actions.setAttribute('data-status', statusLabel);
+                                modalRoot.querySelector('.status-text').textContent = statusLabel;
+                            }
+
+                            openModalWithData();
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
                 });
             });
 

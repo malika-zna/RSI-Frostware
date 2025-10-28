@@ -14,6 +14,7 @@ class Pesanan extends Model
         'idPelanggan',
         'tanggalPesan',
         'tanggalKirim',
+        'alamatKirim',
         'jumlahBalok',
         'totalHarga',
         'status',
@@ -24,16 +25,6 @@ class Pesanan extends Model
         'tanggalPesan' => 'datetime',
         'tanggalKirim' => 'datetime',
     ];
-
-    // public static function cariAkun(string $email, string $nomorTelepon)
-    // {
-
-    // }
-
-    // public static function cekPassword(Akun $akun, string $password)
-    // {
-
-    // }
 
     public function pelanggan()
     {

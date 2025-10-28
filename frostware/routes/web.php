@@ -24,6 +24,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/kelolapesanan', [PesananController::class, 'daftarPesanan'])->name('kelolapesanan');
+Route::get('/pesanan/{id}', [PesananController::class, 'detailPesanan'])->name('pesanan.detail');
 
 // Route::get('/verifpesanan', function () {
 //     return view('popupverifpesanan-mal');

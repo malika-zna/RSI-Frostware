@@ -21,12 +21,12 @@
 
                         <div class="field kiri">
                             <div class="label">Nama Pelanggan</div>
-                            <div class="value">Budi Santoso</div>
+                            <div class="value nama-pelanggan">Budi Santoso</div>
                         </div>
 
                         <div class="field kanan">
                             <div class="label">Tanggal Pesanan</div>
-                            <div class="value">15/09/2025</div>
+                            <div class="value tanggal-pesanan">15/09/2025</div>
                         </div>
                     </div>
 
@@ -34,13 +34,13 @@
 
                         <div class="field kiri">
                             <div class="label">Email</div>
-                            <div class="value">budi.santoso@gmail.com</div>
+                            <div class="value email-pelanggan">budi.santoso@gmail.com</div>
                         </div>
 
                         <div class="field kanan">
                             <div class="label">Jumlah Pesanan</div>
                             <div class="quantity">
-                                <div class="qty">120</div>
+                                <div class="qty jumlah-pesanan">120</div>
                                 <div class="unit">balok</div>
                             </div>
                         </div>
@@ -50,18 +50,18 @@
 
                         <div class="field kiri">
                             <div class="label">Nomor Telepon</div>
-                            <div class="value">089765432100</div>
+                            <div class="value telepon-pelanggan">089765432100</div>
                         </div>
 
                         <div class="field kanan">
                             <div class="label">Tanggal Pengiriman</div>
-                            <div class="value">25/10/2025</div>
+                            <div class="value tanggal-kirim">25/10/2025</div>
                         </div>
                     </div>
 
                     <div class="alamat">
                         <div class="label">Alamat Pengiriman</div>
-                        <div class="value">Jl. Budi Sutomo No.50, Lamongan, Jawa Timur</div>
+                        <div class="value alamat-pengiriman">Jl. Budi Sutomo No.50, Lamongan, Jawa Timur</div>
                     </div>
                 </div>
 
@@ -69,10 +69,10 @@
                     <div class="status-group">
                         <div class="label">Status</div>
                         <div class="status-badge" data-status="Belum Diverifikasi">
-                            <div class="text">Belum Diverifikasi</div>
+                            <div class="text status-text">Belum Diverifikasi</div>
                         </div>
                     </div>
-                    <div class="actions">
+                    <div class="actions" data-status="Belum Diverifikasi">
                         <button class="btn btn-tolak">
                             <div class="text">Tolak</div>
                         </button>
@@ -257,7 +257,6 @@
             .status-badge {
                 width: fit-content;
                 padding: 3px 10px;
-                background: #ECEEF2;
                 border-radius: 8px;
                 display: inline-flex;
                 align-items: center;
@@ -269,7 +268,31 @@
                 }
             }
 
+            .status-badge[data-status='Belum Diverifikasi'] {
+                background: #ECEEF2;
+            }
+
+            .status-badge[data-status='Diterima'] {
+                background: #00B940;
+
+                .text {
+                    color: white;
+                }
+            }
+
+            .status-badge[data-status='Ditolak'] {
+                background: #D4183D;
+
+                .text {
+                    color: white;
+                }
+            }
+
             .actions {
+                display: none;
+            }
+
+            .actions[data-status='Belum Diverifikasi'] {
                 display: flex;
                 gap: 16px;
                 justify-content: flex-end;
