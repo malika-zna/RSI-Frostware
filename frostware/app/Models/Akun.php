@@ -20,9 +20,24 @@ class Akun extends Model
 
     public static function cariAkun(string $email, string $nomorTelepon)
     {
-        return static::where('email', $email)
-                    ->orWhere('nomorTelepon', $nomorTelepon)
-                    ->first();
+        if ($nomorTelepon != '') {
+            return static::with('role')
+                ->where('email', $email)
+                ->orWhere('nomorTelepon', $nomorTelepon)
+                ->first();
+        } else {
+            return static::with('role')
+                ->where('email', $email)
+                ->first();
+        }
+    }
+
+    public static function cekPassword(Akun $akun, string $password)
+    {
+        if ($akun->password == $password) {
+            return true;
+        }
+        return password_verify($password, $akun->password);
     }
 
     public function role()

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrasiController;
+use App\Http\Controllers\LoginController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -12,6 +13,8 @@ Route::get('/register', function () {
 })->name('register');
 
 Route::post('/register', [RegistrasiController::class, 'registrasiAkun'])->name('register.post');
+
+Route::post('/login', [LoginController::class, 'periksaLogin'])->name('login.post');
 
 Route::get('/login', function () {
     return view('login-mal');
@@ -25,9 +28,9 @@ Route::get('/kelolapesanan', function () {
 //     return view('popupverifpesanan-mal');
 // })->name('verifpesanan');
 
-Route::get('/inputketerangan', function () {
-    return view('popupinputketerangan-mal');
-})->name('inputketerangan');
+// Route::get('/inputketerangan', function () {
+//     return view('popupinputketerangan-mal');
+// })->name('inputketerangan');
 
 // Route untuk halaman produksi (setelah login) -- Fad Bingung
 Route::get('/produksi', function () {

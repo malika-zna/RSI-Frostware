@@ -16,7 +16,7 @@
             /* font-family: Figtree; */
         }
 
-         a {
+        a {
             text-decoration: none;
         }
 
@@ -28,6 +28,11 @@
         h1 {
             font-family: Figtree;
             /* font-family: Parkinsans; */
+        }
+
+        button {
+            background: none;
+            border: none;
         }
 
         body {
@@ -235,6 +240,33 @@
             font-weight: 400;
             word-wrap: break-word;
         }
+
+        .statuslogin {
+            display: flex;
+            align-self: stretch;
+            padding-left: 5px;
+            gap: 5px;
+
+            p {
+                font-family: Figtree;
+                font-size: 12px;
+                /* color: gray; */
+            }
+
+            svg {
+                width: 16px;
+            }
+        }
+
+        .statuslogin[data-status="gagal"] {
+            p {
+                color: #D4183D;
+            }
+
+            svg {
+                fill: #D4183D;
+            }
+        }
     </style>
 </head>
 
@@ -254,26 +286,39 @@
                 laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
                 velit esse cillum dolore eu fugiat nulla pariatur.</p>
         </div>
-        <div class="form-box">
-            <!-- <div class="form-inner"> -->
+        <form class="form-box" action="{{ route('login.post') }}" method="POST">
+            @csrf
             <div class="form-field">
                 <div class="form-label">Email</div>
-                <input class="form-input" type="text" placeholder="Masukkan alamat email">
+                <input required name="email" value="{{ old('email') }}" class="form-input" type="email"
+                    placeholder="Masukkan alamat email">
             </div>
             <div class="form-field">
                 <div class="form-label">Password</div>
-                <input class="form-input" type="text" placeholder="Masukkan password">
+                <input required name="password" value="{{ old('password') }}" class="form-input" type="password"
+                    placeholder="Masukkan password">
             </div>
+            @if(isset($statusMessage))
+                <div class="statuslogin" data-status="{{ $status }}">
+                    @if ($status == "gagal")
+                        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                        </svg>
+                    @endif
+                    <p>{{ $statusMessage }}</p>
+                </div>
+            @endif
             <!-- Tambahan Fadila -->
-            <div class="btn-login">
-                <a class="btn-text" href="{{ route('produksi') }}">Login</a>
-            </div>
+            <button class="btn-login" type="submit">
+                <div class="btn-text">Login</div>
+            </button>
             <!-- Sampai sini -->
             <div class="register-section">
                 <div class="register-text">Belum punya akun?</div>
                 <a class="register-link" href="{{ route('register') }}">Daftar</a>
             </div>
-        </div>
+        </form>
     </div>
 </body>
 
