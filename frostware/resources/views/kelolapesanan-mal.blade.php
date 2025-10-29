@@ -696,12 +696,15 @@
                 modalRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
             }
 
+            let currentPesananId = null;
+
             // attach click ke semua tombol Verifikasi / Lihat Verifikasi
             document.querySelectorAll('.action-button').forEach(btn => {
                 btn.addEventListener('click', async function (e) {
                     const id = btn.dataset.id || btn.closest('.table-row')?.dataset.id;
                     const row = btn.closest('.table-row');
                     if (!id) return;
+                    currentPesananId = id;
                     try {
                         const res = await fetch(`/pesanan/${id}`);
                         const json = await res.json();
@@ -715,9 +718,11 @@
                         document.getElementById('pv-telp').textContent = p.pelanggan?.nomorTelepon ?? '-';
                         document.getElementById('pv-alamat').textContent = p.alamatKirim ?? '-';
                         document.getElementById('pv-jumlah').textContent = p.jumlahBalok ?? 0;
+                        document.getElementById('pv-keterangan').textContent = p.keteranganPenolakan ?? '-';
                         document.getElementById('pv-status').querySelector('.text').textContent = (p.status ?? '-');
                         document.getElementById('pv-status').setAttribute('status', p.status);
                         document.getElementById('actions').setAttribute('status', p.status);
+                        document.getElementById('keterangan').setAttribute('status', p.status);
 
                         // tanggal format sederhana (sesuaikan)
                         const pvTanggalPesanEl = document.querySelector('.value[id="pv-tanggalPesan"]');
@@ -845,7 +850,7 @@
 
             // close handlers for keterangan modal (backdrop & cancel button)
             keteranganRoot?.addEventListener('click', function (e) {
-                if (e.target.hasAttribute('data-close') || e.target.closest('.btn-cancel') || e.target.closest('.btn-save')) {
+                if (e.target.hasAttribute('data-close') || e.target.closest('.btn-cancel')) {
                     closeKeterangan();
                 }
             });
@@ -858,6 +863,110 @@
                     closeKeterangan();
                 }
             });
+
+            const keteranganForm = document.querySelector('#modal-keterangan-root form.content');
+
+            if (keteranganForm) {
+                keteranganForm.addEventListener('submit', async function (ev) {
+                    ev.preventDefault();
+                    // if (!currentPesananId) {
+                    //     alert('Tidak ada pesanan dipilih.');
+                    //     return;
+                    // }
+
+                    const teksEl = document.getElementById('in-keterangan');
+                    // const keterangan = teksEl;
+                    const keterangan = teksEl ? teksEl.value.trim() : '';
+                    // if (!keterangan) {
+                    //     // simple client validation
+                    //     alert('Mohon isi keterangan penolakan.');
+                    //     return;
+                    // }
+
+                    const submitBtn = keteranganForm.querySelector('.btn-save');
+                    // const origText = submitBtn ? submitBtn.textContent : null;
+                    // if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Menyimpan...'; }
+
+                    try {
+                        const resp = await fetch(`/pesanan/${currentPesananId}/tolak`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            credentials: 'same-origin',
+                            body: JSON.stringify({ keterangan })
+                        });
+
+                        let jr = {};
+                        try { jr = await resp.json(); } catch (e) { /* ignore */ }
+
+                        if (resp.ok && jr.success) {
+                            // tutup modal keterangan
+                            const kRoot = document.getElementById('modal-keterangan-root');
+                            if (kRoot) {
+                                kRoot.style.display = 'none';
+                                document.body.style.overflow = '';
+                                kRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
+                            }
+
+                            // update popup verif jika terbuka
+                            const pvStatus = document.getElementById('pv-status');
+                            if (pvStatus) {
+                                pvStatus.querySelector('.text').textContent = 'Ditolak';
+                                pvStatus.setAttribute('status', 'Ditolak');
+                            }
+
+                            const actionsEl = document.getElementById('actions');
+                            if (actionsEl) {
+                                actionsEl.setAttribute('status', 'Ditolak');
+                            }
+
+                            const pvError = document.getElementById('pv-error');
+                            if (pvError) { pvError.style.display = 'none'; pvError.textContent = ''; }
+
+                            const kolomKet = document.getElementById('keterangan');
+                            if (kolomKet) {
+                                kolomKet.setAttribute('status', 'Ditolak');
+                            }
+
+                            const pvKet = document.getElementById('pv-keterangan');
+                            if (pvKet) {
+                                pvKet.textContent = keterangan;
+                            }
+
+                            // update table row status & keterangan
+                            const row = document.querySelector(`.table-row[data-id="${currentPesananId}"]`);
+                            if (row) {
+                                const badge = row.querySelector('.status-badge');
+                                if (badge) {
+                                    const st = badge.querySelector('.status-text');
+                                    if (st) st.textContent = 'Ditolak';
+                                    badge.setAttribute('data-status', 'Ditolak');
+                                }
+                                row.setAttribute('data-status', 'Ditolak');
+
+                                // ubah tombol aksi menjadi "Lihat Verifikasi"
+                                const actionBtnText = row.querySelector('.action-button .action-button-text');
+                                if (actionBtnText) actionBtnText.textContent = 'Lihat Verifikasi';
+                            }
+
+                            // kosongkan textarea setelah sukses
+                            if (teksEl) teksEl.value = '';
+
+                        } else {
+                            const msg = jr.message || 'Gagal menyimpan keterangan.';
+                            alert(msg);
+                        }
+                    } catch (err) {
+                        console.error('tolak fetch error', err);
+                        alert('Terjadi kesalahan jaringan saat mengirim keterangan.');
+                    }
+                    // finally {
+                    //     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
+                    // }
+                });
+            }
         })();
     </script>
 

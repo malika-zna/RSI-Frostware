@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use Carbon\Carbon;
 // use Illuminate\Support\Facades\DB;
-// use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class PesananController extends Controller
 {
@@ -99,8 +99,26 @@ class PesananController extends Controller
         // }
     }
 
-    public function tolakPesanan()
+    public function tolakPesanan(Request $request, $id)
     {
+        $validated = $request->validate([
+            'keterangan' => 'required|string|max:250',
+        ]);
 
+        $pesanan = Pesanan::find($id);
+        if (!$pesanan) {
+            return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
+        }
+
+        try {
+            $pesanan->status = 'Ditolak';
+            $pesanan->keteranganPenolakan = $validated['keterangan'];
+            $pesanan->save();
+
+            return response()->json(['success' => true, 'message' => 'Pesanan ditolak']);
+        } catch (\Throwable $e) {
+            Log::error('tolakPesanan error', ['id' => $id, 'message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
+        }
     }
 }

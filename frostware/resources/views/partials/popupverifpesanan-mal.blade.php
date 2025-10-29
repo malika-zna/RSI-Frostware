@@ -63,6 +63,11 @@
                         <div class="label">Alamat Pengiriman</div>
                         <div class="value" id="pv-alamat">-</div>
                     </div>
+
+                    <div class="keterangan" id="keterangan" status="">
+                        <div class="label">Keterangan</div>
+                        <div class="value" id="pv-keterangan">-</div>
+                    </div>
                 </div>
                 <div id="pv-error" style="color:#D4183D; display:none; margin-top:6px;"></div>
                 <div class="status">
@@ -223,6 +228,7 @@
                 display: inline-flex;
                 flex-direction: column;
                 gap: 2px;
+                padding-bottom: 10px;
 
                 .label {
                     color: #777;
@@ -257,6 +263,7 @@
             .status-badge {
                 width: fit-content;
                 padding: 3px 10px;
+                background-color: #ECEEF2;
                 border-radius: 8px;
                 display: inline-flex;
                 align-items: center;
@@ -279,6 +286,34 @@
                 background-color: #D4183D;
                 .text {
                     color: white;
+                }
+            }
+
+            .keterangan {
+                display: none;
+            }
+
+            /* .keterangan[status='Ditolak'] {
+                display: flex;
+                gap: 16px;
+                justify-content: flex-end;
+                align-items: flex-end;
+            } */
+
+            .keterangan[status='Ditolak'] {
+                align-self: stretch;
+                display: inline-flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .label {
+                    color: #777;
+                    font-size: 14px;
+                }
+
+                .value {
+                    font-size: 16px;
+                    margin-top: 4px;
                 }
             }
 

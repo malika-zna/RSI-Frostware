@@ -4,18 +4,20 @@
         <div class="header">
             <div class="title">Keterangan Penolakan Pesanan</div>
         </div>
-        <div class="content">
+        <form class="content">
             <div class="field-group">
+                @csrf
                 <div class="label">Mohon masukkan alasan penolakan pesanan (maksimal 250 karakter)</div>
-                <textarea class="textarea" contenteditable="true" aria-label="Alasan penolakan" maxlength=250
-                    placeholder="Contoh: Stok produk habis, Alamat pengiriman tidak valid, dll."></textarea>
+                <textarea required id="in-keterangan" class="textarea" contenteditable="true"
+                    aria-label="Alasan penolakan" maxlength=250
+                    placeholder="Contoh: Jumlah pesanan yang diterima sudah melebihi batas, Alamat pengiriman tidak valid, dll."></textarea>
             </div>
 
             <div class="actions">
                 <button type="button" class="btn btn-cancel">Batal</button>
-                <button type="button" class="btn btn-save">Simpan</button>
+                <button type="submit" class="btn btn-save">Simpan</button>
             </div>
-        </div>
+        </form>
     </div>
     <style>
         .modal-overlay {
