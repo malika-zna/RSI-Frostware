@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="svg" href="/fw.svg">
     <title>Login</title>
     <style>
         * {
@@ -295,18 +296,17 @@
             </div>
             <div class="form-field">
                 <div class="form-label">Password</div>
-                <input required name="password" value="{{ old('password') }}" class="form-input" type="password"
-                    placeholder="Masukkan password">
+                <input required name="password" class="form-input" type="password" placeholder="Masukkan password">
             </div>
-            @if(isset($statusMessage))
-                <div class="statuslogin" data-status="{{ $status }}">
-                    @if ($status == "gagal")
+            @if(session('statusMessage'))
+                <div class="statuslogin" data-status="{{ session('status', 'gagal') }}">
+                    @if (session('status') === 'gagal')
                         <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
                             <path
                                 d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
                         </svg>
                     @endif
-                    <p>{{ $statusMessage }}</p>
+                    <p>{{ session('statusMessage') }}</p>
                 </div>
             @endif
             <!-- Tambahan Fadila -->

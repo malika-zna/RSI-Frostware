@@ -11,18 +11,26 @@ class LoginController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
-        
+
         $akun = Akun::cariAkun($email, '');
 
         if (!$akun) { // dijalankan kalau null
-            return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email tidak terdaftar']);
+            // return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email tidak terdaftar']);
+            return redirect()->back()
+                ->withInput()
+                ->with('status', 'gagal')
+                ->with('statusMessage', 'Email tidak terdaftar');
         }
 
         if ($akun instanceof Akun) {
             $passvalid = Akun::cekPassword($akun, $password);
 
             if (!$passvalid) {
-                return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email atau password salah']);
+                // return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email atau password salah']);
+                return redirect()->back()
+                ->withInput()
+                ->with('status', 'gagal')
+                ->with('statusMessage', 'Email atau password salah');
             }
 
             $this->simpanSesi($akun);

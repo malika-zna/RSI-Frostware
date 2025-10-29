@@ -10,7 +10,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
         rel="stylesheet">
-
+    <link rel="icon" type="svg" href="/fw.svg">
+    <!-- <link rel="shortcut icon" href="/Frostware.svg" type="svg"> -->
     <title>Kelola Pesanan</title>
     <style>
         * {
