@@ -47,7 +47,7 @@ class PesananController extends Controller
         // cek batas 2000
         if ($sudahDiterima + $totalBalokPesanan <= 2000) {
             // panggil method model untuk update status (misal set status = 'diterima')
-            $updated = $pesanan->updateStatus('diterima');
+            $updated = $pesanan->updateStatus('Diterima');
 
             if ($updated) {
                 return response()->json(['success' => true, 'message' => 'Pesanan diterima']);

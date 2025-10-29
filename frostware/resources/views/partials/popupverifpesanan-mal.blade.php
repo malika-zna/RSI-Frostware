@@ -72,7 +72,7 @@
                             <div class="text">-</div>
                         </div>
                     </div>
-                    <div class="actions">
+                    <div class="actions" id="actions" status="">
                         <button class="btn btn-tolak" id="pv-tolak">
                             <div class="text">Tolak</div>
                         </button>
@@ -284,6 +284,10 @@
             }
 
             .actions {
+                display: none;
+            }
+
+            .actions[status='Belum Diverifikasi'] {
                 display: flex;
                 gap: 16px;
                 justify-content: flex-end;
