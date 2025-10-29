@@ -99,8 +99,8 @@ class PesananController extends Controller
         // }
     }
 
-    // public function validasiPassword(string $password, string $konfirmasiPassword)
-    // {
+    public function tolakPesanan()
+    {
 
-    // }
+    }
 }

@@ -257,7 +257,6 @@
             .status-badge {
                 width: fit-content;
                 padding: 3px 10px;
-                background: #ECEEF2;
                 border-radius: 8px;
                 display: inline-flex;
                 align-items: center;

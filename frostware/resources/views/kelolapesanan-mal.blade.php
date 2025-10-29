@@ -325,7 +325,7 @@
             }
 
             .status-badge[data-status="Diterima"] {
-                background: #00C950;
+                background: #00B940;
 
                 .status-text {
                     color: white;
@@ -522,10 +522,10 @@
                             <div class="col-customer">
                                 <div class="customer-info">
                                     <div class="customer-name cell-text">
-                                        {{ $p->pelanggan->nama }}
+                                        {{ $p->pelanggan->nama ?? '-' }}
                                     </div>
                                     <div class="customer-phone cell-text">
-                                        {{ $p->pelanggan->nomorTelepon }}
+                                        {{ $p->pelanggan->nomorTelepon ?? '-' }}
                                     </div>
                                 </div>
                             </div>
@@ -541,8 +541,8 @@
                                 <div class="cell-text">{{ $p->tanggalKirim->format('d/m/Y') }}</div>
                             </div>
                             <div class="col-status">
-                                <div data-status="{{ ucwords($p->status) }}" class="status-badge">
-                                    <div class="status-text">{{ ucwords($p->status) }}</div>
+                                <div data-status="{{ $p->status }}" class="status-badge">
+                                    <div class="status-text">{{ $p->status }}</div>
                                 </div>
                             </div>
                             <div class="col-action">
