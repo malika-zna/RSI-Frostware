@@ -26,6 +26,17 @@ class Pesanan extends Model
         'tanggalKirim' => 'datetime',
     ];
 
+    public static function hitungTotalBalok(string $tanggalPengiriman) {
+        return self::where('status', 'diterima')
+                    ->whereDate('tanggalKirim', $tanggalPengiriman)
+                    ->sum('jumlahBalok');
+    }
+
+    public function updateStatus(string $status) {
+        $this->status = $status;
+        $this->save();
+    }
+
     public function pelanggan()
     {
         return $this->belongsTo(Akun::class, 'idPelanggan', 'idAkun');
