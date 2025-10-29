@@ -23,8 +23,10 @@ Route::get('/login', function () {
     return view('login-mal');
 })->name('login');
 
+Route::get('/ringkasan', [PesananController::class, 'tampilkanRingkasan'])->name('ringkasan');
 Route::get('/kelolapesanan', [PesananController::class, 'daftarPesanan'])->name('kelolapesanan');
 Route::get('/pesanan/{id}', [PesananController::class, 'detailPesanan'])->name('pesanan.detail');
+Route::post('/pesanan/{id}/terima', [PesananController::class, 'terimaPesanan'])->name('pesanan.terima');
 
 // Route::get('/verifpesanan', function () {
 //     return view('popupverifpesanan-mal');

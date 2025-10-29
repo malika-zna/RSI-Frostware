@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Pesanan extends Model
 {
@@ -26,15 +27,23 @@ class Pesanan extends Model
         'tanggalKirim' => 'datetime',
     ];
 
-    public static function hitungTotalBalok(string $tanggalPengiriman) {
-        return self::where('status', 'diterima')
-                    ->whereDate('tanggalKirim', $tanggalPengiriman)
-                    ->sum('jumlahBalok');
+    public static function hitungTotalBalok($tanggalKirim, ?int $excludeId = null): int
+    {
+        $query = self::whereDate('tanggalKirim', Carbon::parse($tanggalKirim)->toDateString())
+            ->whereRaw("LOWER(status) = 'diterima'");
+
+        if ($excludeId) {
+            $query->where('idPesanan', '<>', $excludeId);
+        }
+
+        return (int) $query->sum('jumlahBalok');
     }
 
-    public function updateStatus(string $status) {
+
+    public function updateStatus(string $status): bool
+    {
         $this->status = $status;
-        $this->save();
+        return (bool) $this->save();
     }
 
     public function pelanggan()

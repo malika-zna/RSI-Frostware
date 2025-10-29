@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -439,6 +440,11 @@
                 }
             }
 
+            .nodata {
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+
         }
     </style>
 </head>
@@ -540,15 +546,11 @@
                                 </div>
                             </div>
                             <div class="col-action">
-                                @if(trim(strtolower($p->status)) === 'belum diverifikasi')
-                                    <button data-sudah-verif="belum" class="action-button">
-                                        <div class="action-button-text">Verifikasi Pesanan</div>
-                                    </button>
-                                @else
-                                    <button data-sudah-verif="sudah" class="action-button">
-                                        <div class="action-button-text">Lihat Verifikasi</div>
-                                    </button>
-                                @endif
+                                <button data-id="{{ $p->idPesanan }}" class="action-button">
+                                    <div class="action-button-text">
+                                        {{ trim(strtolower($p->status)) === 'belum diverifikasi' ? 'Verifikasi Pesanan' : 'Lihat Verifikasi' }}
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     @empty
@@ -565,20 +567,19 @@
             </div>
             <div class="summary-description">Tanggal pengiriman dan jumlah pesanan yang diterima</div>
             <div class="summary-list">
-                <div class="summary-item">
-                    <div class="summary-date">25/10/2025</div>
-                    <div class="summary-qty">
-                        <div class="number">810</div>
-                        <div class="unit">balok</div>
+                @forelse($summary as $s)
+                    <div class="summary-item">
+                        <div class="summary-date">{{ $s->tanggal }}</div>
+                        <div class="summary-qty">
+                            <div class="number">{{ $s->total_balok }}</div>
+                            <div class="unit">balok</div>
+                        </div>
                     </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-date">25/10/2025</div>
-                    <div class="summary-qty">
-                        <div class="number">810</div>
-                        <div class="unit">balok</div>
+                @empty
+                    <div class="nodata">
+                        Tidak ada data.
                     </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -590,6 +591,7 @@
     <script>
         (function () {
             const modalRoot = document.getElementById('modal-root');
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const keteranganRoot = document.getElementById('modal-keterangan-root');
             const userInfoBtn = document.querySelector('.user-info');
             const userPanelEl = document.querySelector('.user-panel');
@@ -640,6 +642,31 @@
                 hideUserPanel();
             });
 
+            async function updateSummary() {
+                try {
+                    const res = await fetch('/ringkasan', { credentials: 'same-origin' });
+                    if (!res.ok) return;
+                    const j = await res.json();
+                    if (!j.success) return;
+                    const listEl = document.querySelector('.summary-list');
+                    if (!listEl) return;
+                    if (j.data.length === 0) {
+                        return;
+                    }
+                    listEl.innerHTML = j.data.map(item => `
+                        <div class="summary-item">
+                            <div class="summary-date">${item.tanggal}</div>
+                            <div class="summary-qty">
+                                <div class="number">${item.total_balok}</div>
+                                <div class="unit">balok</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    console.error('Gagal update summary', err);
+                }
+            }
+
             function closeModal() {
                 if (!modalRoot) return;
                 modalRoot.style.display = 'none';
@@ -671,47 +698,136 @@
 
             // attach click ke semua tombol Verifikasi / Lihat Verifikasi
             document.querySelectorAll('.action-button').forEach(btn => {
-                btn.addEventListener('click', function () {
+                btn.addEventListener('click', async function (e) {
+                    const id = btn.dataset.id || btn.closest('.table-row')?.dataset.id;
                     const row = btn.closest('.table-row');
-                    if (!row) return;
-                    const id = row.dataset.id;
-                    if (!id) return openModalWithData();
+                    if (!id) return;
+                    try {
+                        const res = await fetch(`/pesanan/${id}`);
+                        const json = await res.json();
+                        if (!json.success) { alert(json.message || 'Pesanan tidak ditemukan'); return; }
+                        const p = json.data;
 
-                    fetch(`{{ url('/pesanan') }}/${id}`, { headers: { Accept: 'application/json' } })
-                        .then(res => {
-                            if (!res.ok) {
-                                openModalWithData();
-                                throw new Error('fetch failed');
-                            }
-                            return res.json();
-                        })
-                        .then(data => {
-                            modalRoot.querySelector('.id-ord').textContent = 'ORD' + (data.idPesanan);
-                            modalRoot.querySelector('.nama-pelanggan').textContent = data.nama;
-                            modalRoot.querySelector('.tanggal-pesanan').textContent = data.tanggalPesan;
-                            modalRoot.querySelector('.email-pelanggan').textContent = data.email;
-                            modalRoot.querySelector('.jumlah-pesanan').textContent = data.jumlahBalok;
-                            modalRoot.querySelector('.telepon-pelanggan').textContent = data.nomorTelepon;
-                            modalRoot.querySelector('.tanggal-kirim').textContent = data.tanggalKirim;
-                            modalRoot.querySelector('.alamat-pengiriman').textContent = data.alamatKirim;
+                        // isi modal
+                        document.getElementById('pv-id').textContent = 'ORD' + p.idPesanan;
+                        document.getElementById('pv-nama').textContent = p.pelanggan?.nama ?? '-';
+                        document.getElementById('pv-email').textContent = p.pelanggan?.email ?? '-';
+                        document.getElementById('pv-telp').textContent = p.pelanggan?.nomorTelepon ?? '-';
+                        document.getElementById('pv-alamat').textContent = p.alamatKirim ?? '-';
+                        document.getElementById('pv-jumlah').textContent = p.jumlahBalok ?? 0;
+                        document.getElementById('pv-status').querySelector('.text').textContent = (p.status ?? '-');
+                        document.getElementById('pv-status').setAttribute('status', p.status);
+                        document.getElementById('actions').setAttribute('status', p.status);
 
-                            const badge = modalRoot.querySelector('.status-badge');
-                            const actions = modalRoot.querySelector('.actions');
+                        // tanggal format sederhana (sesuaikan)
+                        const pvTanggalPesanEl = document.querySelector('.value[id="pv-tanggalPesan"]');
+                        if (pvTanggalPesanEl) {
+                            pvTanggalPesanEl.textContent = p.tanggalPesan ? new Date(p.tanggalPesan).toLocaleDateString() : '-';
+                        }
+                        const pvTanggalKirimEl = document.querySelector('.value[id="pv-tanggalKirim"]');
+                        if (pvTanggalKirimEl) {
+                            pvTanggalKirimEl.textContent = p.tanggalKirim ? new Date(p.tanggalKirim).toLocaleDateString() : '-';
+                        }
 
-                            if (badge) {
-                                const statusLabel = data.status;
-                                badge.setAttribute('data-status', statusLabel);
-                                actions.setAttribute('data-status', statusLabel);
-                                modalRoot.querySelector('.status-text').textContent = statusLabel;
-                            }
+                        // siapkan elemen error (pastikan ada di partial)
+                        const errEl = document.getElementById('pv-error');
+                        if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
 
-                            openModalWithData();
-                        })
-                        .catch(err => {
-                            console.error(err);
-                        });
+                        // tampilkan modal
+                        openModalWithData();
+
+                        // terima handler
+                        const btnTerima = document.getElementById('pv-terima');
+                        if (btnTerima) {
+                            // gunakan listener instead of assigning onclick to avoid duplicated handlers
+                            btnTerima.replaceWith(btnTerima.cloneNode(true)); // remove old handlers
+                            const newBtnTerima = document.getElementById('pv-terima');
+
+                            newBtnTerima.addEventListener('click', async function () {
+                                const errEl = document.getElementById('pv-error');
+                                if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+
+                                try {
+                                    const resp = await fetch(`/pesanan/${id}/terima`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': csrf
+                                        },
+                                        credentials: 'same-origin',
+                                        body: JSON.stringify({})
+                                    });
+
+                                    // parse JSON safely
+                                    let jr = {};
+                                    try { jr = await resp.json(); } catch (e) { /* ignore */ }
+
+                                    if (resp.ok && jr.success) {
+                                        // sukses: update badge status di popup
+                                        const pvStatusEl = document.getElementById('pv-status');
+                                        if (pvStatusEl) {
+                                            pvStatusEl.querySelector('.text').textContent = 'Diterima';
+                                            pvStatusEl.setAttribute('status', 'Diterima');
+                                        }
+
+                                        // update status elemen actions
+                                        const actionsEl = document.getElementById('actions');
+                                        if (actionsEl) {
+                                            actionsEl.setAttribute('status', 'Diterima');
+                                        }
+
+                                        // update status badge in table row
+                                        if (row) {
+                                            const badge = row.querySelector('.status-badge');
+                                            if (badge) {
+                                                badge.querySelector('.status-text').textContent = 'Diterima';
+                                                badge.setAttribute('data-status', 'Diterima');
+                                            }
+                                            row.setAttribute('data-status', 'Diterima');
+
+                                            // update button text to "Lihat Verifikasi"
+                                            const actionBtn = row.querySelector('.action-button .action-button-text');
+                                            if (actionBtn) {
+                                                actionBtn.textContent = 'Lihat Verifikasi';
+                                            }
+                                        }
+                                        // await updateSummary();
+
+                                        if (typeof updateSummary === 'function') {
+                                            try { await updateSummary(); } catch (e) { console.error('updateSummary failed', e); }
+                                        }
+
+                                    } else {
+                                        // tampilkan pesan dari server (422 atau error lain)
+                                        const message = jr.message || 'Gagal menerima pesanan.';
+                                        if (errEl) {
+                                            errEl.textContent = message;
+                                            errEl.style.display = 'block';
+                                        } else {
+                                            alert(message);
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    const msg = 'Terjadi kesalahan jaringan.';
+                                    const errEl2 = document.getElementById('pv-error');
+                                    if (errEl2) {
+                                        errEl2.textContent = msg;
+                                        errEl2.style.display = 'block';
+                                    } else {
+                                        alert(msg);
+                                    }
+                                }
+                            });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Terjadi kesalahan saat mengambil data pesanan.');
+                    }
                 });
             });
+
+            updateSummary();
 
             // close handlers (backdrop & close button)
             modalRoot?.addEventListener('click', function (e) {
