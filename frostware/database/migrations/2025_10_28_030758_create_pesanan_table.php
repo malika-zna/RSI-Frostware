@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('idPelanggan');
             $table->date('tanggalPesan');
             $table->date('tanggalKirim');
+            $table->string('alamatKirim');
             $table->integer('jumlahBalok');
             $table->decimal('totalHarga');
             $table->enum('status', [

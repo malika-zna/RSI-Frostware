@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Pesanan extends Model
 {
@@ -14,6 +15,7 @@ class Pesanan extends Model
         'idPelanggan',
         'tanggalPesan',
         'tanggalKirim',
+        'alamatKirim',
         'jumlahBalok',
         'totalHarga',
         'status',
@@ -25,15 +27,24 @@ class Pesanan extends Model
         'tanggalKirim' => 'datetime',
     ];
 
-    // public static function cariAkun(string $email, string $nomorTelepon)
-    // {
+    public static function hitungTotalBalok($tanggalKirim, ?int $excludeId = null): int
+    {
+        $query = self::whereDate('tanggalKirim', Carbon::parse($tanggalKirim)->toDateString())
+            ->whereRaw("LOWER(status) = 'diterima'");
 
-    // }
+        if ($excludeId) {
+            $query->where('idPesanan', '<>', $excludeId);
+        }
 
-    // public static function cekPassword(Akun $akun, string $password)
-    // {
+        return (int) $query->sum('jumlahBalok');
+    }
 
-    // }
+
+    public function updateStatus(string $status): bool
+    {
+        $this->status = $status;
+        return (bool) $this->save();
+    }
 
     public function pelanggan()
     {

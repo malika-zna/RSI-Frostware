@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -509,7 +510,7 @@
                 </div>
                 <div class="table-body">
                     @forelse($pesanan as $p)
-                        <div data-status="{{ $p->status }}" class="table-row">
+                        <div data-status="{{ $p->status }}" data-id="{{ $p->idPesanan }}" class="table-row">
                             <div class="col-id">
                                 <div class="cell-text">ORD{{ $p->idPesanan }}</div>
                             </div>
@@ -528,7 +529,7 @@
                             </div>
                             <div class="col-order-date">
                                 <div class="cell-text">
-                                      {{ $p->tanggalPesan->format('d/m/Y') }}
+                                    {{ $p->tanggalPesan->format('d/m/Y') }}
                                 </div>
                             </div>
                             <div class="col-ship-date">
@@ -540,15 +541,11 @@
                                 </div>
                             </div>
                             <div class="col-action">
-                                @if(trim(strtolower($p->status)) === 'belum diverifikasi')
-                                    <button data-sudah-verif="belum" class="action-button">
-                                        <div class="action-button-text">Verifikasi Pesanan</div>
-                                    </button>
-                                @else
-                                    <button data-sudah-verif="sudah" class="action-button">
-                                        <div class="action-button-text">Lihat Verifikasi</div>
-                                    </button>
-                                @endif
+                                <button data-id="{{ $p->idPesanan }}" class="action-button">
+                                    <div class="action-button-text">
+                                        {{ trim(strtolower($p->status)) === 'belum diverifikasi' ? 'Verifikasi Pesanan' : 'Lihat Verifikasi' }}
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     @empty
@@ -590,6 +587,7 @@
     <script>
         (function () {
             const modalRoot = document.getElementById('modal-root');
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const keteranganRoot = document.getElementById('modal-keterangan-root');
             const userInfoBtn = document.querySelector('.user-info');
             const userPanelEl = document.querySelector('.user-panel');
@@ -671,16 +669,71 @@
 
             // attach click ke semua tombol Verifikasi / Lihat Verifikasi
             document.querySelectorAll('.action-button').forEach(btn => {
-                btn.addEventListener('click', function () {
+                btn.addEventListener('click', async function (e) {
+                    const id = btn.dataset.id || btn.closest('.table-row')?.dataset.id;
                     const row = btn.closest('.table-row');
-                    if (!row) return;
-                    // const id = row.querySelector('.col-id .cell-text')?.textContent?.trim() || '';
-                    // const customerName = row.querySelector('.col-customer .customer-name')?.textContent?.trim() || '';
-                    // const orderDate = row.querySelector('.col-order-date .cell-text')?.textContent?.trim() || '';
-                    // const qty = row.querySelector('.col-qty .cell-text')?.textContent?.trim() || '';
-                    // const phone = row.querySelector('.col-customer .customer-phone')?.textContent?.trim() || '';
-                    // // jika butuh alamat/email, ambil dari dataset atau fetch via API
-                    openModalWithData();
+                    if (!id) return;
+                    try {
+                        const res = await fetch(`/pesanan/${id}`);
+                        const json = await res.json();
+                        if (!json.success) { alert(json.message || 'Pesanan tidak ditemukan'); return; }
+                        const p = json.data;
+
+                        // isi modal
+                        document.getElementById('pv-id').textContent = 'ORD' + p.idPesanan;
+                        document.getElementById('pv-nama').textContent = p.pelanggan?.nama ?? '-';
+                        document.getElementById('pv-email').textContent = p.pelanggan?.email ?? '-';
+                        document.getElementById('pv-telp').textContent = p.pelanggan?.nomorTelepon ?? '-';
+                        document.getElementById('pv-alamat').textContent = p.alamatKirim ?? '-';
+                        document.getElementById('pv-jumlah').textContent = p.jumlahBalok ?? 0;
+                        document.getElementById('pv-status').querySelector('.text').textContent = (p.status ?? '-');
+                        document.getElementById('pv-status').setAttribute('status', p.status);
+
+                        // tanggal format sederhana (sesuaikan)
+                        const pvTanggalPesanEl = document.querySelector('.value[id="pv-tanggalPesan"]');
+                        if (pvTanggalPesanEl) {
+                            pvTanggalPesanEl.textContent = p.tanggalPesan ? new Date(p.tanggalPesan).toLocaleDateString() : '-';
+                        }
+                        const pvTanggalKirimEl = document.querySelector('.value[id="pv-tanggalKirim"]');
+                        if (pvTanggalKirimEl) {
+                            pvTanggalKirimEl.textContent = p.tanggalKirim ? new Date(p.tanggalKirim).toLocaleDateString() : '-';
+                        }
+
+                        // siapkan elemen error (pastikan ada di partial)
+                        const errEl = document.getElementById('pv-error');
+                        if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+
+                        // tampilkan modal
+                        openModalWithData();
+
+                        // terima handler
+                        const btnTerima = document.getElementById('pv-terima');
+                        btnTerima.onclick = async function () {
+                            const resp = await fetch(`/pesanan/${id}/terima`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrf
+                                },
+                                body: JSON.stringify({})
+                            });
+                            const jr = await resp.json();
+                            if (jr.success) {
+                                closeModal();
+                                location.reload();
+                            } else {
+                                if (errEl) {
+                                    errEl.textContent = jr.message || 'Gagal';
+                                    errEl.style.display = 'block';
+                                } else {
+                                    alert(jr.message || 'Gagal');
+                                }
+                            }
+                        };
+                    } catch (err) {
+                        console.error(err);
+                        alert('Terjadi kesalahan saat mengambil data pesanan.');
+                    }
                 });
             });
 

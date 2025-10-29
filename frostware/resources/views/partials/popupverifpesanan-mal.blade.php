@@ -5,7 +5,7 @@
             <div class="popup-header">
                 <div class="order-title">
                     <div class="judul">Verifikasi Pesanan #</div>
-                    <div class="id-ord">ORD001</div>
+                    <div class="id-ord" id="pv-id">ORD<span></span></div>
                 </div>
                 <button class="icon-close" data-close>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#000" class="bi bi-x" viewBox="0 0 16 16">
@@ -21,12 +21,12 @@
 
                         <div class="field kiri">
                             <div class="label">Nama Pelanggan</div>
-                            <div class="value">Budi Santoso</div>
+                            <div class="value" id="pv-nama">-</div>
                         </div>
 
                         <div class="field kanan">
                             <div class="label">Tanggal Pesanan</div>
-                            <div class="value">15/09/2025</div>
+                            <div class="value" id="pv-tanggalPesan">-</div>
                         </div>
                     </div>
 
@@ -34,13 +34,13 @@
 
                         <div class="field kiri">
                             <div class="label">Email</div>
-                            <div class="value">budi.santoso@gmail.com</div>
+                            <div class="value" id="pv-email">-</div>
                         </div>
 
                         <div class="field kanan">
                             <div class="label">Jumlah Pesanan</div>
                             <div class="quantity">
-                                <div class="qty">120</div>
+                                <div class="qty" id="pv-jumlah">-</div>
                                 <div class="unit">balok</div>
                             </div>
                         </div>
@@ -50,33 +50,33 @@
 
                         <div class="field kiri">
                             <div class="label">Nomor Telepon</div>
-                            <div class="value">089765432100</div>
+                            <div class="value" id="pv-telp">-</div>
                         </div>
 
                         <div class="field kanan">
                             <div class="label">Tanggal Pengiriman</div>
-                            <div class="value">25/10/2025</div>
+                            <div class="value" id="pv-tanggalKirim">-</div>
                         </div>
                     </div>
 
                     <div class="alamat">
                         <div class="label">Alamat Pengiriman</div>
-                        <div class="value">Jl. Budi Sutomo No.50, Lamongan, Jawa Timur</div>
+                        <div class="value" id="pv-alamat">-</div>
                     </div>
                 </div>
-
+                <div id="pv-error" style="color:#D4183D; display:none; margin-top:6px;"></div>
                 <div class="status">
                     <div class="status-group">
                         <div class="label">Status</div>
-                        <div class="status-badge" data-status="Belum Diverifikasi">
-                            <div class="text">Belum Diverifikasi</div>
+                        <div class="status-badge" id="pv-status" status="">
+                            <div class="text">-</div>
                         </div>
                     </div>
                     <div class="actions">
-                        <button class="btn btn-tolak">
+                        <button class="btn btn-tolak" id="pv-tolak">
                             <div class="text">Tolak</div>
                         </button>
-                        <button class="btn btn-terima">
+                        <button class="btn btn-terima" id="pv-terima">
                             <div class="text">Terima</div>
                         </button>
                     </div>
@@ -266,6 +266,20 @@
                 .text {
                     font-size: 12px;
 
+                }
+            }
+
+            .status-badge[status='Diterima'] {
+                background-color: #00B940;
+                .text {
+                    color: white;
+                }
+            }
+
+            .status-badge[status='Ditolak'] {
+                background-color: #D4183D;
+                .text {
+                    color: white;
                 }
             }
 
