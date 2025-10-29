@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pesanan;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PesananController extends Controller
 {
@@ -14,14 +17,43 @@ class PesananController extends Controller
             ->orderBy('idPesanan', 'asc')
             ->get();
 
-        return view('kelolapesanan-mal', compact('pesanan'));
+        $summary = Pesanan::selectRaw('DATE(tanggalKirim) as tanggal, SUM(jumlahBalok) as total_balok')
+            ->whereRaw("status = 'Diterima'")
+            ->groupBy('tanggal')
+            ->orderBy('tanggal', 'asc')
+            ->get()
+            ->map(function ($r) {
+                return (object) [
+                    'tanggal' => Carbon::parse($r->tanggal)->format('d/m/Y'),
+                    'total_balok' => (int) $r->total_balok,
+                ];
+            });
+
+        return view('kelolapesanan-mal', compact('pesanan', 'summary'));
+    }
+
+    public function tampilkanRingkasan()
+    {
+        $rows = Pesanan::selectRaw('DATE(tanggalKirim) as tanggal, SUM(jumlahBalok) as total_balok')
+            ->whereRaw("status = 'Diterima'")
+            ->groupBy('tanggal')
+            ->orderBy('tanggal', 'asc')
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'tanggal' => Carbon::parse($r->tanggal)->format('d/m/Y'),
+                    'total_balok' => (int) $r->total_balok,
+                ];
+            });
+
+        return response()->json(['success' => true, 'data' => $rows]);
     }
 
     public function detailPesanan($id)
     {
         $pesanan = Pesanan::with('pelanggan')->find($id);
 
-        if (! $pesanan) {
+        if (!$pesanan) {
             return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
         }
 
@@ -31,36 +63,40 @@ class PesananController extends Controller
 
     public function terimaPesanan(Request $request, $id)
     {
+        try {
         $pesanan = Pesanan::find($id);
-
-        if (!$pesanan) {
+        if (! $pesanan) {
             return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
         }
 
-        // pastikan ada kolom totalBalok dan tanggalPengiriman di model
-        $tglKirim = $pesanan->tanggalKirim; // sesuaikan nama kolom jika beda
+        $tglKirim = $pesanan->tanggalKirim;
         $totalBalokPesanan = (int) $pesanan->jumlahBalok;
 
-        // hitung total balok yang sudah diterima pada tanggal yang sama (exclude current jika sudah diterima)
+        // hitung total yang sudah diterima (exclude current id)
         $sudahDiterima = Pesanan::hitungTotalBalok($tglKirim, $id);
 
-        // cek batas 2000
-        if ($sudahDiterima + $totalBalokPesanan <= 2000) {
-            // panggil method model untuk update status (misal set status = 'diterima')
-            $updated = $pesanan->updateStatus('Diterima');
-
-            if ($updated) {
-                return response()->json(['success' => true, 'message' => 'Pesanan diterima']);
-            }
-
-            return response()->json(['success' => false, 'message' => 'Gagal mengubah status pesanan'], 500);
+        if ($sudahDiterima + $totalBalokPesanan > 2000) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pesanan tidak dapat diterima karena jumlah pesanan untuk tanggal pengiriman ini sudah melebihi 2000 balok.'
+            ], 422);
         }
 
-        // tidak bisa diterima
-        return response()->json([
-            'success' => false,
-            'message' => 'Pesanan tidak dapat diterima: kuota balok untuk tanggal pengiriman sudah melebihi batas (2000).'
-        ], 422);
+        DB::beginTransaction();
+        $pesanan->status = 'Diterima';
+        $pesanan->save();
+        DB::commit();
+
+        return response()->json(['success' => true, 'message' => 'Pesanan diterima']);
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        Log::error('terimaPesanan error', [
+            'id' => $id,
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
+    }
     }
 
     // public function validasiPassword(string $password, string $konfirmasiPassword)

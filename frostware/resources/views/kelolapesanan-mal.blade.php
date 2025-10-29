@@ -440,6 +440,11 @@
                 }
             }
 
+            .nodata {
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.6);
+            }
+
         }
     </style>
 </head>
@@ -562,20 +567,19 @@
             </div>
             <div class="summary-description">Tanggal pengiriman dan jumlah pesanan yang diterima</div>
             <div class="summary-list">
-                <div class="summary-item">
-                    <div class="summary-date">25/10/2025</div>
-                    <div class="summary-qty">
-                        <div class="number">810</div>
-                        <div class="unit">balok</div>
+                @forelse($summary as $s)
+                    <div class="summary-item">
+                        <div class="summary-date">{{ $s->tanggal }}</div>
+                        <div class="summary-qty">
+                            <div class="number">{{ $s->total_balok }}</div>
+                            <div class="unit">balok</div>
+                        </div>
                     </div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-date">25/10/2025</div>
-                    <div class="summary-qty">
-                        <div class="number">810</div>
-                        <div class="unit">balok</div>
+                @empty
+                    <div class="nodata">
+                        Tidak ada data.
                     </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
@@ -637,6 +641,31 @@
             document.addEventListener('click', function () {
                 hideUserPanel();
             });
+
+            async function updateSummary() {
+                try {
+                    const res = await fetch('/ringkasan', { credentials: 'same-origin' });
+                    if (!res.ok) return;
+                    const j = await res.json();
+                    if (!j.success) return;
+                    const listEl = document.querySelector('.summary-list');
+                    if (!listEl) return;
+                    if (j.data.length === 0) {
+                        return;
+                    }
+                    listEl.innerHTML = j.data.map(item => `
+                        <div class="summary-item">
+                            <div class="summary-date">${item.tanggal}</div>
+                            <div class="summary-qty">
+                                <div class="number">${item.total_balok}</div>
+                                <div class="unit">balok</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    console.error('Gagal update summary', err);
+                }
+            }
 
             function closeModal() {
                 if (!modalRoot) return;
@@ -740,7 +769,7 @@
                                             pvStatusEl.querySelector('.text').textContent = 'Diterima';
                                             pvStatusEl.setAttribute('status', 'Diterima');
                                         }
-                                        
+
                                         // update status elemen actions
                                         const actionsEl = document.getElementById('actions');
                                         if (actionsEl) {
@@ -755,27 +784,19 @@
                                                 badge.setAttribute('data-status', 'Diterima');
                                             }
                                             row.setAttribute('data-status', 'Diterima');
-                                            
+
                                             // update button text to "Lihat Verifikasi"
                                             const actionBtn = row.querySelector('.action-button .action-button-text');
                                             if (actionBtn) {
                                                 actionBtn.textContent = 'Lihat Verifikasi';
                                             }
                                         }
+                                        // await updateSummary();
 
-                                        // // update status badge in table row (opsional, tanpa reload)
-                                        // if (row) {
-                                        //     // contoh: cari elemen badge/kolom status di row dan ubah teks & atribut
-                                        //     const badge = row.querySelector('.status-badge') || row.querySelector('[data-status]');
-                                        //     if (badge) {
-                                        //         badge.textContent = 'Diterima';
-                                        //         badge.setAttribute('data-status', 'Diterima');
-                                        //     }
-                                        //     row.setAttribute('data-status', 'Diterima');
-                                        // }
+                                        if (typeof updateSummary === 'function') {
+                                            try { await updateSummary(); } catch (e) { console.error('updateSummary failed', e); }
+                                        }
 
-                                        // jika ingin reload penuh uncomment:
-                                        // location.reload();
                                     } else {
                                         // tampilkan pesan dari server (422 atau error lain)
                                         const message = jr.message || 'Gagal menerima pesanan.';
@@ -805,6 +826,8 @@
                     }
                 });
             });
+
+            updateSummary();
 
             // close handlers (backdrop & close button)
             modalRoot?.addEventListener('click', function (e) {
