@@ -76,7 +76,7 @@
                         <button class="btn btn-tolak">
                             <div class="text">Tolak</div>
                         </button>
-                        <button class="btn btn-terima"></button>
+                        <button class="btn btn-terima">
                             <div class="text">Terima</div>
                         </button>
                     </div>
