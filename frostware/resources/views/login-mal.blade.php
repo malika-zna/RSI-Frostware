@@ -282,10 +282,9 @@
         <div class="content-section">
             <h1 class="content-title">Halo User!</h1>
             <h1 class="content-subtitle">Silakan isikan email dan password Anda untuk masuk ke dalam sistem</h1>
-            <p class="content-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p class="content-text">Selamat datang di Frostware, sistem manajemen yang dibangun untuk otomatisasi
+                seluruh proses bisnis PT Himalaya Karunia Abadi. Masuk sekarang untuk mengakses layanan es balok yang
+                terintegrasi, andal, dan mendorong kemajuan perusahaan melalui efisiensi operasional terbaik.</p>
         </div>
         <form class="form-box" action="{{ route('login.post') }}" method="POST">
             @csrf

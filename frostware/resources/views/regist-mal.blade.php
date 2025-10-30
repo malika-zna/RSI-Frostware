@@ -290,10 +290,9 @@
 
         <h1 class="content-title">Halo Customer!</h1>
         <h1 class="content-subtitle">Silakan lengkapi data Anda dan klik daftar untuk membuat akun baru!</h1>
-        <p class="content-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-            ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p class="content-text">Selamat datang di Frostware, sistem pemesanan es balok dari PT. Himalaya Karunia
+            Abadi. Daftarkan diri Anda untuk menikmati kemudahan pemesanan cepat dan pelacakan status pesanan yang
+            andal. Es balok kami diproduksi khusus untuk menjaga kesegaran tangkapan laut Anda.</p>
 
         <form class="form-box" action="{{ route('register.post') }}" method="POST">
             @csrf
