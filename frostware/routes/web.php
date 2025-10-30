@@ -43,9 +43,9 @@ Route::get('/produksi', function () {
 })->name('produksi');
 
 // Route popup konfirmasi (muncul setelah klik “Selesai Diproduksi”)
-// Route::get('/konfirmasi-produksi', function () {
-//     return view('popupproduksi-fad');
-// })->name('konfirmasi-produksi');
+Route::get('/konfirmasi-produksi', function () {
+    return view('popupproduksi-fad');
+})->name('konfirmasi-produksi');
 
 // ini bawaan laravel -mal
 
