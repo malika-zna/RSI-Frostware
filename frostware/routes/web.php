@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PesananController;
+use App\Http\Controllers\KelolaPesananController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -23,11 +23,11 @@ Route::get('/login', function () {
     return view('login-mal');
 })->name('login');
 
-Route::get('/ringkasan', [PesananController::class, 'tampilkanRingkasan'])->name('ringkasan');
-Route::get('/kelolapesanan', [PesananController::class, 'daftarPesanan'])->name('kelolapesanan');
-Route::get('/pesanan/{id}', [PesananController::class, 'detailPesanan'])->name('pesanan.detail');
-Route::post('/pesanan/{id}/terima', [PesananController::class, 'terimaPesanan'])->name('pesanan.terima');
-Route::post('/pesanan/{id}/tolak', [PesananController::class, 'tolakPesanan'])->name('pesanan.tolak');
+Route::get('/ringkasan', [KelolaPesananController::class, 'tampilkanRingkasan'])->name('ringkasan');
+Route::get('/kelolapesanan', [KelolaPesananController::class, 'daftarPesanan'])->name('kelolapesanan');
+Route::get('/pesanan/{id}', [KelolaPesananController::class, 'detailPesanan'])->name('pesanan.detail');
+Route::post('/pesanan/{id}/terima', [KelolaPesananController::class, 'terimaPesanan'])->name('pesanan.terima');
+Route::post('/pesanan/{id}/tolak', [KelolaPesananController::class, 'tolakPesanan'])->name('pesanan.tolak');
 
 // Route::get('/verifpesanan', function () {
 //     return view('popupverifpesanan-mal');

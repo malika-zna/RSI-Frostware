@@ -586,8 +586,8 @@
     </div>
 
 
-    @include('partials.popupverifpesanan-mal')
-    @include('partials.popupinputketerangan-mal')
+    @include('KelolaPesanan-mal.popupverifpesanan-mal')
+    @include('KelolaPesanan-mal.popupinputketerangan-mal')
 
     <script>
         (function () {

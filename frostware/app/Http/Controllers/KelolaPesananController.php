@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use Carbon\Carbon;
 // use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 
-class PesananController extends Controller
+class KelolaPesananController extends Controller
 {
     public function daftarPesanan()
     {
@@ -29,7 +29,7 @@ class PesananController extends Controller
                 ];
             });
 
-        return view('kelolapesanan-mal', compact('pesanan', 'summary'));
+        return view('KelolaPesanan-mal.kelolapesanan-mal', compact('pesanan', 'summary'));
     }
 
     public function tampilkanRingkasan()
