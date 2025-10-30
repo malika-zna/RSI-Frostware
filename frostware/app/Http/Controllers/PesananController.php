@@ -61,7 +61,7 @@ class PesananController extends Controller
         return response()->json(['success' => true, 'data' => $pesanan]);
     }
 
-    public function terimaPesanan(Request $request, $id)
+    public function terimaPesanan($id)
     {
         // try {
         $pesanan = Pesanan::find($id);
@@ -82,43 +82,32 @@ class PesananController extends Controller
             ], 422);
         }
 
-        // DB::beginTransaction();
         $pesanan->status = 'Diterima';
         $pesanan->save();
-        // DB::commit();
 
         return response()->json(['success' => true, 'message' => 'Pesanan diterima']);
-        // } catch (\Throwable $e) {
-        //     DB::rollBack();
-        //     Log::error('terimaPesanan error', [
-        //         'id' => $id,
-        //         'message' => $e->getMessage(),
-        //         'trace' => $e->getTraceAsString()
-        //     ]);
-        //     return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
-        // }
     }
 
     public function tolakPesanan(Request $request, $id)
     {
-        $validated = $request->validate([
-            'keterangan' => 'required|string|max:250',
-        ]);
+        // $validated = $request->validate([
+        //     'keterangan' => 'required|string|max:250',
+        // ]);
 
         $pesanan = Pesanan::find($id);
         if (!$pesanan) {
             return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
         }
 
-        try {
+        // try {
             $pesanan->status = 'Ditolak';
-            $pesanan->keteranganPenolakan = $validated['keterangan'];
+            $pesanan->keteranganPenolakan = $request->keterangan;
             $pesanan->save();
 
             return response()->json(['success' => true, 'message' => 'Pesanan ditolak']);
-        } catch (\Throwable $e) {
-            Log::error('tolakPesanan error', ['id' => $id, 'message' => $e->getMessage()]);
-            return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
-        }
+        // } catch (\Throwable $e) {
+        //     Log::error('tolakPesanan error', ['id' => $id, 'message' => $e->getMessage()]);
+        //     return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
+        // }
     }
 }

@@ -27,7 +27,7 @@ class Pesanan extends Model
         'tanggalKirim' => 'datetime',
     ];
 
-    public static function hitungTotalBalok($tanggalKirim, ?int $excludeId = null): int
+    public static function hitungTotalBalok($tanggalKirim, ?int $excludeId = null)
     {
         $query = self::whereDate('tanggalKirim', Carbon::parse($tanggalKirim)->toDateString())
             ->whereRaw("LOWER(status) = 'diterima'");
@@ -40,7 +40,7 @@ class Pesanan extends Model
     }
 
 
-    public function updateStatus(string $status): bool
+    public function updateStatus(string $status)
     {
         $this->status = $status;
         return (bool) $this->save();
