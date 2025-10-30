@@ -38,9 +38,9 @@ Route::post('/pesanan/{id}/tolak', [PesananController::class, 'tolakPesanan'])->
 // })->name('inputketerangan');
 
 // Route untuk halaman produksi (setelah login) -- Fad Bingung
-Route::get('/produksi', function () {
-    return view('produksi-fad');
-})->name('produksi');
+// Route::get('/produksi', function () {
+//     return view('produksi-fad');
+// })->name('produksi');
 
 // ini bawaan laravel -mal
 
