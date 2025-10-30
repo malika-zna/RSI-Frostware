@@ -170,6 +170,8 @@
       font-size: 13px;
       cursor: pointer;
       box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08);
+      text-decoration: none;
+      display: inline-block;
     }
 
     .btn-pill {
@@ -333,37 +335,36 @@
     <h2>DAFTAR PRODUKSI</h2>
 
     <div class="action-buttons">
-      <button class="btn-small" type="button">Lihat Aset</button>
-      <button class="btn-small" type="button">Urutkan Berdasarkan Waktu Pengiriman</button>
+  <a href="{{ url('/aset') }}" class="btn-small">Lihat Aset</a>
+  <a href="{{ url('/produksi?urutkan=1') }}" class="btn-small">Urutkan Berdasarkan Waktu Pengiriman</a>
     </div>
 
-    <!-- Card 1 -->
-    <div class="card">
-      <div class="card-content">
-        <h3>Nama Pelanggan</h3>
-        <p><strong>120 balok es</strong></p>
-        <p><span>Tanggal Pengiriman</span> : 10-10-2025</p>
-        <p><span>ID Pesanan</span> : ORD001</p>
+    @if(isset($daftarProduksi) && count($daftarProduksi) > 0)
+      @foreach($daftarProduksi as $pesanan)
+        <div class="card">
+          <div class="card-content">
+            <h3>Nama Pelanggan</h3>
+            <p><strong>{{ $pesanan->keteranganSelesai ?? '-' }}</strong></p>
+            <p><span>Tanggal Pengiriman</span> : {{ $pesanan->waktuPengiriman }}</p>
+            <p><span>ID Pesanan</span> : {{ $pesanan->idPesanan }}</p>
+          </div>
+          <div class="status">
+            <p>{{ $pesanan->statusProduksi }}</p>
+            @if($pesanan->statusProduksi == 'Belum Diproduksi')
+              <button class="done-btn" type="button">Selesai Diproduksi</button>
+            @endif
+          </div>
+        </div>
+      @endforeach
+    @else
+      <div style="background:#e0e0e0;color:#222;font-size:22px;font-weight:500;text-align:center;padding:48px 0;margin:32px 0;border-radius:8px;">
+        @if(request()->has('urutkan'))
+          Tidak Ada Pesanan yang Diurutkan
+        @else
+          Tidak Ada Pesanan untuk Diproduksi
+        @endif
       </div>
-      <div class="status">
-        <p>Belum Diproduksi</p>
-        <button class="done-btn" type="button">Selesai Diproduksi</button>
-      </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="card">
-      <div class="card-content">
-        <h3>Nama Pelanggan</h3>
-        <p><strong>220 balok es</strong></p>
-        <p><span>Tanggal Pengiriman</span> : 09-10-2025</p>
-        <p><span>ID Pesanan</span> : ORD002</p>
-      </div>
-      <div class="status">
-        <p>Belum Diproduksi</p>
-        <button class="done-btn" type="button">Selesai Diproduksi</button>
-      </div>
-    </div>
+    @endif
   </div>
 
 

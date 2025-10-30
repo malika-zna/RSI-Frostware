@@ -42,6 +42,11 @@ Route::get('/produksi', function () {
     return view('produksi-fad');
 })->name('produksi');
 
+// Route ini akan memuat file view laporkankerusakanaset-fad.blade.php 
+// Route::get('/asset', function () {
+//     return view('laporkankerusakanaset-fad');
+// });
+
 // ini bawaan laravel -mal
 
 // Route::get('/', function () {
