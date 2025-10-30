@@ -251,6 +251,61 @@
       box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
       opacity: 0.98;
     }
+
+    /* =========================
+       CSS MODAL POPUP PRODUKSI
+       ========================= */
+    #popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.18);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup-box {
+      background: #153E90;
+      color: #fff;
+      width: 380px;
+      padding: 32px 28px 28px 28px;
+      border-radius: 0;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .popup-box p {
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 38px;
+      margin-top: 0;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 32px;
+    }
+
+    .popup-buttons button {
+      background: #153E90;
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 22px;
+      cursor: pointer;
+      min-width: 100px;
+      height: 40px;
+      border-radius: 0;
+    }
   </style>
 </head>
 
@@ -310,9 +365,18 @@
       </div>
     </div>
   </div>
-</body>
 
-</html>
+
+  <!-- Modal Popup Overlay -->
+  <div id="popup-overlay">
+    <div class="popup-box">
+      <p>Konfirmasi Produksi Selesai?</p>
+      <div class="popup-buttons">
+        <button id="btn-cancel">Batal</button>
+        <button id="btn-confirm">Selesai</button>
+      </div>
+    </div>
+  </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -320,7 +384,18 @@
       btn.addEventListener('click', function () {
         btn.classList.add('pressed');
         setTimeout(function () { btn.classList.remove('pressed'); }, 180);
+        // Show modal popup overlay in-page
+        document.getElementById('popup-overlay').style.display = 'flex';
       });
     });
+    document.getElementById('btn-cancel').onclick = function(){
+      document.getElementById('popup-overlay').style.display = 'none';
+    };
+    document.getElementById('btn-confirm').onclick = function(){
+      document.getElementById('popup-overlay').style.display = 'none';
+    };
   });
 </script>
+</body>
+
+</html>
