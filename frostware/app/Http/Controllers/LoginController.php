@@ -77,12 +77,12 @@ class LoginController extends Controller
         if ($roleName === 'resepsionis') {
             return redirect()->route('kelolapesanan');
         }
-        // if ($roleName === 'manajer') {
-        //     return redirect()->route('staff.dashboard');
-        // }
-        // if ($roleName === 'driver') {
-        //     return redirect()->route('staff.dashboard');
-        // }
+        if ($roleName === 'manajer') {
+            return redirect()->route('manajer.dashboard');
+        }
+        if ($roleName === 'driver') {
+            return redirect()->route('driver.dashboard');
+        }
         if ($roleName === 'pj produksi') {
             return redirect()->route('produksi');
         }
