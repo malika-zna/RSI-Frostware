@@ -437,7 +437,7 @@
       <div class="card-content">
         <h3>{{ $pesanan->pelanggan->nama }}</h3>
         <p><strong>{{ $pesanan->jumlahBalok ?? 0 }} Balok Es</strong></p>
-        <p><span>Tanggal Pengiriman</span> : {{ $pesanan->tanggalKirim }}</p>
+        <p><span>Tanggal Pengiriman</span> : {{ $pesanan->tanggalKirim->format('d/m/Y') }}</p>
         <p><span>ID Pesanan</span> : {{ $pesanan->idPesanan }}</p>
       </div>
       <div class="status">
