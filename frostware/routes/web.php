@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProduksiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
@@ -38,9 +39,11 @@ Route::post('/pesanan/{id}/tolak', [KelolaPesananController::class, 'tolakPesana
 // })->name('inputketerangan');
 
 // Route untuk halaman produksi (setelah login) -- Fad Bingung
-Route::get('/produksi', function () {
-    return view('produksi-fad');
-})->name('produksi');
+// Route::get('/produksi', function () {
+//     return view('produksi-fad');
+// })->name('produksi');
+
+Route::get('/produksi', [ProduksiController::class, 'ambilDaftarProduksi'])->name('produksi');
 
 // Route ini akan memuat file view laporkankerusakanaset-fad.blade.php 
 // Route::get('/asset', function () {

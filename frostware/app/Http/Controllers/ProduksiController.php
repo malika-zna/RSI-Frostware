@@ -11,15 +11,15 @@ class ProduksiController extends Controller
     public function ambilDaftarProduksi()
     {
         // Mengambil pesanan dengan status produksi yang aktif
-        $daftarProduksi = Pesanan::where('statusProduksi', 'Diterima')->get();
+        $daftarProduksi = Pesanan::where('status', 'Diterima')->get();
         return view('produksi-fad', ['daftarProduksi' => $daftarProduksi]);
     }
 
     // Ambil urutan produksi berdasarkan waktu pengiriman
     public function ambilUrutanProduksi()
     {
-        $daftarUrutanProduksi = Pesanan::where('statusProduksi', 'Diterima')
-            ->orderBy('waktuPengiriman', 'asc')
+        $daftarUrutanProduksi = Pesanan::where('status', 'Diterima')
+            ->orderBy('tanggalKirim', 'asc')
             ->get();
         return view('produksi-fad', ['daftarProduksi' => $daftarUrutanProduksi]);
     }
