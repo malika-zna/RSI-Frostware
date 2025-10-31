@@ -435,14 +435,14 @@
     @foreach($daftarProduksi as $pesanan)
     <div class="card">
       <div class="card-content">
-        <h3>Nama Pelanggan</h3>
-        <p><strong>{{ $pesanan->keteranganSelesai ?? '-' }}</strong></p>
-        <p><span>Tanggal Pengiriman</span> : {{ $pesanan->waktuPengiriman }}</p>
+        <h3>{{ $pesanan->pelanggan->nama }}</h3>
+        <p><strong>{{ $pesanan->jumlahBalok ?? 0 }} Balok Es</strong></p>
+        <p><span>Tanggal Pengiriman</span> : {{ $pesanan->tanggalKirim->format('d/m/Y') }}</p>
         <p><span>ID Pesanan</span> : {{ $pesanan->idPesanan }}</p>
       </div>
       <div class="status">
-        <p>{{ $pesanan->statusProduksi }}</p>
-        @if($pesanan->statusProduksi == 'Belum Diproduksi')
+        <p>{{ $pesanan->status ? 'Belum Diproduksi' : '-' }}</p>
+        @if($pesanan->status == 'Diterima')
         <button class="done-btn" type="button">Selesai Diproduksi</button>
         @endif
       </div>

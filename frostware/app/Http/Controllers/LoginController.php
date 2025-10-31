@@ -89,9 +89,9 @@ class LoginController extends Controller
         // if ($roleName === 'pj keuangan') {
         //     return redirect()->route('staff.dashboard');
         // }
-        // if ($roleName === 'pj pemeliharaan') {
-        //     return redirect()->route('staff.dashboard');
-        // }
+        if ($roleName === 'pj pemeliharaan') {
+            return redirect()->route('kelolaaset');
+        }
         // return redirect()->route('login');
     }
 
