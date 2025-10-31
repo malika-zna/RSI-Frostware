@@ -436,7 +436,7 @@
     <div class="card">
       <div class="card-content">
         <h3>Nama Pelanggan</h3>
-        <p><strong>{{ $pesanan->status ? 'Belum Diproduksi' : '-' }}</strong></p>
+        <p><strong>{{ $pesanan->jumlahBalok ?? 0 }} Balok Es</strong></p>
         <p><span>Tanggal Pengiriman</span> : {{ $pesanan->tanggalKirim }}</p>
         <p><span>ID Pesanan</span> : {{ $pesanan->idPesanan }}</p>
       </div>
