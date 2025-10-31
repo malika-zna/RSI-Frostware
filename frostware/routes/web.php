@@ -43,7 +43,15 @@ Route::post('/pesanan/{id}/tolak', [KelolaPesananController::class, 'tolakPesana
 //     return view('produksi-fad');
 // })->name('produksi');
 
+// Rute untuk menampilkan daftar produksi
 Route::get('/produksi', [ProduksiController::class, 'ambilDaftarProduksi'])->name('produksi');
+
+// Rute untuk Halaman Produksi yang Diurutkan berdasarkan tanggalKirim
+// Ini dipanggil oleh method ambilUrutanProduksi()
+Route::get('/produksi/urutkan', [ProduksiController::class, 'ambilUrutanProduksi'])->name('produksi.urutkan');
+
+// Tambahkan rute untuk proses selesai produksi (asumsi ini adalah POST atau PUT)
+Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'prosesSelesaiProduksi'])->name('produksi.selesai');
 
 // Route ini akan memuat file view laporkankerusakanaset-fad.blade.php 
 // Route::get('/asset', function () {

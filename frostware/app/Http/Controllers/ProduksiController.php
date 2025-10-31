@@ -25,11 +25,22 @@ class ProduksiController extends Controller
     }
 
     // Proses selesai produksi
-    public function prosesSelesaiProduksi($idPesanan)
+    public function prosesSelesaiProduksi(Request $request, $idPesanan)
     {
+        // Temukan pesanan, atau lemparkan 404 jika tidak ada (findOrFail)
         $pesanan = Pesanan::findOrFail($idPesanan);
-        $pesanan->statusProduksi = 'Selesai';
+
+        // Logika TOGGLE:
+        if ($pesanan->status == 'Diterima') {
+            // Jika saat ini 'Diterima' (Belum Diproduksi), ubah menjadi Selesai Diproduksi
+            $pesanan->status = 'Selesai Diproduksi';
+        } else if ($pesanan->status == 'Selesai Diproduksi') {
+            // Jika saat ini 'Selesai Diproduksi', ubah kembali menjadi Diterima (Belum Diproduksi)
+            $pesanan->status = 'Diterima';
+        }
+
         $pesanan->save();
+
         // Kembalikan status terbaru ke view
         return response()->json(['status' => 'success', 'idPesanan' => $idPesanan]);
     }

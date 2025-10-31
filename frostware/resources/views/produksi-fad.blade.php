@@ -5,6 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daftar Produksi</title>
+  <!-- [PERBAIKAN 1]: Tambahkan meta tag CSRF untuk Laravel -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -259,6 +262,8 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      /* Perubahan 1: Mengatur card untuk menyamakan tinggi konten */
+      align-items: stretch;
     }
 
     .card-content {
@@ -285,13 +290,34 @@
 
     .status {
       text-align: right;
+      /* Perubahan 2: Menggunakan Flexbox pada container status */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      /* Untuk mendorong tombol ke bawah */
+      align-items: flex-end;
+      min-height: 100%;
+      /* Pastikan status mengisi seluruh tinggi card */
     }
 
-    .status p {
+    .status .status-display {
+      /* Menggunakan margin-bottom pada container status display agar terpisah dari tombol */
+      margin-bottom: 0;
+    }
+
+    .status .status-display p {
+      /* Styling untuk status yang dinamis */
       color: #b3b3b3;
       font-weight: 600;
       font-size: 15px;
       margin-bottom: 20px;
+      /* Hapus margin-bottom default yang terlalu besar */
+    }
+
+    .status .status-display p[style*="bold"] {
+      /* Status Selesai */
+      color: #4CAF50 !important;
+      font-weight: 700 !important;
     }
 
     /* button-style for finished state with press effect */
@@ -428,22 +454,35 @@
 
     <div class="action-buttons">
       <a href="{{ url('/aset') }}" class="btn-small">Lihat Aset</a>
-      <a href="{{ url('/produksi?urutkan=1') }}" class="btn-small">Urutkan Berdasarkan Waktu Pengiriman</a>
+      <!-- Pastikan rute sudah didefinisikan di web.php -->
+      <a href="{{ route('produksi.urutkan') }}" class="btn-small">Urutkan Berdasarkan Waktu Pengiriman</a>
     </div>
 
     @if(isset($daftarProduksi) && count($daftarProduksi) > 0)
     @foreach($daftarProduksi as $pesanan)
-    <div class="card">
+    <div class="card" data-pesanan-id="{{ $pesanan->idPesanan }}">
       <div class="card-content">
+        <!-- Asumsi relasi pelanggan() ada dan sudah dimuat, dan Model Akun ada -->
         <h3>{{ $pesanan->pelanggan->nama }}</h3>
-        <p><strong>{{ $pesanan->jumlahBalok ?? 0 }} Balok Es</strong></p>
-        <p><span>Tanggal Pengiriman</span> : {{ $pesanan->tanggalKirim->format('d/m/Y') }}</p>
+        <p><strong>{{ $pesanan->jumlahBalok ?? 0 }} balok es</strong></p>
+        <!-- Pastikan tanggalKirim adalah objek Carbon -->
+        <p><span>Tanggal Pengiriman</span> : {{ $pesanan->tanggalKirim->format('d-m-Y') }}</p>
         <p><span>ID Pesanan</span> : {{ $pesanan->idPesanan }}</p>
       </div>
       <div class="status">
-        <p>{{ $pesanan->status ? 'Belum Diproduksi' : '-' }}</p>
-        @if($pesanan->status == 'Diterima')
-        <button class="done-btn" type="button">Selesai Diproduksi</button>
+        <!-- Area status yang akan di-update secara dinamis -->
+        <div class="status-display" id="status-{{ $pesanan->idPesanan }}">
+          @if (isset($pesanan->statusProduksi) && $pesanan->statusProduksi === 'Selesai')
+          <p style="color: #4CAF50; font-weight: bold;">Selesai Diproduksi</p>
+          @else
+          <!-- Tampilkan status default jika belum selesai -->
+          <p>{{ $pesanan->status == 'Diterima' ? 'Belum Diproduksi' : ($pesanan->statusProduksi ?? 'Belum Diproduksi') }}</p>
+          @endif
+        </div>
+
+        <!-- Tombol hanya tampil jika status pesanan adalah 'Diterima' dan belum selesai diproduksi -->
+        @if($pesanan->status == 'Diterima' && (!isset($pesanan->statusProduksi) || $pesanan->statusProduksi !== 'Selesai'))
+        <button class="done-btn" type="button" data-id="{{ $pesanan->idPesanan }}">Selesai Diproduksi</button>
         @endif
       </div>
     </div>
@@ -451,8 +490,8 @@
     @else
     <div class="empty-state-message">
       <span>
-        @if(request()->has('urutkan'))
-        Tidak Ada Pesanan yang Diurutkan
+        @if(Route::is('produksi.urutkan'))
+        Tidak Ada Pesanan yang Siap Diproduksi
         @else
         Tidak Ada Pesanan untuk Diproduksi
         @endif
@@ -462,7 +501,7 @@
   </div>
 
 
-  <div id="popup-overlay">
+  <div id="popup-overlay" style="display: none;">
     <div class="popup-box">
       <p>Konfirmasi Produksi Selesai?</p>
       <div class="popup-buttons">
@@ -473,6 +512,9 @@
   </div>
 
   <script>
+    // Variabel global untuk menyimpan ID pesanan yang sedang diproses
+    let currentPesananId = null;
+
     // Fungsi untuk mendapatkan nama hari dalam Bahasa Indonesia
     function getNamaHari(dayIndex) {
       const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -495,42 +537,115 @@
       }
     }
 
+    // FUNGSI UTAMA: Untuk memperbarui status di UI tanpa reload (Sesuai Sequence)
+    function tampilkanStatusProduksiSelesai(idPesanan, statusText = 'Selesai Diproduksi') {
+      const statusDisplay = document.getElementById(`status-${idPesanan}`);
+      const doneButton = document.querySelector(`.done-btn[data-id="${idPesanan}"]`);
+
+      if (statusDisplay) {
+        // Perbarui teks status dengan warna hijau tebal
+        statusDisplay.innerHTML = `<p style="color: #4CAF50; font-weight: bold;">${statusText}</p>`;
+      }
+
+      // Hapus tombol "Selesai Diproduksi"
+      if (doneButton) {
+        doneButton.remove();
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       updateTanggal();
 
       // LOGIKA USER PANEL (TOGGLE DROPDOWN)
       const toggleButton = document.getElementById('toggle-user-panel');
       const userPanel = document.getElementById('user-panel');
+      if (toggleButton && userPanel) {
+        toggleButton.addEventListener('click', function(event) {
+          event.preventDefault();
+          userPanel.style.display = userPanel.style.display === 'block' ? 'none' : 'block';
+        });
 
-      toggleButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        userPanel.style.display = userPanel.style.display === 'block' ? 'none' : 'block';
-      });
+        document.addEventListener('click', function(event) {
+          const navbarUserArea = document.getElementById('navbar-user-area');
+          if (navbarUserArea && !navbarUserArea.contains(event.target)) {
+            userPanel.style.display = 'none';
+          }
+        });
+      }
 
-      // Menutup panel saat mengklik di luar panel
-      document.addEventListener('click', function(event) {
-        const navbarUserArea = document.getElementById('navbar-user-area');
-        if (navbarUserArea && !navbarUserArea.contains(event.target)) {
-          userPanel.style.display = 'none';
-        }
-      });
+      const popupOverlay = document.getElementById('popup-overlay');
+      const btnConfirm = document.getElementById('btn-confirm');
+      const btnCancel = document.getElementById('btn-cancel');
 
-      // LOGIKA POPUP KONFIRMASI 
-      document.querySelectorAll('.done-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          btn.classList.add('pressed');
-          setTimeout(function() {
-            btn.classList.remove('pressed');
+      // 1. Menangani klik tombol "Selesai Diproduksi" (Munculkan Popup)
+      document.querySelectorAll('.done-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+          // Simpan ID pesanan yang diklik
+          currentPesananId = event.currentTarget.getAttribute('data-id');
+
+          // Animasi tombol
+          event.currentTarget.classList.add('pressed');
+          setTimeout(() => {
+            event.currentTarget.classList.remove('pressed');
           }, 180);
-          document.getElementById('popup-overlay').style.display = 'flex';
+
+          // Tampilkan popup
+          popupOverlay.style.display = 'flex';
         });
       });
-      document.getElementById('btn-cancel').onclick = function() {
-        document.getElementById('popup-overlay').style.display = 'none';
+
+      // 2. Menangani klik tombol "Batal"
+      btnCancel.onclick = function() {
+        popupOverlay.style.display = 'none';
+        currentPesananId = null; // Reset ID
       };
-      document.getElementById('btn-confirm').onclick = function() {
-        document.getElementById('popup-overlay').style.display = 'none';
-      };
+
+      // 3. Menangani klik tombol "Selesai" (Proses Update Status via AJAX)
+      btnConfirm.addEventListener('click', async () => {
+        if (currentPesananId) {
+          // Sembunyikan popup
+          popupOverlay.style.display = 'none';
+
+          // Dapatkan token CSRF (Penting untuk Laravel)
+          const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+          if (!csrfToken) {
+            console.error('CSRF token tidak ditemukan. Pastikan meta tag CSRF ada di <head>.');
+            return;
+          }
+
+          try {
+            // [UPDATE URL]: Sesuaikan dengan rute Controller Anda
+            // Asumsi rute POST ke Controller adalah 'produksi/selesai/{idPesanan}'
+            const response = await fetch(`/produksi/selesai/${currentPesananId}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+              },
+              // Kirim body kosong karena ID sudah ada di URL
+              body: JSON.stringify({})
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+              // Panggil fungsi pembaruan UI
+              tampilkanStatusProduksiSelesai(data.idPesanan);
+
+            } else {
+              console.error('Gagal menyelesaikan produksi:', data);
+              // Logika untuk menampilkan pesan gagal ke pengguna
+            }
+
+          } catch (error) {
+            console.error('Terjadi error saat memproses produksi:', error);
+            // Logika untuk menampilkan pesan error koneksi
+          } finally {
+            currentPesananId = null;
+          }
+        }
+      });
     });
   </script>
 </body>
