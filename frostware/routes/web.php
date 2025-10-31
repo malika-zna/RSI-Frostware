@@ -47,6 +47,10 @@ Route::get('/produksi', function () {
 //     return view('laporkankerusakanaset-fad');
 // });
 
+Route::get('/kelolaaset', function () {
+    return view('KelolaAset-can.dashboard');
+})->name('kelolaaset');
+
 // ini bawaan laravel -mal
 
 // Route::get('/', function () {
