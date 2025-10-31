@@ -22,7 +22,7 @@ return new class extends Migration {
                 'Belum Diverifikasi',
                 'Diterima',
                 'Ditolak',
-                'Selesai Produksi',
+                'Selesai Diproduksi',
                 'Siap Dikirim',
                 'Selesai'
             ])->default('Belum Diverifikasi');

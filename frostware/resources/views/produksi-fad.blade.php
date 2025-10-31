@@ -399,7 +399,7 @@
       <h1>Frostware</h1>
     </div>
     <div class="navbar-right" id="navbar-user-area">
-      <a class="back-link" href="#" id="toggle-user-panel" title="Buka panel pengguna">
+      <a class="back-link" href="#" id="toggle-user-panel" title="Lihat Profil">
         <div>Penanggung Jawab Produksi</div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="#FFF" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
           <path
