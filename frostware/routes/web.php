@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KelolaPesananController;
+use App\Http\Controllers\PengirimanController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -25,6 +26,8 @@ Route::get('/login', function () {
 
 Route::get('/ringkasan', [KelolaPesananController::class, 'tampilkanRingkasan'])->name('ringkasan');
 Route::get('/kelolapesanan', [KelolaPesananController::class, 'daftarPesanan'])->name('kelolapesanan');
+Route::get('/manajer/dashboard', [PengirimanController::class, 'tampilkanDashboardManajer'])->name('manajer.dashboard');
+Route::get('/driver/dashboard', [PengirimanController::class, 'tampilkanDashboardDriver'])->name('driver.dashboard');
 Route::get('/pesanan/{id}', [KelolaPesananController::class, 'detailPesanan'])->name('pesanan.detail');
 Route::post('/pesanan/{id}/terima', [KelolaPesananController::class, 'terimaPesanan'])->name('pesanan.terima');
 Route::post('/pesanan/{id}/tolak', [KelolaPesananController::class, 'tolakPesanan'])->name('pesanan.tolak');
@@ -42,7 +45,7 @@ Route::get('/produksi', function () {
     return view('produksi-fad');
 })->name('produksi');
 
-// Route ini akan memuat file view laporkankerusakanaset-fad.blade.php 
+// Route ini akan memuat file view laporkankerusakanaset-fad.blade.php
 // Route::get('/asset', function () {
 //     return view('laporkankerusakanaset-fad');
 // });
