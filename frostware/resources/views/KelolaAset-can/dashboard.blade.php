@@ -9,16 +9,7 @@
         rel="stylesheet">
     <title>Dashboard Pemeliharaan - Frostware</title>
     <style>
-        /* CSS layout*/
-        /* body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: #FFFFFF;
-            width: 1280px;
-            height: 832px;
-            position: relative;
-        } */
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -32,41 +23,8 @@
             background: #FFFFFF;
         }
 
-        /* Header */
-        /* header {
-            position: absolute;
-            width: 1280px;
-            height: 90px;
-            left: 0;
-            top: 0;
-            background: #1C398E;
-            border-bottom: 1px solid #000000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 25px 40px;
-            color: #FFFFFF;
-        }
-        header h1 {
-            font-weight: 700;
-            font-size: 32px;
-            line-height: 39px;
-            margin: 0;
-        }
-        header .profile {
-            text-align: right;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        header .profile small {
-            display: block;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13px;
-            font-weight: 400;
-            margin-top: 3px;
-        } */
-
-        header { /* bg header */
+        /* bg header */
+        header {
             background-color: #1C398E;
             box-shadow: -5px 5px 8px rgba(0, 0, 0, 0.25);
             width: 100vw;
@@ -139,7 +97,6 @@
             height: fit-content;
             padding: 20px 25px 15px 25px;
             background: #000;
-            /* display: inline-flex; */
             display: none;
             flex-direction: column;
             justify-content: flex-start;
@@ -155,35 +112,25 @@
                 color: #fff;
                 font-size: 16px;
                 font-family: Parkinsans;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 600;
                 margin-bottom: 5px;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
 
             .user-email {
                 color: rgba(255, 255, 255, 0.60);
                 font-size: 12px;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
 
             .user-name {
                 color: #fff;
                 font-size: 14px;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
 
             .user-divider {
                 align-self: stretch;
                 height: 5px;
-                /* position: relative; */
                 border-bottom: 1px solid rgba(255, 255, 255, 0.60);
                 box-sizing: border-box;
                 margin-top: 5px;
@@ -195,7 +142,6 @@
             }
 
             .user-actions {
-                /* overflow: hidden; */
                 display: inline-flex;
                 justify-content: flex-end;
                 align-items: center;
@@ -213,30 +159,24 @@
             .logout-text {
                 color: #000;
                 font-size: 14px;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
         }
 
         /* body konten*/
         .container {
             position: absolute;
-            top: 111px; /* 90px + 21px margin */
+            top: 111px;
             left: 40px;
-            /* width: 1200px; */
-            width: 100%; /* ubah width */
-            max-width: 1280px; /* batas width maks */ 
-            /* height: 700px; */
+            right: 40px;
+            width: 100%;
             display: flex;
             justify-content: space-between;
         }
 
         /* Bagian kiri dan kanan */
         .left, .right {
-            /* width: 540px; */
-            width: 48%; /* ubah width */
+            width: 48%;
             position: relative;
         }
 
@@ -257,34 +197,17 @@
             color: #FFFFFF;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
-            cursor: pointer;
         }
         
-        /* Title Button Positioning */
-        .left .btn-main {
-            position: absolute;
-            left: 217px;
-            top: 12px;
-        }
-        .right .btn-main {
-            position: absolute;
-            left: 170px;
-            top: 12px;
+         /* batas kiri kanan konten */
+        .left, .right {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Garis pembatas vertikal */
-        /* .container::after {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 600px;
-            width: 1px;
-            height: 700px;
-            background: rgba(0, 0, 0, 0.1);
-        } */
-
-        /* Card umum */
+        /* Card */
         .card {
             box-sizing: border-box;
             display: flex;
@@ -296,12 +219,30 @@
             background: #FFFFFF;
             border: 1px solid #AAAAAA;
             border-radius: 15px;
-            margin-top: 100px;
+            margin-top: 50px;
             min-height: 260px;
         }
 
         /* Badge */
         .badge {
+            width: 211px;
+            height: 58px;
+            box-sizing: border-box;
+            background: #1C398E;
+            border: 1px solid #1C398E;
+            border-radius: 15px;
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .btn-small {
             box-sizing: border-box;
             display: inline-flex;
             justify-content: center;
@@ -316,14 +257,11 @@
             line-height: 16px;
             color: #030213;
             margin-bottom: 10px;
+            cursor: pointer;
         }
 
-        /* Secondary badge for "Lihat Laporan Kerusakan" */
-        .badge-small {
-            padding: 5px 10px;
-            height: 27.33px;
-            font-size: 12px;
-            margin-bottom: 10px;
+        .btn-small:hover {
+            background: #162d70;
         }
 
         /* Table styling */
@@ -399,7 +337,9 @@
             <span class="user">Penanggung Jawab Pemeliharaan</span>
         </div>
         <div class="date">
-            <p>Minggu, 28/09/2025</p>
+            <p class="hari">Minggu, </p>
+            <p class="tanggal">28/09/2025</p>
+
         </div>
     </div>
 </header>
@@ -421,10 +361,12 @@
 <div class="container">
 
     <section class="left">
-        <button class="btn-main">Daftar Aset</button>
+        <div class="badge">Daftar Aset</div>
+
+        <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card">
-            <div class="badge">Aktifkan Mode Edit</div>
+            <button class="btn-small">Aktifkan Mode Edit</button>
 
             <table>
                 <thead>
@@ -463,12 +405,17 @@
         </div>
     </section>
 
+    <div style="width:1px; background:#000; opacity:.1; align-self: stretch;"></div>
+    
     <section class="right">
-        <button class="btn-main">Log Aktivitas</button>
+        <div class="badge">Log Aktivitas</div>
+
+        <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card" style="min-height: 342px;">
-            <div class="badge">Aktifkan Mode Edit</div>
-            <div class="badge badge-small">Lihat Laporan Kerusakan</div>
+            <button class="btn-small">Aktifkan Mode Edit</button>
+            <button class="btn-small">Lihat Laporan Kerusakan</button>
+
 
             <table>
                 <thead>
@@ -509,12 +456,29 @@
 
 </div>
 
-<!-- tambahan js -->
+<!-- js -->
 <script>
+// header user
 function togglePanel() {
     const panel = document.getElementById('userPanel');
     panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
     }
+
+// hari dan tanggal
+function updateDate() {
+                const now = new Date();
+                const hariId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const hari = hariId[now.getDay()];
+                const dd = String(now.getDate()).padStart(2, '0');
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const yyyy = now.getFullYear();
+                const hariEl = document.querySelector('.date .hari');
+                const tanggalEl = document.querySelector('.date .tanggal');
+                if (hariEl) hariEl.textContent = hari + ', ';
+                if (tanggalEl) tanggalEl.textContent = `${dd}/${mm}/${yyyy}`;
+            }
+
+            updateDate();
 </script>
 
 </body>
