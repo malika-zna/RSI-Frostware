@@ -167,8 +167,8 @@
         .container {
             position: absolute;
             top: 111px;
-            left: 40px;
-            right: 40px;
+            /* left: 40px;
+            right: 40px; */
             width: 100%;
             display: flex;
             justify-content: space-between;

@@ -65,6 +65,25 @@ Route::get('/kelolaaset', function () {
     return view('KelolaAset-can.dashboard');
 })->name('kelolaaset');
 
+// tambahan buat punya mas zain -malika yang nambahin
+Route::get('/kelolapengirimanmjr', function () {
+    return view('manajer.kelola-pengiriman');
+})->name('kelolapengirimanmjr');
+
+Route::get('/kelolapengirimandrv', function () {
+    return view('driver.kelola-pengiriman');
+})->name('kelolapengirimandrv');
+
+
+// tambahan buat punya jia -malika yang nambahin
+Route::get('/buatpesanan', function () {
+    return view('Pelanggan-jia.buat-pesanan');
+})->name('buatpesanan');
+
+Route::get('/beranda-pelanggan', function () {
+    return view('Pelanggan-jia.dashboard');
+})->name('beranda-pelanggan');
+
 // ini bawaan laravel -mal
 
 // Route::get('/', function () {

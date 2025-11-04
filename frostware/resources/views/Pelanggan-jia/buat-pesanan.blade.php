@@ -4,7 +4,8 @@
 <div class="dashboard-container">
     <h2>Buat Pesanan Baru</h2>
 
-    <form action="{{ route('pesanan.store') }}" method="POST">
+    <form action="" method="POST">
+        {{-- <form action="{{ route('pesanan.store') }}" method="POST"></form> --}}
         @csrf
         <div class="mb-3">
             <label>Tanggal Kirim</label>
@@ -22,7 +23,8 @@
         </div>
 
         <button type="submit" class="btn-primary">Simpan Pesanan</button>
-        <a href="{{ route('dashboard.pelanggan') }}" class="btn-secondary">Kembali</a>
+        <a href="" class="btn-secondary">Kembali</a>
+        {{-- <a href="{{ route('dashboard.pelanggan') }}" class="btn-secondary">Kembali</a> --}}
     </form>
 </div>
 @endsection
