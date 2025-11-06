@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use Carbon\Carbon;
 // use Illuminate\Support\Facades\DB;
-// use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class KelolaPesananController extends Controller
 {
     public function daftarPesanan()
     {
-        $allowedStatuses = ['Belum Diverifikasi', 'Diterima', 'Ditolak'];
+        $statusTampil = ['Belum Diverifikasi', 'Diterima', 'Ditolak'];
 
         $pesanan = Pesanan::with('pelanggan')
-            ->whereIn('status', $allowedStatuses)
+            ->whereRaw('status IN ("' . implode('","', $statusTampil) . '")')
+            ->whereDate('tanggalKirim', '>=', Carbon::tomorrow()->format('Y-m-d'))
             ->orderBy('status', 'asc')
             ->orderBy('idPesanan', 'asc')
             ->get();
@@ -32,6 +33,8 @@ class KelolaPesananController extends Controller
                 ];
             });
 
+        $this->tolakTerlewat();
+
         return view('KelolaPesanan-mal.kelolapesanan-mal', compact('pesanan', 'summary'));
     }
 
@@ -39,12 +42,13 @@ class KelolaPesananController extends Controller
     {
         $rows = Pesanan::selectRaw('DATE(tanggalKirim) as tanggal, SUM(jumlahBalok) as total_balok')
             ->whereRaw("status = 'Diterima'")
+            ->whereDate('tanggalKirim', '>=', Carbon::tomorrow()->format('Y-m-d'))
             ->groupBy('tanggal')
             ->orderBy('tanggal', 'asc')
             ->get()
             ->map(function ($r) {
                 return [
-                    'tanggal' => Carbon::parse($r->tanggal)->format('d/m/Y'),
+                    'tanggal' => $r->tanggal ? Carbon::parse($r->tanggal)->format('d/m/Y') : null,
                     'total_balok' => (int) $r->total_balok,
                 ];
             });
@@ -112,5 +116,18 @@ class KelolaPesananController extends Controller
         //     Log::error('tolakPesanan error', ['id' => $id, 'message' => $e->getMessage()]);
         //     return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
         // }
+    }
+
+    private function tolakTerlewat()
+    {
+        $today = Carbon::today()->format('Y-m-d');
+        $message = 'Resepsionis tidak menerima pesanan Anda';
+
+        return Pesanan::whereRaw("status = 'Belum Diverifikasi'")
+            ->whereDate('tanggalKirim', '<=', $today)
+            ->update([
+                'status' => 'Ditolak',
+                'keteranganPenolakan' => $message,
+            ]);
     }
 }
