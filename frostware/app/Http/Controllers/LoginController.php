@@ -71,9 +71,9 @@ class LoginController extends Controller
 
         // redirect berdasarkan role (sesuaikan nama role)
         $roleName = $akun->role->role;
-        // if ($roleName === 'pelanggan') {
-        //     return redirect()->route('admin.dashboard');
-        // }
+        if ($roleName === 'pelanggan') {
+            return redirect()->route('beranda-pelanggan');
+        }
         if ($roleName === 'resepsionis') {
             return redirect()->route('kelolapesanan');
         }

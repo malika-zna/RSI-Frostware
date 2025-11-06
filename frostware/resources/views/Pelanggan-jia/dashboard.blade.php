@@ -1,6 +1,20 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@section('content')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="svg" href="/fw.svg">
+    <title>Login</title>
+
+</head>
+<body>
+
 <div class="dashboard-container">
 
     <div class="dashboard-header">
@@ -55,4 +69,6 @@
         </div>
     </div>
 </div>
-@endsection
+
+</body>
+</html>

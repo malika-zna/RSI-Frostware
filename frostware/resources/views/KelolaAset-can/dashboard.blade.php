@@ -23,12 +23,15 @@
             background: #FFFFFF;
         }
 
+        button {
+            background: none;
+            border: none;}
+
         /* bg header */
         header {
             background-color: #1C398E;
             box-shadow: -5px 5px 8px rgba(0, 0, 0, 0.25);
             width: 100vw;
-            height: 90px;
             box-sizing: border-box;
             top: 0px;
             left: 0px;
@@ -43,7 +46,6 @@
                 font-size: 26px;
                 font-weight: 600;
                 margin-right: auto;
-                font-family: Parkinsans;
             }
 
             .head-info {
@@ -97,6 +99,7 @@
             height: fit-content;
             padding: 20px 25px 15px 25px;
             background: #000;
+            /* display: inline-flex; */
             display: none;
             flex-direction: column;
             justify-content: flex-start;
@@ -107,30 +110,40 @@
             right: 20px;
             top: 50px;
             z-index: 100;
-
+            
             .user-role {
                 color: #fff;
                 font-size: 16px;
                 font-family: Parkinsans;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 600;
                 margin-bottom: 5px;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
             }
 
             .user-email {
                 color: rgba(255, 255, 255, 0.60);
                 font-size: 12px;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
             }
 
             .user-name {
                 color: #fff;
                 font-size: 14px;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
             }
 
             .user-divider {
                 align-self: stretch;
                 height: 5px;
+                /* position: relative; */
                 border-bottom: 1px solid rgba(255, 255, 255, 0.60);
                 box-sizing: border-box;
                 margin-top: 5px;
@@ -142,6 +155,7 @@
             }
 
             .user-actions {
+                /* overflow: hidden; */
                 display: inline-flex;
                 justify-content: flex-end;
                 align-items: center;
@@ -157,9 +171,12 @@
             }
 
             .logout-text {
-                color: #000;
+                color: #fff;
                 font-size: 14px;
+                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
+                /* line-height: 16px; */
+                /* word-wrap: break-word; */
             }
         }
 
@@ -331,18 +348,25 @@
 
 <!-- html -->
 <header>
-    <h1 class="head-title">Frostware</h1>
-    <div class="head-info">
-        <div class="user-info" onclick="togglePanel()">
-            <span class="user">Penanggung Jawab Pemeliharaan</span>
+        <div class="head-title">
+            Frostware
         </div>
-        <div class="date">
-            <p class="hari">Minggu, </p>
-            <p class="tanggal">28/09/2025</p>
-
+        <div class="head-info">
+            <button class="user-info" onclick="togglePanel()">
+                <h2 class="user">
+                    Penanggung Jawab Pemeliharaan
+                </h2>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#FFF" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                </svg>
+            </button>
+            <div class="date">
+                <p class="hari">Minggu, </p>
+                <p class="tanggal">25/10/2025</p>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
 <!-- tambahan user profil -->
 <div class="user-panel" id="userPanel">
@@ -356,7 +380,7 @@
                 <div class="logout-text">Logout</div>
             </button>
         </form>
-</div>
+    </div>
 
 <div class="container">
 
