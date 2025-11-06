@@ -69,7 +69,15 @@
                         <div class="value" id="pv-keterangan">-</div>
                     </div>
                 </div>
-                <div id="pv-error" style="color:#D4183D; display:none; margin-top:6px;"></div>
+                <div id="bagian-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-x-circle-fill" viewBox="0 0 17 17">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z" />
+                    </svg>
+                    <div id="pv-error">
+
+                    </div>
+                </div>
                 <div class="status">
                     <div class="status-group">
                         <div class="label">Status</div>
@@ -277,6 +285,7 @@
 
             .status-badge[status='Diterima'] {
                 background-color: #00B940;
+
                 .text {
                     color: white;
                 }
@@ -284,6 +293,7 @@
 
             .status-badge[status='Ditolak'] {
                 background-color: #D4183D;
+
                 .text {
                     color: white;
                 }
@@ -353,6 +363,26 @@
 
             .btn-terima {
                 background-color: #00B940;
+            }
+
+            #bagian-error {
+                display: none;
+                flex-direction: row;
+                gap: 10px;
+                padding: 10px 10px 10px 15px;
+                border-radius: 8px;
+                background-color: rgba(212, 24, 61, 0.1);
+
+                /* border: 1.5px solid rgba(212, 24, 61, 0.8); */
+                #pv-error {
+                    font-size: 14px;
+                    color: #D4183D;
+                }
+
+                svg {
+                    width: 36px;
+                    fill: #D4183D;
+                }
             }
         }
     </style>

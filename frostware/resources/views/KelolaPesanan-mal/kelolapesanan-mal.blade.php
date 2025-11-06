@@ -735,10 +735,6 @@
                             pvTanggalKirimEl.textContent = p.tanggalKirim ? new Date(p.tanggalKirim).toLocaleDateString() : '-';
                         }
 
-                        // siapkan elemen error (pastikan ada di partial)
-                        const errEl = document.getElementById('pv-error');
-                        if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
-
                         // tampilkan modal
                         openModalWithData();
 
@@ -750,8 +746,9 @@
                             const newBtnTerima = document.getElementById('pv-terima');
 
                             newBtnTerima.addEventListener('click', async function () {
+                                const errCon = document.getElementById('bagian-error');
                                 const errEl = document.getElementById('pv-error');
-                                if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+                                if (errCon) { errCon.style.display = 'none'; errEl.textContent = ''; }
 
                                 try {
                                     const resp = await fetch(`/pesanan/${id}/terima`, {
@@ -806,9 +803,9 @@
                                     } else {
                                         // tampilkan pesan dari server (422 atau error lain)
                                         const message = jr.message || 'Gagal menerima pesanan.';
-                                        if (errEl) {
+                                        if (errCon) {
                                             errEl.textContent = message;
-                                            errEl.style.display = 'block';
+                                            errCon.style.display = 'flex';
                                         } else {
                                             alert(message);
                                         }
@@ -839,6 +836,8 @@
             modalRoot?.addEventListener('click', function (e) {
                 if (e.target.hasAttribute('data-close') || e.target.closest('.icon-close')) {
                     closeModal();
+                    const errCon = document.getElementById('bagian-error');
+                    errCon.style.display='none';
                     return;
                 }
                 // jika tombol tolak diklik di dalam popup verif -> buka modal keterangan

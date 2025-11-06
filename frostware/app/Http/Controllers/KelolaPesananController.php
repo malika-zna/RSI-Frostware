@@ -85,7 +85,7 @@ class KelolaPesananController extends Controller
         if ($sudahDiterima + $totalBalokPesanan > 2000) {
             return response()->json([
                 'success' => false,
-                'message' => 'Pesanan tidak dapat diterima karena jumlah pesanan untuk tanggal pengiriman ini sudah melebihi 2000 balok.'
+                'message' => 'Pesanan tidak dapat diterima karena jumlah pesanan untuk tanggal pengiriman ini akan melebihi 2000 balok'
             ], 422);
         }
 
