@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use Carbon\Carbon;
 // use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 
 class KelolaPesananController extends Controller
 {
@@ -132,14 +132,14 @@ class KelolaPesananController extends Controller
 
     private function tolakTerlewat()
     {
-        $today = Carbon::today()->format('Y-m-d');
-        $message = 'Resepsionis tidak menerima pesanan Anda';
+        $harini = Carbon::today()->format('Y-m-d');
+        $pesan = 'Resepsionis tidak menerima pesanan Anda';
 
         return Pesanan::whereRaw("status = 'Belum Diverifikasi'")
-            ->whereDate('tanggalKirim', '<=', $today)
+            ->whereDate('tanggalKirim', '<=', $harini)
             ->update([
                 'status' => 'Ditolak',
-                'keteranganPenolakan' => $message,
+                'keteranganPenolakan' => $pesan,
             ]);
     }
 }
