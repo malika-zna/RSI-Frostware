@@ -89,10 +89,9 @@ Route::get('/kelolapengirimandrv', function () {
 Route::get('/pesanan/create', [PesananController::class, 'create'])->name('pesanan.create');
 Route::get('/beranda-pelanggan', [PesananController::class, 'index'])->name('beranda-pelanggan');
 
-
-
 // ini bawaan laravel -mal
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
