@@ -17,7 +17,7 @@ class PesananController extends Controller
             ->orderByDesc('tanggalPesan')
             ->get();
 
-        return view('pelanggan.dashboard', compact('pesanans'));
+        return view('Pelanggan-jia.dashboard', compact('pesanans'));
     }
 
     public function create()

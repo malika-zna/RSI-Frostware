@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProduksiController;
+use App\Http\Controllers\PesananController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
@@ -76,13 +77,19 @@ Route::get('/kelolapengirimandrv', function () {
 
 
 // tambahan buat punya jia -malika yang nambahin
-Route::get('/buatpesanan', function () {
-    return view('Pelanggan-jia.buat-pesanan');
-})->name('buatpesanan');
+// Route::get('/buatpesanan', function () {
+//     return view('Pelanggan-jia.buat-pesanan');
+// })->name('buatpesanan');
 
-Route::get('/beranda-pelanggan', function () {
-    return view('Pelanggan-jia.dashboard');
-})->name('beranda-pelanggan');
+// Route::get('/beranda-pelanggan', function () {
+//     return view('Pelanggan-jia.dashboard');
+// })->name('beranda-pelanggan');
+
+// Rute untuk menampilkan dashboard pelanggan
+Route::get('/pesanan/create', [PesananController::class, 'create'])->name('pesanan.create');
+Route::get('/beranda-pelanggan', [PesananController::class, 'index'])->name('beranda-pelanggan');
+
+
 
 // ini bawaan laravel -mal
 
