@@ -12,7 +12,10 @@ class KelolaPesananController extends Controller
 {
     public function daftarPesanan()
     {
+        $allowedStatuses = ['Belum Diverifikasi', 'Diterima', 'Ditolak'];
+
         $pesanan = Pesanan::with('pelanggan')
+            ->whereIn('status', $allowedStatuses)
             ->orderBy('status', 'asc')
             ->orderBy('idPesanan', 'asc')
             ->get();
@@ -100,11 +103,11 @@ class KelolaPesananController extends Controller
         }
 
         // try {
-            $pesanan->status = 'Ditolak';
-            $pesanan->keteranganPenolakan = $request->keterangan;
-            $pesanan->save();
+        $pesanan->status = 'Ditolak';
+        $pesanan->keteranganPenolakan = $request->keterangan;
+        $pesanan->save();
 
-            return response()->json(['success' => true, 'message' => 'Pesanan ditolak']);
+        return response()->json(['success' => true, 'message' => 'Pesanan ditolak']);
         // } catch (\Throwable $e) {
         //     Log::error('tolakPesanan error', ['id' => $id, 'message' => $e->getMessage()]);
         //     return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
