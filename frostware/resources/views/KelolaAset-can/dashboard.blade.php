@@ -194,7 +194,7 @@
             background: #1C398E;
             border: 1px solid #1C398E;
             border-radius: 15px;
-            color: #FFFFFF;
+            color: #ffffffff;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
         }

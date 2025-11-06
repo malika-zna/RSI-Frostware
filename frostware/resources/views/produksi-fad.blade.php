@@ -123,9 +123,9 @@
       right: 0;
       margin-top: 1px;
       width: 250px;
-      background-color: #fff;
+      background-color: black;
       /* LATAR BELAKANG TERANG */
-      color: #000;
+      color: white;
       /* Teks default HITAM */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       padding: 12px 16px;
@@ -145,14 +145,15 @@
     .user-panel .user-name {
       font-weight: 400;
       font-size: 14px;
-      color: #333;
+      color: white;
     }
 
     .user-panel .user-email {
       font-weight: 400;
       font-size: 12px;
-      color: #666;
+      color: white;
       margin-bottom: 8px;
+      opacity: 0.6;
     }
 
     .user-panel .user-divider {
@@ -167,16 +168,16 @@
       background: none;
       border: none;
       text-align: right;
-      padding: 8px 0 0 0;
+      padding: 4px 4px 4px 4px;
       cursor: pointer;
       font-size: 14px;
       font-weight: 600;
-      color: #D32F2F;
+      color: white;
     }
 
     .user-panel .user-actions:hover {
-      opacity: 0.9;
-      background-color: #f7f7f7;
+      /* opacity: 0.2; */
+      background-color: #222;
     }
 
     /* Main Section */
@@ -220,7 +221,7 @@
     }
 
     .btn-small {
-      background-color: #000;
+      background-color: #1C398E;
       color: #fff;
       border: none;
       padding: 8px 16px;
@@ -235,7 +236,8 @@
     }
 
     .btn-small:hover {
-      opacity: 0.9;
+      /* opacity: 0.9; */
+      background-color: black;
     }
 
     .btn-pill {
