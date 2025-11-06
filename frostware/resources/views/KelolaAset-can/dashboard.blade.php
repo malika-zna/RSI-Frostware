@@ -278,7 +278,7 @@
         }
 
         .btn-small:hover {
-            background: #162d70;
+            background: rgba(22, 45, 112, 0.3);
         }
 
         /* Table styling */
