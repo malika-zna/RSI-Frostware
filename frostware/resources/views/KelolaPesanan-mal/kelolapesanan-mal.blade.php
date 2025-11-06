@@ -726,13 +726,13 @@
                         document.getElementById('keterangan').setAttribute('status', p.status);
 
                         // tanggal format sederhana (sesuaikan)
-                        const pvTanggalPesanEl = document.querySelector('.value[id="pv-tanggalPesan"]');
+                        const pvTanggalPesanEl = document.getElementById('pv-tanggalPesan');
                         if (pvTanggalPesanEl) {
-                            pvTanggalPesanEl.textContent = p.tanggalPesan ? new Date(p.tanggalPesan).toLocaleDateString() : '-';
+                            pvTanggalPesanEl.textContent = p.tanggalPesan;
                         }
-                        const pvTanggalKirimEl = document.querySelector('.value[id="pv-tanggalKirim"]');
+                        const pvTanggalKirimEl = document.getElementById('pv-tanggalKirim');
                         if (pvTanggalKirimEl) {
-                            pvTanggalKirimEl.textContent = p.tanggalKirim ? new Date(p.tanggalKirim).toLocaleDateString() : '-';
+                            pvTanggalKirimEl.textContent = p.tanggalKirim;
                         }
 
                         // tampilkan modal

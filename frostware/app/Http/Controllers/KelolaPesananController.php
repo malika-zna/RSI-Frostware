@@ -65,7 +65,19 @@ class KelolaPesananController extends Controller
         }
 
         // kembalikan data JSON agar JS di view mengisi popup
-        return response()->json(['success' => true, 'data' => $pesanan]);
+        return response()->json([
+        'success' => true,
+        'data' => [
+            'idPesanan' => $pesanan->idPesanan,
+            'pelanggan' => $pesanan->pelanggan,
+            'jumlahBalok' => $pesanan->jumlahBalok,
+            'tanggalPesan' => $pesanan->tanggalPesan ? $pesanan->tanggalPesan->format('d/m/Y') : null,
+            'tanggalKirim' => $pesanan->tanggalKirim ? $pesanan->tanggalKirim->format('d/m/Y') : null,
+            'alamatKirim' => $pesanan->alamatKirim,
+            'status' => $pesanan->status,
+            'keteranganPenolakan' => $pesanan->keteranganPenolakan,
+        ],
+    ]);
     }
 
     public function terimaPesanan($id)
