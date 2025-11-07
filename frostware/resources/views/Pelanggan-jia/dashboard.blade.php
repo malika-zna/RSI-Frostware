@@ -9,78 +9,34 @@
         /* pakai webfont via import - aman untuk Blade */
         @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Parkinsans:wght@600&display=swap');
 
-            * { box-sizing: border-box; }
-            body {
-                font-family: 'Figtree', sans-serif;
-                background-color: #ffffff; /* samakan dengan KelolaPesanan */
-                margin: 0;
-                padding: 0;
-                color: #0A0A0A;
-            }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: #E7EEFF;
+            margin: 0;
+            padding: 0;
+            color: #0A0A0A;
+        }
 
-            /* header styling disetarakan dengan KelolaPesanan-mal */
-            header {
-                background-color: #1C398E;
-                box-shadow: -5px 5px 8px rgba(0,0,0,0.25);
-                width: 100vw;
-                box-sizing: border-box;
-                top: 0;
-                left: 0;
-                position: fixed;
-                padding: 20px 40px;
-                display: flex;
-                flex-direction: row;
-                z-index: 1;
-            }
+        header {
+            background-color: #1C398E;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 8px 8px;
+        }
 
-            header h1, .head-title { font-family: 'Parkinsans', sans-serif; font-size: 26px; margin: 0; color: white }
-            .head-info { display:inline-flex; flex-direction:column; align-items:flex-end; gap:5px }
-            .head-info .right { font-size: 14px; opacity: 0.95; color: rgba(255,255,255,0.95) }
+        header h1 { font-family: 'Parkinsans', sans-serif; font-size: 26px; margin: 0; }
+        header .right { font-size: 14px; opacity: 0.95; }
 
-            .user-info {
-                border: none;
-                background: none;
-                display: inline-flex;
-                flex-direction: row;
-                gap: 8px;
-                align-items: center;
-            }
-
-            .user-info .user { color: white; font-size: 16px; font-weight: 500; margin:0 }
-
-            .user-info:hover { cursor: pointer; background-color: rgba(255,255,255,0.06); }
-
-            .user-panel {
-                width: 280px;
-                height: fit-content;
-                padding: 20px 25px 15px 25px;
-                background: #000;
-                display: none;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: flex-start;
-                gap: 5px;
-                box-sizing: border-box;
-                position: fixed;
-                right: 20px;
-                top: 50px;
-                z-index: 100;
-                color: white;
-                border-radius: 6px;
-            }
-
-            .user-panel .user-role { font-size:16px; font-weight:600; font-family:'Parkinsans'; }
-            .user-panel .user-name { margin-top:4px; font-size:14px }
-            .user-panel .user-email { font-size:12px; color:rgba(255,255,255,0.6) }
-            .user-panel .user-divider { align-self:stretch; height:5px; border-bottom:1px solid rgba(255,255,255,0.06); margin:8px 0 }
-            .user-panel .user-actions { margin-left:auto; padding:6px 10px; border-radius:3px }
-
-            main {
-                display: flex;
-                gap: 24px;
-                padding: 120px 40px; /* beri jarak karena header fixed */
-                align-items: flex-start;
-            }
+        main {
+            display: flex;
+            gap: 24px;
+            padding: 36px;
+            align-items: flex-start;
+        }
 
         .left { flex: 0 0 56%; }   /* lebih lebar untuk detail tagihan */
         .right { flex: 0 0 40%; }  /* ringkasan & daftar */
@@ -153,17 +109,16 @@
         }
         .table tbody tr:nth-child(even) { background: #FAFCFF; }
 
-        /* gunakan data-status seperti di KelolaPesanan untuk konsistensi */
         .status-badge {
-            display: inline-flex;
+            display: inline-block;
             padding: 6px 10px;
             border-radius: 8px;
             font-weight: 700;
             font-size: 13px;
         }
-        .status-badge[data-status="Belum Diverifikasi"] { background:#ECEEF2; color:#030213; }
-        .status-badge[data-status="Diterima"] { background:#00B940; color:#fff; }
-        .status-badge[data-status="Ditolak"] { background:#D4183D; color:#fff; }
+        .status-Belum\ Diverifikasi { background:#ECEEF2; color:#030213; }
+        .status-Diterima { background:#00B940; color:#fff; }
+        .status-Ditolak { background:#D4183D; color:#fff; }
 
         /* responsive */
         @media (max-width: 960px) {
@@ -173,30 +128,9 @@
     </style>
 </head>
 <body>
-    <div class="user-panel" style="display:none;">
-        <div class="user-role">{{ session('role', 'Role') }}</div>
-        <div class="user-name">{{ session('nama', 'nama pengguna') }}</div>
-        <div class="user-email">{{ session('email', 'email') }}</div>
-        <div class="user-divider"></div>
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button class="user-actions" type="submit" logout>
-                <div class="logout-text">Logout</div>
-            </button>
-        </form>
-    </div>
-
     <header>
-        <div class="head-title">Frostware</div>
-        <div class="head-info">
-            <button class="user-info">
-                <h2 class="user">{{ session('role', 'Pelanggan') }}</h2>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="#FFF" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
-                </svg>
-            </button>
-            <div class="right">{{ \Carbon\Carbon::now()->translatedFormat('l, d/m/Y') }}</div>
-        </div>
+        <h1>Frostware</h1>
+        <div class="right">{{ \Carbon\Carbon::now()->translatedFormat('l, d/m/Y') }}</div>
     </header>
 
     <main>
@@ -332,16 +266,5 @@
 
         </section>
     </main>
-    <script>
-        (function(){
-            const userInfoBtn = document.querySelector('.user-info');
-            const userPanelEl = document.querySelector('.user-panel');
-            function showUserPanel(){ if(!userPanelEl) return; userPanelEl.style.display='inline-flex'; userPanelEl.setAttribute('data-open','true'); }
-            function hideUserPanel(){ if(!userPanelEl) return; userPanelEl.style.display='none'; userPanelEl.setAttribute('data-open','false'); }
-            userInfoBtn?.addEventListener('click', function(e){ e.stopPropagation(); if(!userPanelEl) return; const isOpen = userPanelEl.getAttribute('data-open')==='true'; isOpen ? hideUserPanel() : showUserPanel(); });
-            userPanelEl?.addEventListener('click', function(e){ e.stopPropagation(); });
-            document.addEventListener('click', function(){ hideUserPanel(); });
-        })();
-    </script>
 </body>
 </html>
