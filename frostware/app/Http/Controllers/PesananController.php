@@ -22,7 +22,8 @@ class PesananController extends Controller
 
     public function create()
     {
-        return view('pelanggan.buat-pesanan');
+        // tampilkan form buat pesanan untuk pelanggan
+        return view('Pelanggan-jia.buat-pesanan');
     }
 
     public function store(Request $request)
@@ -32,17 +33,26 @@ class PesananController extends Controller
             'alamatKirim' => 'required|string',
             'jumlahBalok' => 'required|integer|min:1',
         ]);
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk membuat pesanan.');
+        }
 
-        Pesanan::create([
-            'idPelanggan' => Auth::id(),
-            'tanggalPesan' => now(),
-            'tanggalKirim' => $request->tanggalKirim,
-            'alamatKirim' => $request->alamatKirim,
-            'jumlahBalok' => $request->jumlahBalok,
-            'status' => 'Belum Diverifikasi',
-            'totalHarga' => 0,
-        ]);
+        try {
+            Pesanan::create([
+                'idPelanggan' => Auth::id(),
+                'tanggalPesan' => now(),
+                'tanggalKirim' => $request->tanggalKirim,
+                'alamatKirim' => $request->alamatKirim,
+                'jumlahBalok' => $request->jumlahBalok,
+                'status' => 'Belum Diverifikasi',
+                'totalHarga' => 0,
+            ]);
 
-        return redirect()->route('dashboard.pelanggan')->with('success', 'Pesanan berhasil dibuat!');
+            return redirect()->route('beranda-pelanggan')->with('success', 'Pesanan berhasil dibuat!');
+        } catch (\Throwable $e) {
+            // log error jika diperlukan
+            // \Log::error('store pesanan error', ['error' => $e->getMessage()]);
+            return back()->withInput()->withErrors('Gagal menyimpan pesanan. Silakan coba lagi atau hubungi admin.');
+        }
     }
 }

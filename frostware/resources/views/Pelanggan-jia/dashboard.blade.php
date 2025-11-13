@@ -271,7 +271,7 @@
             </div>
 
             <div class="action-row">
-                <a href="#" class="btn-primary">Pesanan +</a>
+                <a href="{{ route('pesanan.create') }}" class="btn-primary">Pesanan +</a>
                 <a href="#" class="btn-outline">Komplain +</a>
             </div>
 

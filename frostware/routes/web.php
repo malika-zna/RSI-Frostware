@@ -86,8 +86,12 @@ Route::get('/kelolapengirimandrv', function () {
 // })->name('beranda-pelanggan');
 
 // Rute untuk menampilkan dashboard pelanggan
-Route::get('/pesanan/create', [PesananController::class, 'create'])->name('pesanan.create');
-Route::get('/beranda-pelanggan', [PesananController::class, 'index'])->name('beranda-pelanggan');
+// Rute pelanggan (butuh autentikasi)
+Route::middleware('auth')->group(function () {
+    Route::get('/pesanan/create', [PesananController::class, 'create'])->name('pesanan.create');
+    Route::post('/pesanan', [PesananController::class, 'store'])->name('pesanan.store');
+    Route::get('/beranda-pelanggan', [PesananController::class, 'index'])->name('beranda-pelanggan');
+});
 
 // ini bawaan laravel -mal
 

@@ -60,9 +60,9 @@ class KelolaPesananController extends Controller
     {
         $pesanan = Pesanan::with('pelanggan')->find($id);
 
-        // if (!$pesanan) {
-        //     return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
-        // }
+        if (!$pesanan) {
+            return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
+        }
 
         // kembalikan data JSON agar JS di view mengisi popup
         return response()->json([

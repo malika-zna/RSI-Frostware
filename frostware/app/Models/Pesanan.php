@@ -41,9 +41,16 @@ class Pesanan extends Model
         return (int) $query->sum('jumlahBalok');
     }
 
-    public function updateStatus(string $status)
+    /**
+     * Update status and optional keteranganPenolakan
+     * Accepts an optional second argument for keterangan.
+     */
+    public function updateStatus(string $status, ?string $keterangan = null)
     {
         $this->status = $status;
+        if (!is_null($keterangan)) {
+            $this->keteranganPenolakan = $keterangan;
+        }
         return (bool) $this->save();
     }
 
