@@ -591,14 +591,8 @@
 
     <script>
         (function () {
-            const modalRoot = document.getElementById('modal-root');
-            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const keteranganRoot = document.getElementById('modal-keterangan-root');
-            const userInfoBtn = document.querySelector('.user-info');
-            const userPanelEl = document.querySelector('.user-panel');
-
             // hari dan tanggal
-            function updateDate() {
+            function updateTanggal() {
                 const now = new Date();
                 const hariId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                 const hari = hariId[now.getDay()];
@@ -610,51 +604,46 @@
                 if (hariEl) hariEl.textContent = hari + ', ';
                 if (tanggalEl) tanggalEl.textContent = `${dd}/${mm}/${yyyy}`;
             }
-
-            updateDate();
+            updateTanggal();
 
             function showUserPanel() {
                 if (!userPanelEl) return;
                 userPanelEl.style.display = 'inline-flex';
                 userPanelEl.setAttribute('data-open', 'true');
             }
-
             function hideUserPanel() {
                 if (!userPanelEl) return;
                 userPanelEl.style.display = 'none';
                 userPanelEl.setAttribute('data-open', 'false');
             }
 
-            // toggle when user-info button clicked
-            userInfoBtn?.addEventListener('click', function (e) {
+            const userInfoBtn = document.querySelector('.user-info');
+            const userPanelEl = document.querySelector('.user-panel');
+            userInfoBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 if (!userPanelEl) return;
                 const isOpen = userPanelEl.getAttribute('data-open') === 'true';
                 isOpen ? hideUserPanel() : showUserPanel();
             });
-
-            // prevent clicks inside panel from bubbling (so document click doesn't close immediately)
-            userPanelEl?.addEventListener('click', function (e) {
+            userPanelEl.addEventListener('click', function (e) {
                 e.stopPropagation();
             });
-
-            // click outside closes the panel (and modals)
             document.addEventListener('click', function () {
                 hideUserPanel();
             });
 
             async function updateSummary() {
-                try {
-                    const res = await fetch('/ringkasan', { credentials: 'same-origin' });
-                    if (!res.ok) return;
-                    const j = await res.json();
-                    if (!j.success) return;
-                    const listEl = document.querySelector('.summary-list');
-                    if (!listEl) return;
-                    if (j.data.length === 0) {
-                        return;
-                    }
-                    listEl.innerHTML = j.data.map(item => `
+                // try {
+                const res = await fetch('/ringkasan', { credentials: 'same-origin' });
+                if (!res.ok) return;
+                const j = await res.json();
+                if (!j.success) return;
+                const listEl = document.querySelector('.summary-list');
+                if (!listEl) return;
+                if (j.data.length === 0) {
+                    return;
+                }
+                listEl.innerHTML = j.data.map(item => `
                         <div class="summary-item">
                             <div class="summary-date">${item.tanggal}</div>
                             <div class="summary-qty">
@@ -663,209 +652,62 @@
                             </div>
                         </div>
                     `).join('');
-                } catch (err) {
-                    console.error('Gagal update summary', err);
-                }
+                // } catch (err) {
+                //     console.error('Gagal update summary', err);
+                // }
             }
 
-            function closeModal() {
-                if (!modalRoot) return;
-                modalRoot.style.display = 'none';
-                document.body.style.overflow = '';
-                modalRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
-            }
+            const popUpVerif = document.getElementById('modal-root');
+            const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const popUpKeterangan = document.getElementById('modal-keterangan-root');
 
-            function openKeterangan() {
-                if (!keteranganRoot) return;
-                keteranganRoot.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                keteranganRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
-            }
-
-            function closeKeterangan() {
-                if (!keteranganRoot) return;
-                keteranganRoot.style.display = 'none';
-                document.body.style.overflow = '';
-                keteranganRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
-            }
-
-            function openModalWithData() {
-                if (!modalRoot) return;
+            function tampilkanPopUpVerif() {
+                if (!popUpVerif) return;
                 // tampilkan
-                modalRoot.style.display = 'flex';
+                popUpVerif.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
-                modalRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
+                popUpVerif.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
             }
-
-            let currentPesananId = null;
-
-            // attach click ke semua tombol Verifikasi / Lihat Verifikasi
-            document.querySelectorAll('.action-button').forEach(btn => {
-                btn.addEventListener('click', async function (e) {
-                    const id = btn.dataset.id || btn.closest('.table-row')?.dataset.id;
-                    const row = btn.closest('.table-row');
-                    if (!id) return;
-                    currentPesananId = id;
-                    try {
-                        const res = await fetch(`/pesanan/${id}`);
-                        const json = await res.json();
-                        if (!json.success) { alert(json.message || 'Pesanan tidak ditemukan'); return; }
-                        const p = json.data;
-
-                        // isi modal
-                        document.getElementById('pv-id').textContent = 'ORD' + p.idPesanan;
-                        document.getElementById('pv-nama').textContent = p.pelanggan?.nama ?? '-';
-                        document.getElementById('pv-email').textContent = p.pelanggan?.email ?? '-';
-                        document.getElementById('pv-telp').textContent = p.pelanggan?.nomorTelepon ?? '-';
-                        document.getElementById('pv-alamat').textContent = p.alamatKirim ?? '-';
-                        document.getElementById('pv-jumlah').textContent = p.jumlahBalok ?? 0;
-                        document.getElementById('pv-keterangan').textContent = p.keteranganPenolakan ?? '-';
-                        document.getElementById('pv-status').querySelector('.text').textContent = (p.status ?? '-');
-                        document.getElementById('pv-status').setAttribute('status', p.status);
-                        document.getElementById('actions').setAttribute('status', p.status);
-                        document.getElementById('keterangan').setAttribute('status', p.status);
-
-                        // tanggal format sederhana (sesuaikan)
-                        const pvTanggalPesanEl = document.getElementById('pv-tanggalPesan');
-                        if (pvTanggalPesanEl) {
-                            pvTanggalPesanEl.textContent = p.tanggalPesan;
-                        }
-                        const pvTanggalKirimEl = document.getElementById('pv-tanggalKirim');
-                        if (pvTanggalKirimEl) {
-                            pvTanggalKirimEl.textContent = p.tanggalKirim;
-                        }
-
-                        // tampilkan modal
-                        openModalWithData();
-
-                        // terima handler
-                        const btnTerima = document.getElementById('pv-terima');
-                        if (btnTerima) {
-                            // gunakan listener instead of assigning onclick to avoid duplicated handlers
-                            btnTerima.replaceWith(btnTerima.cloneNode(true)); // remove old handlers
-                            const newBtnTerima = document.getElementById('pv-terima');
-
-                            newBtnTerima.addEventListener('click', async function () {
-                                const errCon = document.getElementById('bagian-error');
-                                const errEl = document.getElementById('pv-error');
-                                if (errCon) { errCon.style.display = 'none'; errEl.textContent = ''; }
-
-                                try {
-                                    const resp = await fetch(`/pesanan/${id}/terima`, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': csrf
-                                        },
-                                        credentials: 'same-origin',
-                                        body: JSON.stringify({})
-                                    });
-
-                                    // parse JSON safely
-                                    let jr = {};
-                                    try { jr = await resp.json(); } catch (e) { /* ignore */ }
-
-                                    if (resp.ok && jr.success) {
-                                        // sukses: update badge status di popup
-                                        const pvStatusEl = document.getElementById('pv-status');
-                                        if (pvStatusEl) {
-                                            pvStatusEl.querySelector('.text').textContent = 'Diterima';
-                                            pvStatusEl.setAttribute('status', 'Diterima');
-                                        }
-
-                                        // update status elemen actions
-                                        const actionsEl = document.getElementById('actions');
-                                        if (actionsEl) {
-                                            actionsEl.setAttribute('status', 'Diterima');
-                                        }
-
-                                        // update status badge in table row
-                                        if (row) {
-                                            const badge = row.querySelector('.status-badge');
-                                            if (badge) {
-                                                badge.querySelector('.status-text').textContent = 'Diterima';
-                                                badge.setAttribute('data-status', 'Diterima');
-                                            }
-                                            row.setAttribute('data-status', 'Diterima');
-
-                                            // update button text to "Lihat Verifikasi"
-                                            const actionBtn = row.querySelector('.action-button .action-button-text');
-                                            if (actionBtn) {
-                                                actionBtn.textContent = 'Lihat Verifikasi';
-                                            }
-                                        }
-                                        // await updateSummary();
-
-                                        if (typeof updateSummary === 'function') {
-                                            try { await updateSummary(); } catch (e) { console.error('updateSummary failed', e); }
-                                        }
-
-                                    } else {
-                                        // tampilkan pesan dari server (422 atau error lain)
-                                        const message = jr.message || 'Gagal menerima pesanan.';
-                                        if (errCon) {
-                                            errEl.textContent = message;
-                                            errCon.style.display = 'flex';
-                                        } else {
-                                            alert(message);
-                                        }
-                                    }
-                                } catch (err) {
-                                    console.error(err);
-                                    const msg = 'Terjadi kesalahan jaringan.';
-                                    const errEl2 = document.getElementById('pv-error');
-                                    if (errEl2) {
-                                        errEl2.textContent = msg;
-                                        errEl2.style.display = 'block';
-                                    } else {
-                                        alert(msg);
-                                    }
-                                }
-                            });
-                        }
-                    } catch (err) {
-                        console.error(err);
-                        alert('Terjadi kesalahan saat mengambil data pesanan.');
-                    }
-                });
-            });
-
-            updateSummary();
-
-            // close handlers (backdrop & close button)
-            modalRoot?.addEventListener('click', function (e) {
+            function tutupPopUpVerif() {
+                if (!popUpVerif) return;
+                popUpVerif.style.display = 'none';
+                document.body.style.overflow = '';
+                popUpVerif.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
+            }
+            function tampilkanPopUpKeterangan() {
+                if (!popUpKeterangan) return;
+                popUpKeterangan.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                popUpKeterangan.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
+            }
+            function tutupPopUpKeterangan() {
+                if (!popUpKeterangan) return;
+                popUpKeterangan.style.display = 'none';
+                document.body.style.overflow = '';
+                popUpKeterangan.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
+            }
+            
+            popUpVerif.addEventListener('click', function (e) {
                 if (e.target.hasAttribute('data-close') || e.target.closest('.icon-close')) {
-                    closeModal();
+                    tutupPopUpVerif();
                     const errCon = document.getElementById('bagian-error');
-                    errCon.style.display='none';
+                    errCon.style.display = 'none';
                     return;
                 }
                 // jika tombol tolak diklik di dalam popup verif -> buka modal keterangan
                 if (e.target.closest('.btn-tolak')) {
-                    // closeModal();
-                    openKeterangan();
+                    // tutupPopUpVerif();
+                    tampilkanPopUpKeterangan();
                     return;
                 }
             });
-
-            // close handlers for keterangan modal (backdrop & cancel button)
-            keteranganRoot?.addEventListener('click', function (e) {
+            popUpKeterangan.addEventListener('click', function (e) {
                 if (e.target.hasAttribute('data-close') || e.target.closest('.btn-cancel')) {
-                    closeKeterangan();
-                }
-            });
-
-
-            // optional: escape key
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeModal();
-                    closeKeterangan();
+                    tutupPopUpKeterangan();
                 }
             });
 
             const keteranganForm = document.querySelector('#modal-keterangan-root form.content');
-
             if (keteranganForm) {
                 keteranganForm.addEventListener('submit', async function (ev) {
                     ev.preventDefault();
@@ -967,6 +809,137 @@
                     // }
                 });
             }
+
+            let currentPesananId = null;
+            document.querySelectorAll('.action-button').forEach(btn => {
+                btn.addEventListener('click', async function (e) {
+                    const id = btn.dataset.id || btn.closest('.table-row')?.dataset.id;
+                    const row = btn.closest('.table-row');
+                    if (!id) return;
+                    currentPesananId = id;
+                    try {
+                        const res = await fetch(`/pesanan/${id}`);
+                        const json = await res.json();
+                        if (!json.success) { alert(json.message || 'Pesanan tidak ditemukan'); return; }
+                        const p = json.data;
+
+                        // isi modal
+                        document.getElementById('pv-id').textContent = 'ORD' + p.idPesanan;
+                        document.getElementById('pv-nama').textContent = p.pelanggan?.nama ?? '-';
+                        document.getElementById('pv-email').textContent = p.pelanggan?.email ?? '-';
+                        document.getElementById('pv-telp').textContent = p.pelanggan?.nomorTelepon ?? '-';
+                        document.getElementById('pv-alamat').textContent = p.alamatKirim ?? '-';
+                        document.getElementById('pv-jumlah').textContent = p.jumlahBalok ?? 0;
+                        document.getElementById('pv-keterangan').textContent = p.keteranganPenolakan ?? '-';
+                        document.getElementById('pv-status').querySelector('.text').textContent = (p.status ?? '-');
+                        document.getElementById('pv-status').setAttribute('status', p.status);
+                        document.getElementById('actions').setAttribute('status', p.status);
+                        document.getElementById('keterangan').setAttribute('status', p.status);
+
+                        const pvTanggalPesanEl = document.getElementById('pv-tanggalPesan');
+                        if (pvTanggalPesanEl) {
+                            pvTanggalPesanEl.textContent = p.tanggalPesan;
+                        }
+                        const pvTanggalKirimEl = document.getElementById('pv-tanggalKirim');
+                        if (pvTanggalKirimEl) {
+                            pvTanggalKirimEl.textContent = p.tanggalKirim;
+                        }
+
+                        // tampilkan modal
+                        tampilkanPopUpVerif();
+
+                        // terima handler
+                        const btnTerima = document.getElementById('pv-terima');
+                        if (btnTerima) {
+                            btnTerima.replaceWith(btnTerima.cloneNode(true));
+                            const newBtnTerima = document.getElementById('pv-terima');
+
+                            newBtnTerima.addEventListener('click', async function () {
+                                const errCon = document.getElementById('bagian-error');
+                                const errEl = document.getElementById('pv-error');
+                                if (errCon) { errCon.style.display = 'none'; errEl.textContent = ''; }
+
+                                try {
+                                    const resp = await fetch(`/pesanan/${id}/terima`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': csrf
+                                        },
+                                        credentials: 'same-origin',
+                                        body: JSON.stringify({})
+                                    });
+
+                                    // parse JSON safely
+                                    let jr = {};
+                                    try { jr = await resp.json(); } catch (e) { /* ignore */ }
+
+                                    if (resp.ok && jr.success) {
+                                        // sukses: update badge status di popup
+                                        const pvStatusEl = document.getElementById('pv-status');
+                                        if (pvStatusEl) {
+                                            pvStatusEl.querySelector('.text').textContent = 'Diterima';
+                                            pvStatusEl.setAttribute('status', 'Diterima');
+                                        }
+
+                                        // update status elemen actions
+                                        const actionsEl = document.getElementById('actions');
+                                        if (actionsEl) {
+                                            actionsEl.setAttribute('status', 'Diterima');
+                                        }
+
+                                        // update status badge in table row
+                                        if (row) {
+                                            const badge = row.querySelector('.status-badge');
+                                            if (badge) {
+                                                badge.querySelector('.status-text').textContent = 'Diterima';
+                                                badge.setAttribute('data-status', 'Diterima');
+                                            }
+                                            row.setAttribute('data-status', 'Diterima');
+
+                                            // update button text to "Lihat Verifikasi"
+                                            const actionBtn = row.querySelector('.action-button .action-button-text');
+                                            if (actionBtn) {
+                                                actionBtn.textContent = 'Lihat Verifikasi';
+                                            }
+                                        }
+                                        // await updateSummary();
+
+                                        if (typeof updateSummary === 'function') {
+                                            try { await updateSummary(); } catch (e) { console.error('updateSummary failed', e); }
+                                        }
+
+                                    } else {
+                                        // tampilkan pesan dari server (422 atau error lain)
+                                        const message = jr.message || 'Gagal menerima pesanan.';
+                                        if (errCon) {
+                                            errEl.textContent = message;
+                                            errCon.style.display = 'flex';
+                                        } else {
+                                            alert(message);
+                                        }
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    const msg = 'Terjadi kesalahan jaringan.';
+                                    const errEl2 = document.getElementById('pv-error');
+                                    if (errEl2) {
+                                        errEl2.textContent = msg;
+                                        errEl2.style.display = 'block';
+                                    } else {
+                                        alert(msg);
+                                    }
+                                }
+                            });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Terjadi kesalahan saat mengambil data pesanan.');
+                    }
+                });
+            });
+
+            updateSummary();
         })();
     </script>
 

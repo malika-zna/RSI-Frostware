@@ -21,8 +21,11 @@ class Akun extends Model
     public static function cariAkun(string $email, string $nomorTelepon)
     {
         if ($nomorTelepon != '') {
-            return static::with('role')
-                ->where('email', $email)
+            // return static::with('role')
+            //     ->where('email', $email)
+            //     ->orWhere('nomorTelepon', $nomorTelepon)
+            //     ->first();
+            return static::where('email', $email)
                 ->orWhere('nomorTelepon', $nomorTelepon)
                 ->first();
         } else {

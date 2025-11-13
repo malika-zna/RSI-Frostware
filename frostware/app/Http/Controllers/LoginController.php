@@ -14,13 +14,13 @@ class LoginController extends Controller
 
         $akun = Akun::cariAkun($email, '');
 
-        if (!$akun) { // dijalankan kalau null
-            // return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email tidak terdaftar']);
-            return redirect()->back()
-                ->withInput()
-                ->with('status', 'gagal')
-                ->with('statusMessage', 'Email tidak terdaftar');
-        }
+        // if (!$akun) { // dijalankan kalau null
+        //     // return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email tidak terdaftar']);
+        //     return redirect()->back()
+        //         ->withInput()
+        //         ->with('status', 'gagal')
+        //         ->with('statusMessage', 'Email tidak terdaftar');
+        // }
 
         if ($akun instanceof Akun) {
             $passvalid = Akun::cekPassword($akun, $password);
@@ -28,14 +28,19 @@ class LoginController extends Controller
             if (!$passvalid) {
                 // return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email atau password salah']);
                 return redirect()->back()
-                ->withInput()
-                ->with('status', 'gagal')
-                ->with('statusMessage', 'Email atau password salah');
+                    ->withInput()
+                    ->with('status', 'gagal')
+                    ->with('statusMessage', 'Email atau password salah');
             }
 
             $this->simpanSesi($akun);
 
             return $this->tampilkanBeranda();
+        } else {
+            return redirect()->back()
+                ->withInput()
+                ->with('status', 'gagal')
+                ->with('statusMessage', 'Email tidak terdaftar');
         }
     }
 
