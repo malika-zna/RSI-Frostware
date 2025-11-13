@@ -1,17 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Kelola Pengiriman')
+@section('title', 'Tugas Pengiriman Saya')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Card Utama -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="p-6 sm:p-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Daftar Pesanan Masuk</h2>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Tugas Pengiriman Saya</h2>
 
-            <!-- Wrapper untuk table agar bisa scroll di layar kecil -->
             <div class="overflow-x-auto">
-                <!-- Tabel Daftar Pesanan -->
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -19,69 +16,62 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggan</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat Pengiriman</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Pesan</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Kirim</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl Kirim</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Truk</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <!-- Baris 1: ORD001 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">ORD001</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                <div>Budi Santoso</div>
-                                <div class="text-xs text-gray-500">089765432100</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Jl. Budi Sutomo No.50, Lamongan, Jawa Timur</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">120</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">15/09/2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">25/10/2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="px-4 py-1.5 text-xs font-medium text-white bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                    Kirim Sekarang
-                                </button>
-                            </td>
-                        </tr>
 
-                        <!-- Baris 2: ORD002 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">ORD002</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                <div>Ayu Kemala Sari</div>
-                                <div class="text-xs text-gray-500">089765432101</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Jl. Jakarta No.150, Ngawi</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">450</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">15/09/2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">25/10/2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="px-4 py-1.5 text-xs font-medium text-white bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                    Selesaikan Pesanan
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Baris 3: ORD003 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">ORD003</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                <div>Citra Bunga</div>
-                                <div class="text-xs text-gray-500">089765432102</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Jl. Bandung No.245, Probolinggo</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">360</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">15/09/2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">25/10/2025</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button class="px-4 py-1.5 text-xs font-medium text-gray-500 bg-gray-200 rounded-md cursor-not-allowed" disabled>
-                                    Pesanan Selesai
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Tambahkan baris lain sesuai kebutuhan -->
-
-                    </tbody>
+                        @forelse ($pesanans as $pesanan)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    ORD{{ str_pad($pesanan->idPesanan, 3, '0', STR_PAD_LEFT) }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                                    <div>{{ $pesanan->pelanggan->nama ?? 'N/A' }}</div>
+                                    <div class="text-xs text-gray-500">{{ $pesanan->pelanggan->nomorTelepon ?? 'N/A' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $pesanan->alamatKirim }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $pesanan->jumlahBalok }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $pesanan->tanggalKirim->format('d/m/Y') }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                                    {{ $pesanan->truk->nama ?? 'Truk ' . $pesanan->idAset }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    @if($pesanan->status == 'Siap Dikirim')
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            Siap Dikirim
+                                        </span>
+                                    @elseif($pesanan->status == 'Sedang Dikirim')
+                                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Sedang Dikirim
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    @if($pesanan->status == 'Siap Dikirim')
+                                        <button class="px-4 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
+                                            Mulai Kirim
+                                        </button>
+                                    @elseif($pesanan->status == 'Sedang Dikirim')
+                                        <button class="px-4 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                                            Selesaikan
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-6 py-12 text-center">
+                                    <div class="text-lg text-gray-500">
+                                        Tidak ada tugas pengiriman untuk Anda saat ini.
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                        </tbody>
                 </table>
             </div>
         </div>

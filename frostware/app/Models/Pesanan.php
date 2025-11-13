@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -20,7 +19,9 @@ class Pesanan extends Model
         'jumlahBalok',
         'totalHarga',
         'status',
-        'keteranganPenolakan'
+        'keteranganPenolakan',
+        'idDriver', // <-- TAMBAHKAN INI
+        'idAset',   // <-- TAMBAHKAN INI
     ];
 
     protected $casts = [
@@ -28,34 +29,40 @@ class Pesanan extends Model
         'tanggalKirim' => 'datetime',
     ];
 
-    public static function hitungTotalBalok(DateTimeInterface $tanggalKirim)
+    public static function hitungTotalBalok($tanggalKirim, ?int $excludeId = null)
     {
-        // $query = self::whereDate('tanggalKirim', Carbon::parse($tanggalKirim)->toDateString())
-        //     ->whereRaw("LOWER(status) = 'diterima'")->where('idPesanan', '<>', $excludeId);
+        $query = self::whereDate('tanggalKirim', Carbon::parse($tanggalKirim)->toDateString())
+            ->whereRaw("LOWER(status) = 'diterima'");
 
-        // if ($excludeId) {
-        //     $query->where('idPesanan', '<>', $excludeId);
-        // }
+        if ($excludeId) {
+            $query->where('idPesanan', '<>', $excludeId);
+        }
 
-        return (int) self::whereDate('tanggalKirim', $tanggalKirim->format('Y-m-d'))
-            ->whereRaw("LOWER(status) = 'diterima'")
-            // ->where('idPesanan', '<>', $excludeId)
-            ->sum('jumlahBalok');
-        // return (int) $query->sum('jumlahBalok');
+        return (int) $query->sum('jumlahBalok');
     }
 
-
-    public function updateStatus(string $status, ?string $keterangan = null)
+    public function updateStatus(string $status)
     {
         $this->status = $status;
-        if ($keterangan != null) {
-            $this->keteranganPenolakan = $keterangan;
-        }
-        $this->save();
+        return (bool) $this->save();
     }
 
+    // Relasi ke pelanggan
     public function pelanggan()
     {
         return $this->belongsTo(Akun::class, 'idPelanggan', 'idAkun');
+    }
+
+    // ===== TAMBAHAN BARU: Relasi ke Driver =====
+    public function driver()
+    {
+        // idDriver di tabel ini terhubung ke idAkun di tabel Akun
+        return $this->belongsTo(Akun::class, 'idDriver', 'idAkun');
+    }
+
+    // ===== TAMBAHAN BARU: Relasi ke Truk (Aset) =====
+    public function truk()
+    {
+        return $this->belongsTo(Aset::class, 'idAset');
     }
 }
