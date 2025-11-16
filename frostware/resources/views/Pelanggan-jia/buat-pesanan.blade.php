@@ -199,7 +199,7 @@
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto mt-20 mb-12 px-4">
+    <main class="max-w-4xl mx-auto mt-28 mb-12 px-4">
         <div class="bg-white rounded-xl p-8 card-shadow">
             <h2 class="text-2xl font-bold mb-4 text-blue-900">Buat Pesanan Baru</h2>
 
