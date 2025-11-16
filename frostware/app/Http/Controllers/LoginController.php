@@ -9,10 +9,11 @@ class LoginController extends Controller
 {
     public function periksaLogin(Request $request)
     {
+        // dd($request);
         $email = $request->email;
         $password = $request->password;
 
-        $akun = Akun::cariAkun($email, '');
+        $akun = Akun::cariAkun($email, '082332112321');
 
         // if (!$akun) { // dijalankan kalau null
         //     // return view('login-mal', ['status' => 'gagal', 'statusMessage' => 'Email tidak terdaftar']);
@@ -53,6 +54,7 @@ class LoginController extends Controller
             'nama' => $akun->nama,
             'email' => $akun->email,
             'idRole' => $akun->idRole,
+            'nomorTelepon' => $akun->nomorTelepon,
             // role didapatkan dengan eager load
             'role' => mb_convert_case($akun->role?->role, MB_CASE_TITLE, 'UTF-8')
         ]);
