@@ -5,12 +5,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Buat Pesanan - Frostware</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <style>
         .card-shadow {
             box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
         }
 
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: #ffffff;
+            /* samakan dengan KelolaPesanan */
+            margin: 0;
+            padding: 0;
+            color: #0A0A0A;
+        }
+        
         header {
             background-color: #1C398E;
             box-shadow: -5px 5px 8px rgba(0, 0, 0, 0.25);
@@ -25,6 +39,7 @@
             z-index: 1;
 
             .head-title {
+                font-family: Parkinsans;
                 color: white;
                 font-size: 26px;
                 font-weight: 600;
@@ -46,6 +61,7 @@
                 gap: 5px;
 
                 .user {
+                    font-family: Parkinsans;
                     color: white;
                     font-size: 16px;
                     font-weight: 500;
