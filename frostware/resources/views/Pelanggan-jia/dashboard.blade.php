@@ -39,6 +39,7 @@
             z-index: 1;
 
             .head-title {
+                font-family: Parkinsans;
                 color: white;
                 font-size: 26px;
                 font-weight: 600;
@@ -61,6 +62,7 @@
                 gap: 5px;
 
                 .user {
+                    font-family: Parkinsans;
                     color: white;
                     font-size: 16px;
                     font-weight: 500;
@@ -162,6 +164,11 @@
                 margin-left: auto;
                 padding: 5px 10px;
                 border-radius: 3px;
+            }
+
+            button {
+                background: none;
+                border: none;
             }
 
             button.user-actions:hover {
