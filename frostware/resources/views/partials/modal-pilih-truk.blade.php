@@ -32,33 +32,32 @@
 
             <!-- Body Modal (Daftar Truk) -->
             <div class="space-y-3">
-                <!-- Truk 1 -->
-                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                    <span class="text-lg text-gray-800">Mitsubishi L300</span>
-                    <button @click="showTrukModal = false" class="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-700">
-                        Pilih
-                    </button>
-                </div>
-                <!-- Truk 2 -->
-                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                    <span class="text-lg text-gray-800">Bugati Chiron</span>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg cursor-not-allowed" disabled>
-                        Tidak Tersedia
-                    </button>
-                </div>
-                <!-- Truk 3 -->
-                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                    <span class="text-lg text-gray-800">Mitsubishi Fuso</span>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg cursor-not-allowed" disabled>
-                        Tidak Tersedia
-                    </button>
-                </div>
-                <!-- Truk 4 -->
-                <div class="flex justify-between items-center pb-2">
-                    <span class="text-lg text-gray-800">Toyota Hilux</span>
-                    <button @click="showTrukModal = false" class="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-700">
-                        Pilih
-                    </button>
+
+                @forelse($truks as $truk)
+                    <div class="flex justify-between items-center border-b border-gray-200 pb-3">
+                        {{--
+                          Saya berasumsi Model Aset punya atribut 'nama'.
+                          Jika tidak, ganti $truk->nama dengan atribut yang sesuai
+                          (misal: $truk->tipe atau $truk->nomorPolisi)
+                        --}}
+                        <span class="text-lg text-gray-800">{{ $truk->nama ?? "Truk ID: $truk->id" }}</span>
+
+                        {{--
+                          TODO: Anda bisa menambahkan logika ketersediaan truk di sini.
+                        --}}
+
+                        <button
+                            {{-- Panggil fungsi Alpine 'assignTruk' saat diklik --}}
+                            @click="assignTruk({{ $truk->id }})"
+                            class="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-700">
+                            Pilih
+                        </button>
+                    </div>
+                @empty
+                    <div class="text-gray-500 text-center py-4">
+                        Tidak ada truk yang terdaftar atau tersedia.
+                    </div>
+                @endforelse
                 </div>
             </div>
         </div>

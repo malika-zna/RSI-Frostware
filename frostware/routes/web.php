@@ -83,7 +83,13 @@ Route::get('/kelolapengirimandrv', function () {
     return view('driver.kelola-pengiriman');
 })->name('kelolapengirimandrv');
 
+// ===================================
+Route::post('/pengiriman/assign-driver', [PengirimanController::class, 'assignDriver'])->name('pengiriman.assignDriver');
+Route::post('/pengiriman/assign-truk', [PengirimanController::class, 'assignTruk'])->name('pengiriman.assignTruk');
 
+// ===================================
+Route::get('/pesanan/{id}', [KelolaPesananController::class, 'detailPesanan'])->name('pesanan.detail');
+Route::post('/pesanan/{id}/terima', [KelolaPesananController::class, 'terimaPesanan'])->name('pesanan.terima');
 // tambahan buat punya jia -malika yang nambahin
 // Route::get('/buatpesanan', function () {
 //     return view('Pelanggan-jia.buat-pesanan');
