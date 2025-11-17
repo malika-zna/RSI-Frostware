@@ -84,9 +84,9 @@ class KelolaPesananController extends Controller
     {
         // try {
         $pesanan = Pesanan::find($id);
-        if (!$pesanan) {
-            return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
-        }
+        // if (!$pesanan) {
+        //     return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
+        // }
 
         $tglKirim = $pesanan->tanggalKirim;
         $totalBalokPesanan = (int) $pesanan->jumlahBalok;

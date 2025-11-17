@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session; // opsional, tapi eksplisit
 
 class PesananController extends Controller
 {
     public function index()
     {
-        // Ambil pesanan hanya untuk pelanggan login
-        $idPelanggan = Auth::id();
+        $idPelanggan = session('akun_id');
+
+        if (!$idPelanggan) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
 
         $pesanans = Pesanan::where('idPelanggan', $idPelanggan)
             ->orderByDesc('tanggalPesan')
@@ -22,24 +25,28 @@ class PesananController extends Controller
 
     public function create()
     {
-        // tampilkan form buat pesanan untuk pelanggan
+        if (!session('akun_id')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         return view('Pelanggan-jia.buat-pesanan');
     }
 
     public function store(Request $request)
     {
+        if (!session('akun_id')) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk membuat pesanan.');
+        }
+
         $request->validate([
             'tanggalKirim' => 'required|date|after_or_equal:today',
             'alamatKirim' => 'required|string',
             'jumlahBalok' => 'required|integer|min:1',
         ]);
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk membuat pesanan.');
-        }
 
         try {
             Pesanan::create([
-                'idPelanggan' => Auth::id(),
+                'idPelanggan' => session('akun_id'),
                 'tanggalPesan' => now(),
                 'tanggalKirim' => $request->tanggalKirim,
                 'alamatKirim' => $request->alamatKirim,
@@ -50,8 +57,6 @@ class PesananController extends Controller
 
             return redirect()->route('beranda-pelanggan')->with('success', 'Pesanan berhasil dibuat!');
         } catch (\Throwable $e) {
-            // log error jika diperlukan
-            // \Log::error('store pesanan error', ['error' => $e->getMessage()]);
             return back()->withInput()->withErrors('Gagal menyimpan pesanan. Silakan coba lagi atau hubungi admin.');
         }
     }
