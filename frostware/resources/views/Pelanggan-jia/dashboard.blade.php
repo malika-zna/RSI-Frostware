@@ -312,6 +312,16 @@
             background: #FAFCFF;
         }
 
+        .order-rejected-row {
+            background-color: #fff8f8ff !important;
+
+        }
+
+        .order-rejected-row+.order-rejected-row {
+            border-top: none !important;
+        }
+
+
         /* gunakan data-status seperti di KelolaPesanan untuk konsistensi */
         .status-badge {
             display: inline-flex;
@@ -477,35 +487,70 @@
                     </thead>
                     <tbody>
                         @forelse($listPesanan as $p)
-                            <tr>
-                                <td>ORD{{ $p->idPesanan }}</td>
-                                <td>{{ $p->jumlahBalok ?? ($p->jumlahPesanan ?? 0) }}</td>
-                                <td>
-                                    @if(!empty($p->tanggalPesan))
-                                        {{ \Carbon\Carbon::parse($p->tanggalPesan)->format('d/m/Y') }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    @if(!empty($p->tanggalKirim))
-                                        {{ \Carbon\Carbon::parse($p->tanggalKirim)->format('d/m/Y') }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-                                <td>
-                                    @php
-                                        $st = $p->status ?? '-';
-                                        // class must match possible values (escape spaces if any)
-                                        $classStatus = 'status-' . str_replace(' ', '\\ ', $st);
-                                    @endphp
+                            @if ($p->status == 'Ditolak')
+                                <tr class="order-rejected-row">
+                                    <td rowspan="2">ORD{{ $p->idPesanan }}</td>
+                                    <td>{{ $p->jumlahBalok ?? ($p->jumlahPesanan ?? 0) }}</td>
+                                    <td>
+                                        @if(!empty($p->tanggalPesan))
+                                            {{ \Carbon\Carbon::parse($p->tanggalPesan)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(!empty($p->tanggalKirim))
+                                            {{ \Carbon\Carbon::parse($p->tanggalKirim)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $st = $p->status ?? '-';
+                                            // class must match possible values (escape spaces if any)
+                                            $classStatus = 'status-' . str_replace(' ', '\\ ', $st);
+                                        @endphp
 
-                                    <span class="status-badge" data-status="{{ $st }}">
-                                        <span class="status-text">{{ $st }}</span>
-                                    </span>
-                                </td>
-                            </tr>
+                                        <span class="status-badge" data-status="{{ $st }}">
+                                            <span class="status-text">{{ $st }}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="order-rejected-row">
+                                    <td colspan="4">Keterangan : {{ $p->keteranganPenolakan ?? '-' }}</td>
+                                </tr>
+                            @else
+                                <tr>
+                                    <td>ORD{{ $p->idPesanan }}</td>
+                                    <td>{{ $p->jumlahBalok ?? ($p->jumlahPesanan ?? 0) }}</td>
+                                    <td>
+                                        @if(!empty($p->tanggalPesan))
+                                            {{ \Carbon\Carbon::parse($p->tanggalPesan)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if(!empty($p->tanggalKirim))
+                                            {{ \Carbon\Carbon::parse($p->tanggalKirim)->format('d/m/Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @php
+                                            $st = $p->status ?? '-';
+                                            // class must match possible values (escape spaces if any)
+                                            $classStatus = 'status-' . str_replace(' ', '\\ ', $st);
+                                        @endphp
+
+                                        <span class="status-badge" data-status="{{ $st }}">
+                                            <span class="status-text">{{ $st }}</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endif
                         @empty
                             <tr>
                                 <td colspan="5" style="text-align:center; color:#777; padding:18px;">
