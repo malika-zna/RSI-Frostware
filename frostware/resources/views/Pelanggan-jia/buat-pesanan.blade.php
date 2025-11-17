@@ -300,6 +300,17 @@
             if (!tanggalEl.value) tanggalEl.value = today;
         })();
     </script>
+    <script>
+        (function () {
+            const userInfoBtn = document.querySelector('.user-info');
+            const userPanelEl = document.querySelector('.user-panel');
+            function showUserPanel() { if (!userPanelEl) return; userPanelEl.style.display = 'inline-flex'; userPanelEl.setAttribute('data-open', 'true'); }
+            function hideUserPanel() { if (!userPanelEl) return; userPanelEl.style.display = 'none'; userPanelEl.setAttribute('data-open', 'false'); }
+            userInfoBtn?.addEventListener('click', function (e) { e.stopPropagation(); if (!userPanelEl) return; const isOpen = userPanelEl.getAttribute('data-open') === 'true'; isOpen ? hideUserPanel() : showUserPanel(); });
+            userPanelEl?.addEventListener('click', function (e) { e.stopPropagation(); });
+            document.addEventListener('click', function () { hideUserPanel(); });
+        })();
+    </script>
 </body>
 
 </html>
