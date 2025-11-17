@@ -17,11 +17,10 @@
 
         body {
             font-family: 'Figtree', sans-serif;
-            background-color: #ffffff;
-            /* samakan dengan KelolaPesanan */
+            background-color: #F9FAFB; /* match buat-pesanan bg */
             margin: 0;
             padding: 0;
-            color: #0A0A0A;
+            color: #111827; /* match buat-pesanan text color */
         }
 
         /* header styling disetarakan dengan KelolaPesanan-mal */
