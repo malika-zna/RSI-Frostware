@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class create_asets_table extends Migration
+class CreateAsetsTable extends Migration
 {
     public function up()
     {
