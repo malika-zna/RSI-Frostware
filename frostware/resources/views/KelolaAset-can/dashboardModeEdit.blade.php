@@ -7,6 +7,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
         rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
     <title>Dashboard Pemeliharaan - Frostware</title>
     <style>
         * {
@@ -219,6 +220,37 @@
             margin-top: 50px;
             min-height: 260px;
         }
+        
+        .edit-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .action-buttons button {
+            width: 25px;
+            height: 25px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+        
+        .action-buttons button.delete {
+            background-color: transparent;
+            color: black;
+            font-size: 16px;
+            line-height: 1;
+            font-size: 20px;
+        }
 
         /* Badge */
         .badge {
@@ -374,7 +406,17 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card">
-            <button class="btn-small">Aktifkan Mode Edit</button>
+        <div class="edit-header">
+            <button class="btn-small">Matikan Mode Edit</button>
+            <div class="action-buttons">
+                <button class="add" title="Tambah">
+                    <span class="material-symbols-outlined">add</span>
+                </button>
+                <button class="delete" title="Hapus">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </div>
+        </div>
 
             <table>
                 <thead>
@@ -421,7 +463,17 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card" style="min-height: 342px;">
-            <button class="btn-small">Aktifkan Mode Edit</button>
+        <div class="edit-header">
+            <button class="btn-small">Matikan Mode Edit</button>
+            <div class="action-buttons">
+                <button class="add" title="Tambah">
+                    <span class="material-symbols-outlined">add</span>
+                </button>
+                <button class="delete" title="Hapus">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </div>
+        </div>
             <button class="btn-small">Lihat Laporan Kerusakan</button>
 
 

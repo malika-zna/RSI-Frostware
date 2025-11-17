@@ -4,24 +4,36 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateAsetTables extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('asets', function (Blueprint $table) {
-            $table->id();
+        // Tabel daftar aset
+        Schema::create('daftar_aset', function (Blueprint $table) {
+            $table->id('id_aset');
+            $table->string('nama_aset');
+            $table->date('tanggal_beli');
+            $table->string('status'); // baik, rusak, sedang diperbaiki.
             $table->timestamps();
+        });
+
+        // Tabel log aktivitas
+        Schema::create('log_aktivitas', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('id_aset');
+            $table->string('nama_aset');
+            $table->text('riwayat_update');
+            $table->text('catatan')->nullable();
+            $table->string('status');
+            $table->timestamps();
+
+            $table->foreign('id_aset')->references('id_aset')->on('daftar_aset')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('asets');
+        Schema::dropIfExists('log_aktivitas');
+        Schema::dropIfExists('daftar_aset');
     }
-};
+}

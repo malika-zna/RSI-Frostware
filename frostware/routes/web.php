@@ -66,6 +66,14 @@ Route::get('/kelolaaset', function () {
     return view('KelolaAset-can.dashboard');
 })->name('kelolaaset');
 
+Route::get('/editkelolaaset', function () {
+    return view('KelolaAset-can.dashboardModeEdit');
+})->name('EditKelolaAset');
+
+Route::get('/deteletetabelaaset', function () {
+    return view('KelolaAset-can.popUpDeleteDaftar');
+})->name('DeleteDaftarAset');
+
 // tambahan buat punya mas zain -malika yang nambahin
 Route::get('/kelolapengirimanmjr', function () {
     return view('manajer.kelola-pengiriman');
