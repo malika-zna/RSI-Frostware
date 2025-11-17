@@ -9,31 +9,31 @@ class CreateAsetsTable extends Migration
     public function up()
     {
         // Tabel daftar aset
-        Schema::create('daftar_aset', function (Blueprint $table) {
-            $table->id('id_aset');
-            $table->string('nama_aset');
-            $table->date('tanggal_beli');
+        Schema::create('daftarAset', function (Blueprint $table) {
+            $table->id('idAset');
+            $table->string('namaAset');
+            $table->date('tanggalBeli');
             $table->string('status'); // baik, rusak, sedang diperbaiki.
             $table->timestamps();
         });
 
         // Tabel log aktivitas
-        Schema::create('log_aktivitas', function (Blueprint $table) {
+        Schema::create('logAktivitas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_aset');
-            $table->string('nama_aset');
-            $table->text('riwayat_update');
+            $table->unsignedBigInteger('idAset');
+            $table->string('namaAset');
+            $table->text('riwayatApdate');
             $table->text('catatan')->nullable();
             $table->string('status');
             $table->timestamps();
 
-            $table->foreign('id_aset')->references('id_aset')->on('daftar_aset')->onDelete('cascade');
+            $table->foreign('idAset')->references('idAset')->on('daftarAset')->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('log_aktivitas');
-        Schema::dropIfExists('daftar_aset');
+        Schema::dropIfExists('logAktivitas');
+        Schema::dropIfExists('daftarAset');
     }
 }
