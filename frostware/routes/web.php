@@ -105,6 +105,9 @@ Route::get('/pesanan-pelanggan/create', [PesananController::class, 'create'])->n
 Route::post('/pesanan-pelanggan', [PesananController::class, 'store'])->name('pesanan.store');
 Route::get('/beranda-pelanggan', [PesananController::class, 'index'])->name('beranda-pelanggan');
 
+Route::get('/beranda-pjkeuangan', function () {
+    return view('beranda-pjkeuangan');
+})->name('beranda-pjkeuangan');
 
 // ini bawaan laravel -mal
 
