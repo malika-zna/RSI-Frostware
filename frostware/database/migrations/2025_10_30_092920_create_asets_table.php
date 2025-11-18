@@ -20,7 +20,7 @@ class CreateAsetsTable extends Migration
         // Tabel log aktivitas
         Schema::create('logAktivitas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('idAset');
+            $table->string('idAset');
             $table->string('namaAset');
             $table->text('riwayatUpdate');
             $table->text('catatan')->nullable();
