@@ -439,7 +439,7 @@
         <div class="head-info">
             <button class="user-info">
                 <h2 class="user">
-                    PJ Keuangan
+                    Penanggung Jawab Keuangan
                 </h2>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#FFF" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                     <path
