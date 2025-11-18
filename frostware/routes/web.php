@@ -7,6 +7,7 @@ use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KelolaPesananController;
 use App\Http\Controllers\PengirimanController;
+use App\Http\Controllers\AsetController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -33,6 +34,7 @@ Route::get('/driver/dashboard', [PengirimanController::class, 'tampilkanDashboar
 Route::get('/pesanan/{id}', [KelolaPesananController::class, 'detailPesanan'])->name('pesanan.detail');
 Route::post('/pesanan/{id}/terima', [KelolaPesananController::class, 'terimaPesanan'])->name('pesanan.terima');
 Route::post('/pesanan/{id}/tolak', [KelolaPesananController::class, 'tolakPesanan'])->name('pesanan.tolak');
+Route::get('/kelolaaset', [AsetController::class, 'dashboardAset'])->name('kelolaaset');
 
 // Route::get('/verifpesanan', function () {
 //     return view('popupverifpesanan-mal');
@@ -62,9 +64,9 @@ Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'proses
 //     return view('laporkankerusakanaset-fad');
 // });
 
-Route::get('/kelolaaset', function () {
-    return view('KelolaAset-can.dashboard');
-})->name('kelolaaset');
+// Route::get('/kelolaaset', function () {
+//     return view('KelolaAset-can.dashboardAset');
+// })->name('kelolaaset');
 
 Route::get('/editkelolaaset', function () {
     return view('KelolaAset-can.dashboardModeEdit');

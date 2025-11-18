@@ -11,7 +11,8 @@ class Aset extends Model
 
     protected $table = 'daftarAset';
     protected $primaryKey = 'idAset';
-    public $incrementing = true;
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'namaAset',
@@ -21,31 +22,7 @@ class Aset extends Model
 
     public function logAktivitas()
     {
-        return $this->hasMany(LogAktivitas::class, 'idAset');
+        return $this->hasMany(LogAktivitas::class, 'idAset', 'idAset');
     }
 }
 
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class LogAktivitas extends Model
-{
-    use HasFactory;
-
-    protected $table = 'logAktivitas';
-
-    protected $fillable = [
-        'idAset',
-        'namaAset',
-        'riwayatUpdate',
-        'catatan',
-        'status',
-    ];
-
-    public function aset()
-    {
-        return $this->belongsTo(Aset::class, 'idAset');
-    }
-}

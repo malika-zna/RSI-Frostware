@@ -10,7 +10,7 @@ class CreateAsetsTable extends Migration
     {
         // Tabel daftar aset
         Schema::create('daftarAset', function (Blueprint $table) {
-            $table->id('idAset');
+            $table->string('idAset')->primary();
             $table->string('namaAset');
             $table->date('tanggalBeli');
             $table->string('status'); // baik, rusak, sedang diperbaiki.
@@ -22,7 +22,7 @@ class CreateAsetsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('idAset');
             $table->string('namaAset');
-            $table->text('riwayatApdate');
+            $table->text('riwayatUpdate');
             $table->text('catatan')->nullable();
             $table->string('status');
             $table->timestamps();
