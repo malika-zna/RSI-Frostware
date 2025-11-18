@@ -374,7 +374,7 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card">
-            <button class="btn-small">Aktifkan Mode Edit</button>
+            <button class="btn-small" onclick="window.location.href='{{ route('EditKelolaAset') }}'">Aktifkan Mode Edit</button>
 
             <table>
                 <thead>
@@ -427,7 +427,6 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card" style="min-height: 342px;">
-            <button class="btn-small">Aktifkan Mode Edit</button>
             <button class="btn-small">Lihat Laporan Kerusakan</button>
 
             <table>

@@ -407,7 +407,7 @@
 
         <div class="card">
         <div class="edit-header">
-            <button class="btn-small">Matikan Mode Edit</button>
+            <button class="btn-small" onclick="window.location.href='{{ route('kelolaaset') }}'">Matikan Mode Edit</button>
             <div class="action-buttons">
                 <button class="add" title="Tambah">
                     <span class="material-symbols-outlined">add</span>
@@ -463,17 +463,6 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card" style="min-height: 342px;">
-        <div class="edit-header">
-            <button class="btn-small">Matikan Mode Edit</button>
-            <div class="action-buttons">
-                <button class="add" title="Tambah">
-                    <span class="material-symbols-outlined">add</span>
-                </button>
-                <button class="delete" title="Hapus">
-                    <span class="material-symbols-outlined">delete</span>
-                </button>
-            </div>
-        </div>
             <button class="btn-small">Lihat Laporan Kerusakan</button>
 
 
