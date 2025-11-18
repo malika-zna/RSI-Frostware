@@ -1,66 +1,48 @@
-<!-- Modal Pilih Driver -->
 <div x-show="showDriverModal"
      style="display: none;"
-     x-transition:enter="ease-out duration-300"
-     x-transition:enter-start="opacity-0"
-     x-transition:enter-end="opacity-100"
-     x-transition:leave="ease-in duration-200"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0"
      class="fixed inset-0 z-50 flex items-center justify-center p-4">
 
-    <!-- Latar belakang overlay -->
     <div @click="showDriverModal = false" class="fixed inset-0 bg-black bg-opacity-50"></div>
 
-    <!-- Konten Modal -->
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-auto z-10"
-         x-transition:enter="ease-out duration-300"
-         x-transition:enter-start="opacity-0 transform scale-95"
-         x-transition:enter-end="opacity-100 transform scale-100"
-         x-transition:leave="ease-in duration-200"
-         x-transition:leave-start="opacity-100 transform scale-100"
-         x-transition:leave-end="opacity-0 transform scale-95">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-auto z-10 p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900">Pilih Driver</h3>
+            <button @click="showDriverModal = false" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
 
-        <div class="p-6">
-            <!-- Header Modal -->
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-900">Pilih Driver</h3>
-                <button @click="showDriverModal = false" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
+        <div class="space-y-3 max-h-96 overflow-y-auto">
+            @foreach($drivers as $driver)
+                @php
+                    // Cek apakah driver sedang sibuk (punya pesanan aktif)
+                    $isBusy = $driver->pesanan->count() > 0;
+                @endphp
+                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
+                    <div>
+                        <span class="text-lg text-gray-800 block">{{ $driver->nama }}</span>
+                        <span class="text-xs text-gray-500">{{ $driver->nomorTelepon }}</span>
+                    </div>
 
-            <!-- Body Modal (Daftar Driver) -->
-            <div class="space-y-3">
-                <!-- Driver 1 -->
-                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                    <span class="text-lg text-gray-800">Dodo Mulyono</span>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg cursor-not-allowed" disabled>
-                        Sedang Bertugas
-                    </button>
+                    @if($isBusy)
+                        <button disabled class="px-4 py-2 text-sm font-medium text-gray-500 bg-gray-100 rounded-lg cursor-not-allowed">
+                            Sedang Bertugas
+                        </button>
+                    @else
+                        <form method="POST" :action="'/pesanan/' + selectedOrderId + '/tugaskan'">
+                            @csrf
+                            <input type="hidden" name="idDriver" value="{{ $driver->idAkun }}">
+                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-700">
+                                Tugaskan
+                            </button>
+                        </form>
+                    @endif
                 </div>
-                <!-- Driver 2 -->
-                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                    <span class="text-lg text-gray-800">Jaka Supratno</span>
-                    <button class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg cursor-not-allowed" disabled>
-                        Sedang Bertugas
-                    </button>
-                </div>
-                <!-- Driver 3 -->
-                <div class="flex justify-between items-center border-b border-gray-200 pb-3">
-                    <span class="text-lg text-gray-800">Joko Subianto</span>
-                    <button @click="showDriverModal = false" class="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-700">
-                        Tugaskan
-                    </button>
-                </div>
-                <!-- Driver 4 -->
-                <div class="flex justify-between items-center pb-2">
-                    <span class="text-lg text-gray-800">Raka Gibrael</span>
-                    <button @click="showDriverModal = false" classs="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-700">
-                        Tugaskan
-                    </button>
-                </div>
-            </div>
+            @endforeach
+
+            @if($drivers->isEmpty())
+                <p class="text-center text-gray-500 py-4">Tidak ada data driver.</p>
+            @endif
         </div>
     </div>
 </div>

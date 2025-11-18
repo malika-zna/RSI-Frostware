@@ -85,7 +85,7 @@ Route::get('/kelolapengirimandrv', function () {
     return view('driver.kelola-pengiriman');
 })->name('kelolapengirimandrv');
 
-
+Route::post('/pesanan/{id}/tugaskan', [PengirimanController::class, 'tugaskanPengiriman'])->name('pesanan.tugaskan');
 // tambahan buat punya jia -malika yang nambahin
 // Route::get('/buatpesanan', function () {
 //     return view('Pelanggan-jia.buat-pesanan');

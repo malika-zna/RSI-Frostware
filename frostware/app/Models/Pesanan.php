@@ -20,8 +20,9 @@ class Pesanan extends Model
         'totalHarga',
         'status',
         'keteranganPenolakan',
-        'idDriver', // <-- TAMBAHKAN INI
-        'idAset',   // <-- TAMBAHKAN INI
+        'idDriver',
+        'idAset',
+        'idTruk',
     ];
 
     protected $casts = [
