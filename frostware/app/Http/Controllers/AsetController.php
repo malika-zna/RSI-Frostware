@@ -15,6 +15,15 @@ class AsetController extends Controller
 
         return view('KelolaAset-can.dashboardAset', compact('daftarAset', 'logAktivitas'));
     }
+    
+    public function dashboardModeEdit()
+    {
+        $daftarAset = Aset::all();
+        $logAktivitas = LogAktivitas::all();
+
+        return view('KelolaAset-can.dashboardModeEdit', compact('daftarAset', 'logAktivitas'));
+    }
+
 
     public function store(Request $request)
     {

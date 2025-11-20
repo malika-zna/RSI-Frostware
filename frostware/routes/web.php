@@ -68,9 +68,12 @@ Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'proses
 //     return view('KelolaAset-can.dashboardAset');
 // })->name('kelolaaset');
 
-Route::get('/editkelolaaset', function () {
-    return view('KelolaAset-can.dashboardModeEdit');
-})->name('EditKelolaAset');
+// Route::get('/editkelolaaset', function () {
+//     return view('KelolaAset-can.dashboardModeEdit');
+// })->name('EditKelolaAset');
+
+Route::get('/editkelolaaset', [AsetController::class, 'dashboardModeEdit'])
+    ->name('EditKelolaAset');
 
 Route::get('/deteletetabelaaset', function () {
     return view('KelolaAset-can.popUpDeleteDaftar');
