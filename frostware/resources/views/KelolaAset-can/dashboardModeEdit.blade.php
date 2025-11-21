@@ -429,27 +429,33 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($daftarAset as $a)
                     <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>03/04/2006</td>
-                        <td>15/10/2025</td>
-                        <td><span class="badge-status status-baik">Baik</span></td>
+                    <td>{{ $a->idAset }}</td>
+                        <td>{{ $a->namaAset }}</td>
+                        <td>{{ \Carbon\Carbon::parse($a->tanggalBeli)->format('d/m/Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($a->updated_at)->format('d/m/Y') }}</td>
+
+                        @php
+                        $class = match(strtolower($a->status)) {
+                            'baik' => 'status-baik',
+                            'sedang diperbaiki' => 'status-sedang',
+                            'rusak' => 'status-rusak',
+                            default => '',
+                        };
+                        @endphp
+
+                        <td>
+                            <span class="badge-status {{ $class }}">
+                                {{ ucfirst($a->status) }}
+                            </span>
+                        </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>CHN002</td>
-                        <td>Tangki Brine</td>
-                        <td>03/04/2006</td>
-                        <td>10/10/2025</td>
-                        <td><span class="badge-status status-sedang">Sedang<br> Diperbaiki</span></td>
+                        <td colspan="5" style="text-align:center;">Tidak ada data</td>
                     </tr>
-                    <tr>
-                        <td>CHN003</td>
-                        <td>Cetakan Es</td>
-                        <td>03/04/2006</td>
-                        <td>10/10/2025</td>
-                        <td><span class="badge-status status-rusak">Rusak</span></td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
