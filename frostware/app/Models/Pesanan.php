@@ -42,10 +42,6 @@ class Pesanan extends Model
         return (int) $query->sum('jumlahBalok');
     }
 
-    /**
-     * Update status and optional keteranganPenolakan
-     * Accepts an optional second argument for keterangan.
-     */
     public function updateStatus(string $status, ?string $keterangan = null)
     {
         $this->status = $status;
@@ -55,20 +51,16 @@ class Pesanan extends Model
         return (bool) $this->save();
     }
 
-    // Relasi ke pelanggan
     public function pelanggan()
     {
         return $this->belongsTo(Akun::class, 'idPelanggan', 'idAkun');
     }
 
-    // ===== TAMBAHAN BARU: Relasi ke Driver =====
     public function driver()
     {
-        // idDriver di tabel ini terhubung ke idAkun di tabel Akun
         return $this->belongsTo(Akun::class, 'idDriver', 'idAkun');
     }
 
-    // ===== TAMBAHAN BARU: Relasi ke Truk (Aset) =====
     public function truk()
     {
         return $this->belongsTo(Aset::class, 'idAset');

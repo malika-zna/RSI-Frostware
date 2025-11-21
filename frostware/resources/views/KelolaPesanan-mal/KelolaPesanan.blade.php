@@ -586,8 +586,8 @@
     </div>
 
 
-    @include('KelolaPesanan-mal.popupverifpesanan-mal')
-    @include('KelolaPesanan-mal.popupinputketerangan-mal')
+    @include('KelolaPesanan-mal.PopupVerifikasiPesanan')
+    @include('KelolaPesanan-mal.PopUpInputKeterangan')
 
     <script>
         (function () {

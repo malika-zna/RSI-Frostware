@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pesanan;
 use Carbon\Carbon;
-// use Illuminate\Support\Facades\DB;
-// use Illuminate\Support\Facades\Log;
 
 class KelolaPesananController extends Controller
 {
@@ -35,7 +33,7 @@ class KelolaPesananController extends Controller
 
         $this->tolakTerlewat();
 
-        return view('KelolaPesanan-mal.kelolapesanan-mal', compact('pesanan', 'summary'));
+        return view('KelolaPesanan-mal.KelolaPesanan', compact('pesanan', 'summary'));
     }
 
     public function tampilkanRingkasan()
@@ -64,7 +62,6 @@ class KelolaPesananController extends Controller
             return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
         }
 
-        // kembalikan data JSON agar JS di view mengisi popup
         return response()->json([
             'success' => true,
             'data' => [
@@ -82,16 +79,11 @@ class KelolaPesananController extends Controller
 
     public function terimaPesanan($id)
     {
-        // try {
         $pesanan = Pesanan::find($id);
-        // if (!$pesanan) {
-        //     return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
-        // }
 
         $tglKirim = $pesanan->tanggalKirim;
         $totalBalokPesanan = (int) $pesanan->jumlahBalok;
 
-        // hitung total yang sudah diterima (exclude current id)
         $sudahDiterima = Pesanan::hitungTotalBalok($tglKirim);
 
         if ($sudahDiterima + $totalBalokPesanan > 2000) {
@@ -102,32 +94,17 @@ class KelolaPesananController extends Controller
         }
 
         $pesanan->updateStatus('Diterima', null);
-        // $pesanan->save();
 
         return response()->json(['success' => true, 'message' => 'Pesanan diterima']);
     }
 
     public function tolakPesanan(Request $request, $id)
     {
-        // $validated = $request->validate([
-        //     'keterangan' => 'required|string|max:250',
-        // ]);
-
         $pesanan = Pesanan::find($id);
-        // if (!$pesanan) {
-        //     return response()->json(['success' => false, 'message' => 'Pesanan tidak ditemukan'], 404);
-        // }
 
-        // try {
         $pesanan->updateStatus('Ditolak', $request->keterangan);
-        // $pesanan->keteranganPenolakan = $request->keterangan;
-        // $pesanan->save();
 
         return response()->json(['success' => true, 'message' => 'Pesanan ditolak']);
-        // } catch (\Throwable $e) {
-        //     Log::error('tolakPesanan error', ['id' => $id, 'message' => $e->getMessage()]);
-        //     return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
-        // }
     }
 
     private function tolakTerlewat()
