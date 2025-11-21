@@ -44,11 +44,9 @@ Route::get('/produksi/urutkan', [ProduksiController::class, 'ambilUrutanProduksi
 
 Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'prosesSelesaiProduksi'])->name('produksi.selesai');
 
-<<<<<<< HEAD
 Route::get('/editkelolaaset', function () {
     return view('KelolaAset-can.dashboardModeEdit');
 })->name('EditKelolaAset');
-=======
 // Route ini akan memuat file view laporkankerusakanaset-fad.blade.php
 // Route::get('/asset', function () {
 //     return view('laporkankerusakanaset-fad');
@@ -64,7 +62,6 @@ Route::get('/editkelolaaset', function () {
 
 Route::get('/editkelolaaset', [AsetController::class, 'dashboardModeEdit'])
     ->name('EditKelolaAset');
->>>>>>> 99c0ee269ca19bf90e4e2a0b90199e4d510b58b6
 
 Route::get('/deteletetabelaaset', function () {
     return view('KelolaAset-can.popUpDeleteDaftar');
