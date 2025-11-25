@@ -13,7 +13,7 @@
                             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
                     </svg>
                 </button>
-            </div>p\
+            </div>
 
             <div class="popup-content">
                 <div class="data">
@@ -303,13 +303,6 @@
                 display: none;
             }
 
-            /* .keterangan[status='Ditolak'] {
-                display: flex;
-                gap: 16px;
-                justify-content: flex-end;
-                align-items: flex-end;
-            } */
-
             .keterangan[status='Ditolak'] {
                 align-self: stretch;
                 display: inline-flex;
@@ -373,7 +366,6 @@
                 border-radius: 8px;
                 background-color: rgba(212, 24, 61, 0.1);
 
-                /* border: 1.5px solid rgba(212, 24, 61, 0.8); */
                 #pv-error {
                     font-size: 14px;
                     color: #D4183D;

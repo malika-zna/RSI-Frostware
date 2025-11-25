@@ -11,7 +11,6 @@
         href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parkinsans:wght@300..800&display=swap"
         rel="stylesheet">
     <link rel="icon" type="svg" href="/fw.svg">
-    <!-- <link rel="shortcut icon" href="/Frostware.svg" type="svg"> -->
     <title>Kelola Pesanan</title>
     <style>
         * {
@@ -112,7 +111,6 @@
             height: fit-content;
             padding: 20px 25px 15px 25px;
             background: #000;
-            /* display: inline-flex; */
             display: none;
             flex-direction: column;
             justify-content: flex-start;
@@ -128,35 +126,25 @@
                 color: #fff;
                 font-size: 16px;
                 font-family: Parkinsans;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 600;
                 margin-bottom: 5px;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
 
             .user-email {
                 color: rgba(255, 255, 255, 0.60);
                 font-size: 12px;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
 
             .user-name {
                 color: #fff;
                 font-size: 14px;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
 
             .user-divider {
                 align-self: stretch;
                 height: 5px;
-                /* position: relative; */
                 border-bottom: 1px solid rgba(255, 255, 255, 0.60);
                 box-sizing: border-box;
                 margin-top: 5px;
@@ -168,7 +156,6 @@
             }
 
             .user-actions {
-                /* overflow: hidden; */
                 display: inline-flex;
                 justify-content: flex-end;
                 align-items: center;
@@ -186,16 +173,12 @@
             .logout-text {
                 color: #fff;
                 font-size: 14px;
-                /* font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; */
                 font-weight: 400;
-                /* line-height: 16px; */
-                /* word-wrap: break-word; */
             }
         }
 
         .container {
             margin: 120px 40px;
-            /* border: 1px solid black; */
             display: flex;
             flex-direction: row;
         }
@@ -591,7 +574,6 @@
 
     <script>
         (function () {
-            // hari dan tanggal
             function updateTanggal() {
                 const now = new Date();
                 const hariId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
@@ -633,7 +615,6 @@
             });
 
             async function updateSummary() {
-                // try {
                 const res = await fetch('/ringkasan', { credentials: 'same-origin' });
                 if (!res.ok) return;
                 const j = await res.json();
@@ -652,9 +633,6 @@
                             </div>
                         </div>
                     `).join('');
-                // } catch (err) {
-                //     console.error('Gagal update summary', err);
-                // }
             }
 
             const popUpVerif = document.getElementById('modal-root');
@@ -663,7 +641,6 @@
 
             function tampilkanPopUpVerif() {
                 if (!popUpVerif) return;
-                // tampilkan
                 popUpVerif.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
                 popUpVerif.querySelector('.modal')?.setAttribute('aria-hidden', 'false');
@@ -694,9 +671,10 @@
                     errCon.style.display = 'none';
                     return;
                 }
-                // jika tombol tolak diklik di dalam popup verif -> buka modal keterangan
                 if (e.target.closest('.btn-tolak')) {
-                    // tutupPopUpVerif();
+                    const errCon = document.getElementById('bagian-error');
+                    const errEl = document.getElementById('pv-error');
+                    if (errCon) { errCon.style.display = 'none'; errEl.textContent = ''; }
                     tampilkanPopUpKeterangan();
                     return;
                 }
@@ -711,23 +689,10 @@
             if (keteranganForm) {
                 keteranganForm.addEventListener('submit', async function (ev) {
                     ev.preventDefault();
-                    // if (!currentPesananId) {
-                    //     alert('Tidak ada pesanan dipilih.');
-                    //     return;
-                    // }
 
                     const teksEl = document.getElementById('in-keterangan');
-                    // const keterangan = teksEl;
                     const keterangan = teksEl ? teksEl.value.trim() : '';
-                    // if (!keterangan) {
-                    //     // simple client validation
-                    //     alert('Mohon isi keterangan penolakan.');
-                    //     return;
-                    // }
-
                     const submitBtn = keteranganForm.querySelector('.btn-save');
-                    // const origText = submitBtn ? submitBtn.textContent : null;
-                    // if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Menyimpan...'; }
 
                     try {
                         const resp = await fetch(`/pesanan/${currentPesananId}/tolak`, {
@@ -741,10 +706,9 @@
                         });
 
                         let jr = {};
-                        try { jr = await resp.json(); } catch (e) { /* ignore */ }
+                        try { jr = await resp.json(); } catch (e) { }
 
                         if (resp.ok && jr.success) {
-                            // tutup modal keterangan
                             const kRoot = document.getElementById('modal-keterangan-root');
                             if (kRoot) {
                                 kRoot.style.display = 'none';
@@ -752,7 +716,6 @@
                                 kRoot.querySelector('.modal')?.setAttribute('aria-hidden', 'true');
                             }
 
-                            // update popup verif jika terbuka
                             const pvStatus = document.getElementById('pv-status');
                             if (pvStatus) {
                                 pvStatus.querySelector('.text').textContent = 'Ditolak';
@@ -777,7 +740,6 @@
                                 pvKet.textContent = keterangan;
                             }
 
-                            // update table row status & keterangan
                             const row = document.querySelector(`.table-row[data-id="${currentPesananId}"]`);
                             if (row) {
                                 const badge = row.querySelector('.status-badge');
@@ -788,12 +750,10 @@
                                 }
                                 row.setAttribute('data-status', 'Ditolak');
 
-                                // ubah tombol aksi menjadi "Lihat Verifikasi"
                                 const actionBtnText = row.querySelector('.action-button .action-button-text');
                                 if (actionBtnText) actionBtnText.textContent = 'Lihat Verifikasi';
                             }
 
-                            // kosongkan textarea setelah sukses
                             if (teksEl) teksEl.value = '';
 
                         } else {
@@ -804,9 +764,6 @@
                         console.error('tolak fetch error', err);
                         alert('Terjadi kesalahan jaringan saat mengirim keterangan.');
                     }
-                    // finally {
-                    //     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = origText; }
-                    // }
                 });
             }
 
@@ -823,7 +780,6 @@
                         if (!json.success) { alert(json.message || 'Pesanan tidak ditemukan'); return; }
                         const p = json.data;
 
-                        // isi modal
                         document.getElementById('pv-id').textContent = 'ORD' + p.idPesanan;
                         document.getElementById('pv-nama').textContent = p.pelanggan?.nama ?? '-';
                         document.getElementById('pv-email').textContent = p.pelanggan?.email ?? '-';
@@ -845,10 +801,8 @@
                             pvTanggalKirimEl.textContent = p.tanggalKirim;
                         }
 
-                        // tampilkan modal
                         tampilkanPopUpVerif();
 
-                        // terima handler
                         const btnTerima = document.getElementById('pv-terima');
                         if (btnTerima) {
                             btnTerima.replaceWith(btnTerima.cloneNode(true));
@@ -870,25 +824,21 @@
                                         body: JSON.stringify({})
                                     });
 
-                                    // parse JSON safely
                                     let jr = {};
-                                    try { jr = await resp.json(); } catch (e) { /* ignore */ }
+                                    try { jr = await resp.json(); } catch (e) { }
 
                                     if (resp.ok && jr.success) {
-                                        // sukses: update badge status di popup
                                         const pvStatusEl = document.getElementById('pv-status');
                                         if (pvStatusEl) {
                                             pvStatusEl.querySelector('.text').textContent = 'Diterima';
                                             pvStatusEl.setAttribute('status', 'Diterima');
                                         }
 
-                                        // update status elemen actions
                                         const actionsEl = document.getElementById('actions');
                                         if (actionsEl) {
                                             actionsEl.setAttribute('status', 'Diterima');
                                         }
 
-                                        // update status badge in table row
                                         if (row) {
                                             const badge = row.querySelector('.status-badge');
                                             if (badge) {
@@ -897,20 +847,17 @@
                                             }
                                             row.setAttribute('data-status', 'Diterima');
 
-                                            // update button text to "Lihat Verifikasi"
                                             const actionBtn = row.querySelector('.action-button .action-button-text');
                                             if (actionBtn) {
                                                 actionBtn.textContent = 'Lihat Verifikasi';
                                             }
                                         }
-                                        // await updateSummary();
 
                                         if (typeof updateSummary === 'function') {
                                             try { await updateSummary(); } catch (e) { console.error('updateSummary failed', e); }
                                         }
 
                                     } else {
-                                        // tampilkan pesan dari server (422 atau error lain)
                                         const message = jr.message || 'Gagal menerima pesanan.';
                                         if (errCon) {
                                             errEl.textContent = message;

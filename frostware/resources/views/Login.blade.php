@@ -14,7 +14,6 @@
     <style>
         * {
             font-family: Parkinsans;
-            /* font-family: Figtree; */
         }
 
         a {
@@ -28,7 +27,6 @@
 
         h1 {
             font-family: Figtree;
-            /* font-family: Parkinsans; */
         }
 
         button {
@@ -251,7 +249,6 @@
             p {
                 font-family: Figtree;
                 font-size: 12px;
-                /* color: gray; */
             }
 
             svg {
@@ -308,11 +305,9 @@
                     <p>{{ session('statusMessage') }}</p>
                 </div>
             @endif
-            <!-- Tambahan Fadila -->
             <button class="btn-login" type="submit">
                 <div class="btn-text">Login</div>
             </button>
-            <!-- Sampai sini -->
             <div class="register-section">
                 <div class="register-text">Belum punya akun?</div>
                 <a class="register-link" href="{{ route('register') }}">Daftar</a>

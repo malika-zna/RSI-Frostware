@@ -14,7 +14,6 @@
     <style>
         * {
             font-family: Parkinsans;
-            /* font-family: Figtree; */
         }
 
         a {
@@ -28,7 +27,6 @@
 
         h1 {
             font-family: Figtree;
-            /* font-family: Parkinsans; */
         }
 
         body {
@@ -250,7 +248,6 @@
             p {
                 font-family: Figtree;
                 font-size: 12px;
-                /* color: gray; */
             }
 
             svg {

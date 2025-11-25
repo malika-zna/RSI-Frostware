@@ -14,7 +14,7 @@ Route::get('/', function () {
 });
 
 Route::get('/register', function () {
-    return view('regist-mal');
+    return view('Registrasi');
 })->name('register');
 
 Route::post('/register', [RegistrasiController::class, 'registrasiAkun'])->name('register.post');
@@ -24,7 +24,7 @@ Route::post('/login', [LoginController::class, 'periksaLogin'])->name('login.pos
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/login', function () {
-    return view('login-mal');
+    return view('Login');
 })->name('login');
 
 Route::get('/ringkasan', [KelolaPesananController::class, 'tampilkanRingkasan'])->name('ringkasan');
