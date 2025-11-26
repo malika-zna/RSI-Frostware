@@ -358,6 +358,116 @@
             background: #D4183D;
         }
 
+        .status-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .status-badge {
+            cursor: pointer;
+        }
+        
+        .status-dropdown {
+            display: none;
+            position: absolute;
+            top: 32px;
+            left: 0;
+            background: white;
+            border: 1px solid #DDD;
+            border-radius: 10px;
+            padding: 6px 0;
+            width: 150px;
+            z-index: 50;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .status-dropdown div {
+            background: #ECEEF2;
+            padding: 6px 10px;
+            margin: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-family: 'Arimo', sans-serif;
+            color: #030213;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .status-dropdown div:hover {
+            background: rgba(22, 45, 112, 0.3);
+        }
+
+        /* POPUP OVERLAY */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+}
+
+/* BOX POPUP */
+.popup-box {
+    width: 420px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    font-family: 'Inter', sans-serif;
+}
+
+.popup-box h2 {
+    font-size: 18px;
+    font-weight: 600; 
+}
+
+
+/* TEXTAREA */
+.popup-box textarea {
+    width: 100%;
+    height: 64px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    resize: none;
+    font-family: 'Inter', sans-serif;
+}
+
+/* BUTTON WRAPPER */
+.popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* BUTTON BATAL */
+.btn-batal {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #ccc;
+    border: none;
+    cursor: pointer;
+}
+
+/* BUTTON SIMPAN */
+.btn-simpan {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #1C398E;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body>
@@ -446,9 +556,16 @@
                         @endphp
 
                         <td>
-                            <span class="badge-status {{ $class }}">
+                            <div class="status-wrapper">
+                                <span class="badge-status {{ $class }} status-badge"
+                                data-id="{{ $a->idAset }}"
+                                data-current="{{ strtolower($a->status) }}">
                                 {{ ucfirst($a->status) }}
                             </span>
+                            <!-- Dropdown -->
+                            <div class="status-dropdown">
+                            </div>
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -511,6 +628,22 @@
 
 </div>
 
+                            <!-- POPUP CATATAN -->
+                            <div id="popupCatatan" class="popup-overlay">
+    <div class="popup-box">
+        <h2>Tambahkan catatan perubahan status</h2>
+
+        <textarea id="inputCatatan"
+        placeholder="Contoh: Mesin meletus saat digunakan..."></textarea>
+
+        <div class="popup-actions">
+            <button class="btn-batal" onclick="tutupPopup()">Batal</button>
+            <button class="btn-simpan" onclick="simpanCatatan()">Simpan</button>
+        </div>
+    </div>
+</div>
+
+
 <!-- js -->
 <script>
 // header user
@@ -534,6 +667,97 @@ function updateDate() {
             }
 
             updateDate();
+                                // STATUS DROPDOWN LOGIC
+                                document.addEventListener("DOMContentLoaded", () => {
+                                const statusBadges = document.querySelectorAll(".status-badge");
+
+                                statusBadges.forEach(badge => {
+                                    badge.addEventListener("click", function () {
+                                        const wrapper = this.parentElement;
+                                        const dropdown = wrapper.querySelector(".status-dropdown");
+
+                                        // Tutup dropdown lain
+                                        document.querySelectorAll(".status-dropdown").forEach(d => {
+                                            if (d !== dropdown) d.style.display = "none";
+                                        });
+
+                                        const current = this.dataset.current; 
+                                        let options = [];
+
+                                        // LOGIKA BARU SESUAI PERMINTAAN KAMU
+                                        if (current === "baik") {
+                                            options = ["Sedang Diperbaiki", "Rusak"];
+                                        } 
+                                        else if (current === "sedang diperbaiki") {
+                                            options = ["Baik", "Rusak"];
+                                        }
+                                        else if (current === "rusak") {
+                                            options = ["Baik", "Sedang Diperbaiki"];
+                                        }
+
+                                        dropdown.innerHTML = "";
+                                        options.forEach(opt => {
+                                            dropdown.innerHTML += `<div data-new="${opt}">${opt}</div>`;
+                                        });
+
+                                        dropdown.style.display = "block";
+
+// EVENT klik pilihan → buka popup, jangan update status dulu
+dropdown.querySelectorAll("div").forEach(optEl => {
+    optEl.addEventListener("click", () => {
+        const newStatus = optEl.dataset.new;
+
+        // simpan status & badge sementara
+        window.statusBaru = newStatus;
+        window.badgeAktif = badge;
+
+        // tampilkan popup
+        document.getElementById("popupCatatan").style.display = "flex";
+
+        // tutup dropdown
+        dropdown.style.display = "none";
+    });
+});                                    });
+                                });
+
+                                // Klik di luar dropdown → tutup
+                                document.addEventListener("click", function(e) {
+                                    if (!e.target.classList.contains("status-badge")) {
+                                        document.querySelectorAll(".status-dropdown").forEach(d => d.style.display = "none");
+                                    }
+                                });
+                                });
+                                function tutupPopup() {
+    document.getElementById("popupCatatan").style.display = "none";
+    document.getElementById("inputCatatan").value = "";
+}
+
+function simpanCatatan() {
+    const catatan = document.getElementById("inputCatatan").value.trim();
+    if (catatan === "") {
+        alert("Catatan tidak boleh kosong");
+        return;
+    }
+
+    const badge = window.badgeAktif;
+    const newStatus = window.statusBaru;
+
+    // Update teks badge
+    badge.textContent = newStatus;
+
+    // Update warna
+    badge.classList.remove("status-baik","status-sedang","status-rusak");
+    let low = newStatus.toLowerCase();
+
+    if (low === "baik") badge.classList.add("status-baik");
+    if (low === "rusak") badge.classList.add("status-rusak");
+    if (low === "sedang diperbaiki") badge.classList.add("status-sedang");
+
+    badge.dataset.current = low;
+
+    tutupPopup();
+}
+
 </script>
 
 </body>
