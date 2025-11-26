@@ -76,6 +76,8 @@ Route::get('/kelolapengirimandrv', function () {
 })->name('kelolapengirimandrv');
 
 Route::post('/pesanan/{id}/tugaskan', [PengirimanController::class, 'tugaskanPengiriman'])->name('pesanan.tugaskan');
+Route::post('/pesanan/{id}/mulai', [PengirimanController::class, 'mulaiPengiriman'])->name('pesanan.mulai');
+Route::post('/pesanan/{id}/selesai', [PengirimanController::class, 'selesaikanPengiriman'])->name('pesanan.selesai');
 
 Route::middleware('auth')->group(function () {
 });

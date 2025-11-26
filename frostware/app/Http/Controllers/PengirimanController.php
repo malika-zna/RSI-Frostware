@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pesanan;
-use App\Models\Akun; // Import Model Akun
-use App\Models\Truk; // Import Model Truk
+use App\Models\Akun;
+use App\Models\Truk;
 
 class PengirimanController extends Controller
 {
@@ -16,28 +16,32 @@ class PengirimanController extends Controller
     {
         $statusRelevan = ['Selesai Diproduksi', 'Siap Dikirim', 'Sedang Dikirim'];
 
+        // Pastikan Model Pesanan memiliki method function driver() dan truk()
         $pesanans = Pesanan::with(['pelanggan', 'driver', 'truk'])
             ->whereIn('status', $statusRelevan)
             ->orderBy('tanggalKirim', 'asc')
             ->get();
 
         // AMBIL DATA DRIVER
-        // Ambil akun yang memiliki role 'driver'
-        // Asumsi: kita cek ketersediaan berdasarkan apakah mereka sedang membawa pesanan aktif
+        // Mengambil semua akun driver
         $drivers = Akun::whereHas('role', function($q) {
             $q->where('role', 'driver');
-        })->with(['pesanan' => function($query) {
-            // Cek pesanan aktif driver ini
-            $query->whereIn('status', ['Siap Dikirim', 'Sedang Dikirim']);
-        }])->get();
+        })->get();
+
+        // Manual load pesanan aktif untuk menghindari error jika relasi di Model Akun belum dibuat
+        foreach ($drivers as $driver) {
+            $driver->pesanan_aktif = Pesanan::where('idDriver', $driver->idAkun)
+                ->whereIn('status', ['Siap Dikirim', 'Sedang Dikirim'])
+                ->first();
+        }
 
         // AMBIL DATA TRUK
         $truks = Truk::all();
 
         return view('manajer.kelola-pengiriman', [
             'pesanans' => $pesanans,
-            'drivers' => $drivers, // Kirim ke view
-            'truks' => $truks      // Kirim ke view
+            'drivers' => $drivers,
+            'truks' => $truks
         ]);
     }
 
@@ -46,11 +50,13 @@ class PengirimanController extends Controller
      */
     public function tampilkanDashboardDriver()
     {
-        $driverId = session('akun_id'); // Pastikan key session sesuai dengan login Anda
+        // Menggunakan session('akun_id') sesuai pola LoginController Anda
+        $driverId = session('akun_id');
+
         $statusRelevan = ['Siap Dikirim', 'Sedang Dikirim'];
 
         $pesanans = Pesanan::with(['pelanggan', 'truk'])
-            ->where('idDriver', $driverId) // Pastikan kolom di DB adalah idDriver bukan idPelanggan
+            ->where('idDriver', $driverId)
             ->whereIn('status', $statusRelevan)
             ->orderBy('tanggalKirim', 'asc')
             ->get();
@@ -80,7 +86,8 @@ class PengirimanController extends Controller
             $pesanan->idTruk = $request->idTruk;
         }
 
-        // Jika Driver dan Truk sudah dipilih, ubah status jadi Siap Dikirim (jika belum)
+        // Ubah status jadi 'Siap Dikirim' hanya jika kedua aset sudah dipilih
+        // dan status sebelumnya adalah 'Selesai Diproduksi'
         if ($pesanan->idDriver && $pesanan->idTruk && $pesanan->status == 'Selesai Diproduksi') {
             $pesanan->status = 'Siap Dikirim';
         }
@@ -88,5 +95,43 @@ class PengirimanController extends Controller
         $pesanan->save();
 
         return redirect()->back()->with('success', 'Pengiriman berhasil dijadwalkan.');
+    }
+
+    /**
+     * Method untuk memulai pengiriman (Diakses oleh Driver)
+     */
+    public function mulaiPengiriman($idPesanan)
+    {
+        $driverId = session('akun_id');
+        $pesanan = Pesanan::where('idPesanan', $idPesanan)
+            ->where('idDriver', $driverId) // Pastikan hanya driver yang bertugas yang bisa akses
+            ->firstOrFail();
+
+        if ($pesanan->status == 'Siap Dikirim') {
+            $pesanan->status = 'Sedang Dikirim';
+            $pesanan->save();
+            return redirect()->back()->with('success', 'Status pengiriman diperbarui menjadi Sedang Dikirim.');
+        }
+
+        return redirect()->back()->with('error', 'Pesanan tidak dapat dimulai.');
+    }
+
+    /**
+     * Method untuk menyelesaikan pengiriman (Diakses oleh Driver)
+     */
+    public function selesaikanPengiriman($idPesanan)
+    {
+        $driverId = session('akun_id');
+        $pesanan = Pesanan::where('idPesanan', $idPesanan)
+            ->where('idDriver', $driverId)
+            ->firstOrFail();
+
+        if ($pesanan->status == 'Sedang Dikirim') {
+            $pesanan->status = 'Diterima'; // Status akhir pesanan
+            $pesanan->save();
+            return redirect()->back()->with('success', 'Pengiriman telah selesai.');
+        }
+
+        return redirect()->back()->with('error', 'Pengiriman belum dapat diselesaikan.');
     }
 }

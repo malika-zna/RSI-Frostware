@@ -4,6 +4,18 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {{-- Menampilkan Pesan Sukses/Error --}}
+    @if(session('success'))
+        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
         <div class="p-6 sm:p-8">
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Tugas Pengiriman Saya</h2>
@@ -50,17 +62,29 @@
                                         </span>
                                     @endif
                                 </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     @if($pesanan->status == 'Siap Dikirim')
-                                        <button class="px-4 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
-                                            Mulai Kirim
-                                        </button>
+                                        {{-- Form untuk Memulai Pengiriman --}}
+                                        <form action="{{ route('pesanan.mulai', $pesanan->idPesanan) }}" method="POST" onsubmit="return confirm('Mulai pengiriman pesanan ini?');">
+                                            @csrf
+                                            <button type="submit" class="px-4 py-1.5 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition duration-150 ease-in-out">
+                                                Mulai Kirim
+                                            </button>
+                                        </form>
+
                                     @elseif($pesanan->status == 'Sedang Dikirim')
-                                        <button class="px-4 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                                            Selesaikan
-                                        </button>
+                                        {{-- Form untuk Menyelesaikan Pengiriman --}}
+                                        <form action="{{ route('pesanan.selesai', $pesanan->idPesanan) }}" method="POST" onsubmit="return confirm('Apakah pesanan sudah sampai dan diterima pelanggan?');">
+                                            @csrf
+                                            <button type="submit" class="px-4 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-150 ease-in-out">
+                                                Selesaikan
+                                            </button>
+                                        </form>
                                     @endif
                                 </td>
+                                {{-- AKHIR BAGIAN YANG DIPERBARUI --}}
+
                             </tr>
                         @empty
                             <tr>
@@ -71,7 +95,7 @@
                                 </td>
                             </tr>
                         @endforelse
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>

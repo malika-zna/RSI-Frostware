@@ -50,7 +50,19 @@ class Pesanan extends Model
     {
         return $this->belongsTo(Akun::class, 'idPelanggan', 'idAkun');
     }
-    
+
+
+    public function driver()
+    {
+        // Asumsi foreign key di tabel pesanan adalah idDriver
+        return $this->belongsTo(Akun::class, 'idDriver', 'idAkun');
+    }
+
+    public function truk()
+    {
+        // Asumsi foreign key di tabel pesanan adalah idTruk
+        return $this->belongsTo(Truk::class, 'idTruk', 'idTruk');
+    }
     /*
     public static function cariDaftarProduksi()
     {
