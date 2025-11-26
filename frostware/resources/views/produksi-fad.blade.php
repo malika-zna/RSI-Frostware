@@ -493,7 +493,7 @@
     <div class="empty-state-message">
       <span>
         @if(Route::is('produksi.urutkan'))
-        Tidak Ada Pesanan yang Siap Diproduksi
+        Tidak Ada Pesanan yang Diurutkan
         @else
         Tidak Ada Pesanan untuk Diproduksi
         @endif
