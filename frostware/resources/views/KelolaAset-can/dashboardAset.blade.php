@@ -427,8 +427,9 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card" style="min-height: 342px;">
-            <button class="btn-small">Lihat Laporan Kerusakan</button>
-
+        <button class="btn-small" onclick="window.location.href='{{ route('laporanKerusakan') }}'">
+    Lihat Laporan Kerusakan
+</button>
             <table>
                 <thead>
                     <tr>

@@ -78,12 +78,15 @@ class AsetController extends Controller
     }
 
     public function tampilkanLaporanKerusakan()
-    {
-        $asetRusak = Aset::where('status', 'rusak')->get();
-        return view('popUpLaporanKerusakan', compact('asetRusak'));
-    }
+{
+    $laporan = LogAktivitas::where('status', 'rusak')->get();
+    $daftarAset = Aset::all();
+    $logAktivitas = LogAktivitas::all();
 
-    public function tampilkanTabelDaftarAset()
+    return view('KelolaAset-can.popUpLaporanKerusakan', compact('laporan', 'daftarAset', 'logAktivitas'));
+}
+    
+public function tampilkanTabelDaftarAset()
     {
         $daftarAset = Aset::all();
         return view('dashboard', compact('daftarAset'));
@@ -181,4 +184,5 @@ class AsetController extends Controller
             return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
         }
     }
+
 }

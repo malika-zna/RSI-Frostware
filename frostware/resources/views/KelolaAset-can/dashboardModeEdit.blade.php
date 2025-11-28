@@ -718,7 +718,6 @@ input[type="date"]:not(:placeholder-shown):before {
                 calendar_month
             </span>
         </div>
-
         <div class="popup-actions" style="margin-top:15px;">
             <button class="btn-batal" onclick="tutupPopupTambahAset()">Batal</button>
             <button class="btn-simpan" onclick="simpanAsetBaru()">Simpan</button>

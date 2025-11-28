@@ -325,6 +325,76 @@
         .status-rusak {
             background: #D4183D;
         }
+        /* ================= POPUP ================= */
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.25);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.popup-box {
+    width: 520px;
+    background: #FFFFFF;
+    border-radius: 15px;
+    padding: 25px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
+}
+
+.popup-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+}
+
+.popup-message {
+    width: 100%;
+    background: #F5F6FA;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 14px;
+    color: #4A4A4A;
+}
+
+.popup-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.popup-btn-cancel {
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: #ECECEC;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.popup-btn-ok {
+    padding: 8px 18px;
+    border-radius: 8px;
+    background: #1C398E;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.popup-btn-cancel:hover {
+    background: #dcdcdc;
+}
+
+.popup-btn-ok:hover {
+    opacity: .85;
+}
+
 
     </style>
 </head>
@@ -427,8 +497,9 @@
         <div style="width:100%; height:1px; background:#000; opacity:.1; margin:20px 0;"></div>
 
         <div class="card" style="min-height: 342px;">
-            <button class="btn-small">Lihat Laporan Kerusakan</button>
-
+        <button class="btn-small" onclick="openPopup('Mesin Pembuat Es Rusak!', 'Saat digunakan, mesin pembuat es mengeluarkan asap.')">
+    Lihat Laporan Kerusakan
+</button>
             <table>
                 <thead>
                     <tr>
@@ -440,39 +511,56 @@
                     </tr>
                 </thead>
                 <tbody>
-    @forelse($logAktivitas as $log)
+    @if($logAktivitas->count() == 0)
         <tr>
-            <td>{{ $log->idAset }}</td>
-            <td>{{ $log->namaAset }}</td>
-            <td>{{ $log->riwayatUpdate }}</td>
-            <td>{{ $log->catatan ?? '-' }}</td>
-            @php
-                $class = match(strtolower($log->status)) {
-                    'baik' => 'status-baik',
-                    'sedang diperbaiki' => 'status-sedang',
-                    'rusak' => 'status-rusak',
-                    default => '',
-                };
-            @endphp
-            <td>
-            <span class="badge-status {{ $class }} status-badge"
-    data-id="{{ $log->idAset }}"
-    data-nama="{{ $log->namaAset }}"
-    data-current="{{ strtolower($log->status) }}">
-    {{ ucfirst($log->status) }}
-</span>
-            </td>
+            <td colspan="5" style="text-align:center;">Belum ada aktivitas</td>
         </tr>
-    @empty
-        <tr>
-            <td colspan="5" style="text-align: center;">Belum ada aktivitas</td>
-        </tr>
-    @endforelse
+    @else
+        @foreach($logAktivitas as $log)
+            <tr>
+                <td>{{ $log->idAset }}</td>
+                <td>{{ $log->namaAset }}</td>
+                <td>{{ $log->riwayatUpdate }}</td>
+                <td>{{ $log->catatan ?? '-' }}</td>
+
+                @php
+                    $class = match(strtolower($log->status)) {
+                        'baik' => 'status-baik',
+                        'sedang diperbaiki' => 'status-sedang',
+                        'rusak' => 'status-rusak',
+                        default => '',
+                    };
+                @endphp
+
+                <td>
+                    <span class="badge-status {{ $class }}">
+                        {{ ucfirst($log->status) }}
+                    </span>
+                </td>
+            </tr>
+        @endforeach
+    @endif
 </tbody>
             </table>
         </div>
     </section>
 
+</div>
+
+<!-- POPUP -->
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-box">
+        <div class="popup-title" id="popupTitle">Judul Popup</div>
+
+        <div class="popup-message" id="popupMessage">
+            Pesan detail muncul di sini.
+        </div>
+
+        <div class="popup-buttons">
+            <button class="popup-btn-cancel" onclick="closePopup()">Batal</button>
+            <button class="popup-btn-ok" onclick="acceptPopup()">Terima</button>
+        </div>
+    </div>
 </div>
 
 <!-- js -->
@@ -498,6 +586,22 @@ function updateDate() {
             }
 
             updateDate();
+
+            function openPopup(title, message) {
+    document.getElementById("popupTitle").innerText = title;
+    document.getElementById("popupMessage").innerText = message;
+    document.getElementById("popupOverlay").style.display = "flex";
+}
+
+function closePopup() {
+    document.getElementById("popupOverlay").style.display = "none";
+}
+
+function acceptPopup() {
+    // kalau mau redirect setelah klik "Terima"
+    window.location.href = "{{ route('laporanKerusakan') }}";
+}
+
 </script>
 </body>
 </html>

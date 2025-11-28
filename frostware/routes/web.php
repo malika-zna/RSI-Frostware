@@ -53,6 +53,9 @@ Route::get('/EditKelolaAset', [AsetController::class, 'dashboardModeEdit'])
 Route::post('/aset/tambah', [AsetController::class, 'tambahAset'])
     ->name('aset.tambah');
 
+    Route::get('/laporan-kerusakan', [AsetController::class, 'tampilkanLaporanKerusakan'])
+    ->name('laporanKerusakan');
+
 Route::get('/kelolapengirimanmjr', function () {
     return view('manajer.kelola-pengiriman');
 })->name('kelolapengirimanmjr');
