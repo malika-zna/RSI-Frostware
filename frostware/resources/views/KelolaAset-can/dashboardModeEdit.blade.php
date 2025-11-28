@@ -888,21 +888,35 @@ function simpanAsetBaru() {
     formData.append('_token', '{{ csrf_token() }}');
 
     fetch("{{ route('aset.tambah') }}", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            location.reload(); // reload halaman supaya daftar aset terbaru muncul
-        } else {
-            alert("Gagal menyimpan data.");
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Terjadi kesalahan saat menyimpan.");
-    });
+    method: "POST",
+    credentials: "same-origin", // kirim cookie session supaya CSRF bisa diverifikasi
+    headers: {
+        // jangan set Content-Type saat menggunakan FormData
+        'X-CSRF-TOKEN': '{{ csrf_token() }}' // tambahan keamanan
+    },
+    body: formData
+})
+.then(async res => {
+    const text = await res.text();
+    // coba parse JSON, jika bukan JSON -> log response untuk debugging
+    try {
+        return JSON.parse(text);
+    } catch (e) {
+        console.error('Unexpected non-JSON response', res.status, text);
+        throw new Error('Server returned non-JSON response (cek Network/laravel.log)');
+    }
+})
+.then(data => {
+    if (data.success) {
+        location.reload();
+    } else {
+        alert('Gagal menyimpan data: ' + (data.message || ''));
+    }
+})
+.catch(err => {
+    console.error(err);
+    alert('Terjadi kesalahan saat menyimpan. Periksa console dan Network tab.');
+});
 }
 
 </script>

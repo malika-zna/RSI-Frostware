@@ -50,7 +50,7 @@ Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'proses
 Route::get('/EditKelolaAset', [AsetController::class, 'dashboardModeEdit'])
     ->name('EditKelolaAset');
 
-Route::post('/aset/tambah', [App\Http\Controllers\AsetController::class, 'tambahAset'])
+Route::post('/aset/tambah', [AsetController::class, 'tambahAset'])
     ->name('aset.tambah');
 
 Route::get('/kelolapengirimanmjr', function () {

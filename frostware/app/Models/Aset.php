@@ -18,6 +18,11 @@ class Aset extends Model
         'namaAset',
         'tanggalBeli',
         'status',
+        'idAset',
+    ];
+
+    protected $casts = [
+      'tanggalBeli' => 'date',
     ];
 
     public function logAktivitas()

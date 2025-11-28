@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Aset;
 use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AsetController extends Controller
 {
@@ -15,7 +16,7 @@ class AsetController extends Controller
 
         return view('KelolaAset-can.dashboardAset', compact('daftarAset', 'logAktivitas'));
     }
-    
+
     public function dashboardModeEdit()
     {
         $daftarAset = Aset::all();
@@ -24,43 +25,33 @@ class AsetController extends Controller
         return view('KelolaAset-can.dashboardModeEdit', compact('daftarAset', 'logAktivitas'));
     }
 
-
     public function store(Request $request)
     {
-        // Validasi sederhana
         $request->validate([
             'namaAset' => 'required|string',
             'status' => 'required|string'
         ]);
 
-        // 1. Ambil nama aset
         $namaAset = $request->namaAset;
-
-        // 2. Ambil inisial nama aset (contoh: Mesin Pembuat Es = MPE)
         $kata = explode(' ', $namaAset);
         $inisial = '';
         foreach ($kata as $k) {
             $inisial .= strtoupper(substr($k, 0, 1));
         }
 
-        // 3. Cari ID terakhir yang pakai prefix tersebut
         $lastAset = Aset::where('idAset', 'LIKE', $inisial . '%')
-        ->orderBy('idAset', 'desc')
-        ->first();
+            ->orderBy('idAset', 'desc')
+            ->first();
 
-        // 4. Tentukan nomor urut
         if ($lastAset) {
-            // ambil angka bagian belakang, misal dari MPE004 → 004
             $lastNumber = (int) substr($lastAset->idAset, strlen($inisial));
             $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
         } else {
             $newNumber = "001";
         }
 
-        // 5. Bentuk ID lengkap
         $idAset = $inisial . $newNumber;
 
-        // 6. Simpan
         Aset::create([
             'idAset' => $idAset,
             'namaAset' => $namaAset,
@@ -72,15 +63,11 @@ class AsetController extends Controller
 
     private function generateIdAset($namaAset)
     {
-        // Ambil tiga huruf pertama, uppercase
         $prefix = strtoupper(substr($namaAset, 0, 3));
-
-        // Cari id terakhir dengan prefix sama
         $last = Aset::where('idAset', 'like', $prefix . '%')
-        ->orderBy('idAset', 'desc')
-        ->first();
+            ->orderBy('idAset', 'desc')
+            ->first();
 
-        // Nomor terakhir
         if ($last) {
             $number = (int) substr($last->idAset, 3) + 1;
         } else {
@@ -108,80 +95,90 @@ class AsetController extends Controller
         return view('dashboard', compact('daftarAset'));
     }
 
-    public function updateStatus(Request $request) { $request->validate([ 'idAset' => 'required', 'statusBaru' => 'required', ]); // update aset $aset = Aset::findOrFail($request->idAset); $aset->status = $request->statusBaru; $aset->save(); // catat ke log aktivitas LogAktivitas::create([ 'idAset' => $aset->idAset, 'namaAset' => $aset->namaAset, 'status' => $request->statusBaru, 'catatan' => $request->catatan, 'riwayatUpdate' => now()->format("d/m/Y"), ]); return response()->json(['success' => true]); }
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'idAset' => 'required',
+            'statusBaru' => 'required',
+        ]);
 
-}
+        $aset = Aset::findOrFail($request->idAset);
+        $aset->status = $request->statusBaru;
+        $aset->save();
 
-public function delete(Request $request)
-{
-    // validasi
-    $request->validate([
-        'idAset' => 'required'
-    ]);
+        LogAktivitas::create([
+            'idAset' => $aset->idAset,
+            'namaAset' => $aset->namaAset,
+            'status' => $request->statusBaru,
+            'catatan' => $request->catatan ?? null,
+            'riwayatUpdate' => now()->format("d/m/Y"),
+        ]);
 
-    // cari aset
-    $aset = Aset::where('idAset', $request->idAset)->first();
-
-    if (!$aset) {
-        return response()->json(['success' => false, 'message' => 'Aset tidak ditemukan'], 404);
-    }
-    // hapus aset
-    $aset->delete();
-
-    return response()->json(['success' => true]);
-}
-
-public function destroy($idAset)
-{
-    // hapus dari tabel aset
-    $aset = Aset::where('idAset', $idAset)->first();
-
-    if (!$aset) {
-        return back()->with('error', 'Aset tidak ditemukan.');
+        return response()->json(['success' => true]);
     }
 
-    $aset->delete();
+    public function delete(Request $request)
+    {
+        $request->validate(['idAset' => 'required']);
 
-    return redirect()->back()->with('success', 'Aset berhasil dihapus.');
-}
+        $aset = Aset::where('idAset', $request->idAset)->first();
+        if (! $aset) {
+            return response()->json(['success' => false, 'message' => 'Aset tidak ditemukan'], 404);
+        }
 
-public function tambahAset(Request $request)
-{
-    $request->validate([
-        'namaAset' => 'required|string',
-        'tanggalBeli' => 'required|date'
-    ]);
-
-    $namaAset = $request->namaAset;
-
-    // generate kode ID
-    $kata = explode(' ', $namaAset);
-    $inisial = '';
-    foreach ($kata as $k) {
-        $inisial .= strtoupper(substr($k, 0, 1));
+        $aset->delete();
+        return response()->json(['success' => true]);
     }
 
-    $lastAset = Aset::where('idAset', 'LIKE', $inisial . '%')
-        ->orderBy('idAset', 'desc')
-        ->first();
-
-    if ($lastAset) {
-        $lastNumber = (int) substr($lastAset->idAset, strlen($inisial));
-        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-    } else {
-        $newNumber = "001";
+    public function destroy($idAset)
+    {
+        $aset = Aset::where('idAset', $idAset)->first();
+        if (! $aset) {
+            return back()->with('error', 'Aset tidak ditemukan.');
+        }
+        $aset->delete();
+        return redirect()->back()->with('success', 'Aset berhasil dihapus.');
     }
 
-    $idAset = $inisial . $newNumber;
+    public function tambahAset(Request $request)
+    {
+        try {
+            $request->validate([
+                'namaAset' => 'required|string',
+                'tanggalBeli' => 'required|date'
+            ]);
 
-    Aset::create([
-        'idAset' => $idAset,
-        'namaAset' => $namaAset,
-        'tanggalBeli' => $request->tanggalBeli,
-        'status' => "Baik" // default
-    ]);
+            $namaAset = $request->namaAset;
+            $kata = explode(' ', $namaAset);
+            $inisial = '';
+            foreach ($kata as $k) {
+                $inisial .= strtoupper(substr($k, 0, 1));
+            }
 
-    return response()->json(['success' => true]);
-}
+            $lastAset = Aset::where('idAset', 'LIKE', $inisial . '%')
+                ->orderBy('idAset', 'desc')
+                ->first();
 
+            if ($lastAset) {
+                $lastNumber = (int) substr($lastAset->idAset, strlen($inisial));
+                $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+            } else {
+                $newNumber = "001";
+            }
+
+            $idAset = $inisial . $newNumber;
+
+            $aset = Aset::create([
+                'idAset' => $idAset,
+                'namaAset' => $namaAset,
+                'tanggalBeli' => $request->tanggalBeli,
+                'status' => "Baik"
+            ]);
+
+            return response()->json(['success' => true, 'data' => $aset]);
+        } catch (\Throwable $e) {
+            Log::error('aset.tambah error', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['success' => false, 'message' => 'Internal server error'], 500);
+        }
+    }
 }
