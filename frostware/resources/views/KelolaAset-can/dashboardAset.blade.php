@@ -440,28 +440,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>03/04/2010</td>
-                        <td>Meletus Saat Digunakan</td>
-                        <td><span class="badge-status status-rusak">Rusak</span></td>
-                    </tr>
-                    <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>10/04/2010</td>
-                        <td>Pembersihan Mesin</td>
-                        <td><span class="badge-status status-sedang">Sedang<br>Diperbaiki</span></td>
-                    </tr>
-                    <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>10/04/2010</td>
-                        <td>Mesin Dapat Digunakan Kembali</td>
-                        <td><span class="badge-status status-baik">Baik</span></td>
-                    </tr>
-                </tbody>
+    @forelse($logAktivitas as $log)
+        <tr>
+            <td>{{ $log->idAset }}</td>
+            <td>{{ $log->namaAset }}</td>
+            <td>{{ $log->riwayatUpdate }}</td>
+            <td>{{ $log->catatan ?? '-' }}</td>
+            @php
+                $class = match(strtolower($log->status)) {
+                    'baik' => 'status-baik',
+                    'sedang diperbaiki' => 'status-sedang',
+                    'rusak' => 'status-rusak',
+                    default => '',
+                };
+            @endphp
+            <td>
+            <span class="badge-status {{ $class }} status-badge"
+    data-id="{{ $log->idAset }}"
+    data-nama="{{ $log->namaAset }}"
+    data-current="{{ strtolower($log->status) }}">
+    {{ ucfirst($log->status) }}
+</span>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="5" style="text-align: center;">Belum ada aktivitas</td>
+        </tr>
+    @endforelse
+</tbody>
             </table>
         </div>
     </section>
