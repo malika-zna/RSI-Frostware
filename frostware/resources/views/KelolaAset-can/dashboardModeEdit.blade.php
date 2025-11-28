@@ -472,6 +472,29 @@
     cursor: pointer;
 }
 
+/* Hilangkan ikon bawaan Chrome */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Placeholder custom */
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]:not(:focus):before {
+    content: attr(placeholder);
+    color: #888;
+    position: absolute;
+    left: 12px;
+}
+
+/* Sembunyikan placeholder custom saat sudah pilih tanggal */
+input[type="date"]:not(:placeholder-shown):before {
+    content: "";
+}
+
     </style>
 </head>
 <body>
@@ -523,7 +546,7 @@
         <div class="edit-header">
             <button class="btn-small" onclick="window.location.href='{{ route('kelolaaset') }}'">Matikan Mode Edit</button>
             <div class="action-buttons">
-                <button class="add" title="Tambah">
+                <button class="add" title="Tambah" onclick="bukaPopupTambahAset()">
                     <span class="material-symbols-outlined">add</span>
                 </button>
             </div>
@@ -670,6 +693,39 @@
     @method('DELETE')
 </form>
 
+<!-- POPUP TAMBAH ASET BARU -->
+<div id="popupTambahAset" class="popup-overlay">
+    <div class="popup-box" style="max-width:420px;">
+        <h2>Tambah Aset Baru</h2>
+
+        <label style="font-size:14px; font-weight:500;">Nama Aset</label>
+        <input 
+            id="namaAsetBaru"
+            type="text"
+            placeholder="Tuliskan nama aset yang akan anda tambahkan."
+            style="width:100%; padding:10px; border:1px solid #ccc; border-radius:10px; margin-bottom:12px;"
+        >
+
+        <label style="font-size:14px; font-weight:500;">Tanggal Beli</label>
+        <div style="position:relative; width:100%;">
+        <input 
+    id="tanggalBeliBaru"
+    type="date"
+    style="width:100%; padding:10px; border:1px solid #ccc; border-radius:10px;"
+>
+            <span class="material-symbols-outlined"
+                style="position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#555; pointer-events:none;">
+                calendar_month
+            </span>
+        </div>
+
+        <div class="popup-actions" style="margin-top:15px;">
+            <button class="btn-batal" onclick="tutupPopupTambahAset()">Batal</button>
+            <button class="btn-simpan" onclick="simpanAsetBaru()">Simpan</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // header user
 function togglePanel() {
@@ -806,7 +862,49 @@ function hapusAset() {
     }
 }
 
-</script>
+function bukaPopupTambahAset() {
+    document.getElementById('popupTambahAset').style.display = 'flex';
+}
 
+function tutupPopupTambahAset() {
+    document.getElementById('popupTambahAset').style.display = 'none';
+    document.getElementById('namaAsetBaru').value = "";
+    document.getElementById('tanggalBeliBaru').value = "";
+}
+
+function simpanAsetBaru() {
+    const nama = document.getElementById('namaAsetBaru').value;
+    const tanggal = document.getElementById('tanggalBeliBaru').value;
+
+    if (!nama || !tanggal) {
+        alert("Harap isi semua field.");
+        return;
+    }
+
+    // Gunakan FormData supaya CSRF otomatis terbaca
+    let formData = new FormData();
+    formData.append('namaAset', nama);
+    formData.append('tanggalBeli', tanggal);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    fetch("{{ route('aset.tambah') }}", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            location.reload(); // reload halaman supaya daftar aset terbaru muncul
+        } else {
+            alert("Gagal menyimpan data.");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan saat menyimpan.");
+    });
+}
+
+</script>
 </body>
 </html>

@@ -125,7 +125,6 @@ public function delete(Request $request)
     if (!$aset) {
         return response()->json(['success' => false, 'message' => 'Aset tidak ditemukan'], 404);
     }
-
     // hapus aset
     $aset->delete();
 
@@ -144,6 +143,45 @@ public function destroy($idAset)
     $aset->delete();
 
     return redirect()->back()->with('success', 'Aset berhasil dihapus.');
+}
+
+public function tambahAset(Request $request)
+{
+    $request->validate([
+        'namaAset' => 'required|string',
+        'tanggalBeli' => 'required|date'
+    ]);
+
+    $namaAset = $request->namaAset;
+
+    // generate kode ID
+    $kata = explode(' ', $namaAset);
+    $inisial = '';
+    foreach ($kata as $k) {
+        $inisial .= strtoupper(substr($k, 0, 1));
+    }
+
+    $lastAset = Aset::where('idAset', 'LIKE', $inisial . '%')
+        ->orderBy('idAset', 'desc')
+        ->first();
+
+    if ($lastAset) {
+        $lastNumber = (int) substr($lastAset->idAset, strlen($inisial));
+        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+    } else {
+        $newNumber = "001";
+    }
+
+    $idAset = $inisial . $newNumber;
+
+    Aset::create([
+        'idAset' => $idAset,
+        'namaAset' => $namaAset,
+        'tanggalBeli' => $request->tanggalBeli,
+        'status' => "Baik" // default
+    ]);
+
+    return response()->json(['success' => true]);
 }
 
 }

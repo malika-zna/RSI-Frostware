@@ -37,6 +37,9 @@ Route::get('/pesanan/{id}', [KelolaPesananController::class, 'detailPesanan'])->
 Route::post('/pesanan/{id}/terima', [KelolaPesananController::class, 'terimaPesanan'])->name('pesanan.terima');
 Route::post('/pesanan/{id}/tolak', [KelolaPesananController::class, 'tolakPesanan'])->name('pesanan.tolak');
 Route::get('/kelolaaset', [AsetController::class, 'dashboardAset'])->name('kelolaaset');
+Route::post('/aset/tambah', [AsetController::class, 'tambahAset'])->name('aset.tambah');
+Route::post('/update-status', [AsetController::class, 'updateStatus'])->name('update.status');
+Route::delete('/aset/delete/{id}', [AsetController::class, 'destroy'])->name('aset.delete');
 
 Route::get('/produksi', [ProduksiController::class, 'ambilDaftarProduksi'])->name('produksi');
 
@@ -44,12 +47,11 @@ Route::get('/produksi/urutkan', [ProduksiController::class, 'ambilUrutanProduksi
 
 Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'prosesSelesaiProduksi'])->name('produksi.selesai');
 
-Route::post('/update-status', [AsetController::class, 'updateStatus'])->name('update.status');
-
-Route::delete('/aset/delete/{id}', [AsetController::class, 'destroy'])->name('aset.delete');
-
 Route::get('/EditKelolaAset', [AsetController::class, 'dashboardModeEdit'])
     ->name('EditKelolaAset');
+
+Route::post('/aset/tambah', [App\Http\Controllers\AsetController::class, 'tambahAset'])
+    ->name('aset.tambah');
 
 Route::get('/kelolapengirimanmjr', function () {
     return view('manajer.kelola-pengiriman');
