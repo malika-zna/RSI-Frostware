@@ -12,19 +12,19 @@ class AsetController extends Controller
     public function dashboardAset()
     {
         $daftarAset = Aset::all();
-        $logAktivitas = LogAktivitas::all();
-
+        $logAktivitas = LogAktivitas::orderBy('created_at', 'desc')->get();
+    
         return view('KelolaAset-can.dashboardAset', compact('daftarAset', 'logAktivitas'));
     }
-
+    
     public function dashboardModeEdit()
     {
         $daftarAset = Aset::all();
-        $logAktivitas = LogAktivitas::all();
-
+        $logAktivitas = LogAktivitas::orderBy('created_at', 'desc')->get();
+    
         return view('KelolaAset-can.dashboardModeEdit', compact('daftarAset', 'logAktivitas'));
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([
