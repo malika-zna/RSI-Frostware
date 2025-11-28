@@ -132,5 +132,18 @@ public function delete(Request $request)
     return response()->json(['success' => true]);
 }
 
+public function destroy($idAset)
+{
+    // hapus dari tabel aset
+    $aset = Aset::where('idAset', $idAset)->first();
+
+    if (!$aset) {
+        return back()->with('error', 'Aset tidak ditemukan.');
+    }
+
+    $aset->delete();
+
+    return redirect()->back()->with('success', 'Aset berhasil dihapus.');
+}
 
 }
