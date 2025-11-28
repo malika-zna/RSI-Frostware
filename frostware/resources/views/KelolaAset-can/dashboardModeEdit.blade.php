@@ -251,6 +251,9 @@
             line-height: 1;
             font-size: 20px;
         }
+        .material-symbols-outlined {
+            cursor: pointer;
+        }
 
         /* Badge */
         .badge {
@@ -353,6 +356,7 @@
             white-space: normal;
             line-height: 14px;
             text-align: center;
+            width: 70px;
         }
         .status-rusak {
             background: #D4183D;
@@ -522,12 +526,8 @@
                 <button class="add" title="Tambah">
                     <span class="material-symbols-outlined">add</span>
                 </button>
-                <button class="delete" title="Hapus">
-                    <span class="material-symbols-outlined">delete</span>
-                </button>
             </div>
         </div>
-
             <table>
                 <thead>
                     <tr>
@@ -536,6 +536,7 @@
                         <th style="width:81px;">Tanggal Beli</th>
                         <th style="width:107px;">Update Terakhir</th>
                         <th style="width:44px;">Status</th>
+                        <th style="width:40px;">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -545,7 +546,6 @@
                         <td>{{ $a->namaAset }}</td>
                         <td>{{ \Carbon\Carbon::parse($a->tanggalBeli)->format('d/m/Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($a->updated_at)->format('d/m/Y') }}</td>
-
                         @php
                         $class = match(strtolower($a->status)) {
                             'baik' => 'status-baik',
@@ -554,19 +554,23 @@
                             default => '',
                         };
                         @endphp
-
                         <td>
                             <div class="status-wrapper">
-                                <span class="badge-status {{ $class }} status-badge"
-                                data-id="{{ $a->idAset }}"
-                                data-current="{{ strtolower($a->status) }}">
-                                {{ ucfirst($a->status) }}
-                            </span>
-                            <!-- Dropdown -->
+                            <span class="badge-status {{ $class }} status-badge"
+    data-id="{{ $a->idAset }}"
+    data-nama="{{ $a->namaAset }}"
+    data-current="{{ strtolower($a->status) }}">
+    {{ ucfirst($a->status) }}
+</span>
                             <div class="status-dropdown">
                             </div>
                             </div>
                         </td>
+                        <td>
+        <button class="delete" onclick="openPopupDelete('{{ $a->idAset }}')">
+            <span class="material-symbols-outlined">delete</span>
+        </button>
+    </td>
                     </tr>
                     @empty
                     <tr>
@@ -587,8 +591,6 @@
 
         <div class="card" style="min-height: 342px;">
             <button class="btn-small">Lihat Laporan Kerusakan</button>
-
-
             <table>
                 <thead>
                     <tr>
@@ -600,41 +602,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>03/04/2010</td>
-                        <td>Meletus Saat Digunakan</td>
-                        <td><span class="badge-status status-rusak">Rusak</span></td>
-                    </tr>
-                    <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>10/04/2010</td>
-                        <td>Pembersihan Mesin</td>
-                        <td><span class="badge-status status-sedang">Sedang<br>Diperbaiki</span></td>
-                    </tr>
-                    <tr>
-                        <td>CHN001</td>
-                        <td>Mesin Pembuat es</td>
-                        <td>10/04/2010</td>
-                        <td>Mesin Dapat Digunakan Kembali</td>
-                        <td><span class="badge-status status-baik">Baik</span></td>
-                    </tr>
-                </tbody>
+    @forelse($logAktivitas as $log)
+        <tr>
+            <td>{{ $log->idAset }}</td>
+            <td>{{ $log->namaAset }}</td>
+            <td>{{ $log->riwayatUpdate }}</td>
+            <td>{{ $log->catatan ?? '-' }}</td>
+            @php
+                $class = match(strtolower($log->status)) {
+                    'baik' => 'status-baik',
+                    'sedang diperbaiki' => 'status-sedang',
+                    'rusak' => 'status-rusak',
+                    default => '',
+                };
+            @endphp
+            <td>
+            <span class="badge-status {{ $class }} status-badge"
+    data-id="{{ $log->idAset }}"
+    data-nama="{{ $log->namaAset }}"
+    data-current="{{ strtolower($log->status) }}">
+    {{ ucfirst($log->status) }}
+</span>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="5" style="text-align: center;">Belum ada aktivitas</td>
+        </tr>
+    @endforelse
+</tbody>
             </table>
         </div>
     </section>
 
 </div>
-
-                            <!-- POPUP CATATAN -->
                             <div id="popupCatatan" class="popup-overlay">
     <div class="popup-box">
         <h2>Tambahkan catatan perubahan status</h2>
 
         <textarea id="inputCatatan"
-        placeholder="Contoh: Mesin meletus saat digunakan..."></textarea>
+        placeholder="Contoh: Mesin meletus saat digunakan, perbaikan mesin, dsb"></textarea>
 
         <div class="popup-actions">
             <button class="btn-batal" onclick="tutupPopup()">Batal</button>
@@ -643,15 +650,32 @@
     </div>
 </div>
 
+<!-- POPUP DELETE -->
+<div id="popupDelete" class="popup-overlay">
+    <div class="popup-box" style="max-width:420px;">
+        <h2>Apakah Anda yakin ingin menghapus data ini?</h2>
+        <p style="font-size:14px; color:#444;">
+            Data yang dihapus bersifat permanen dan tidak dapat dipulihkan kembali.
+        </p>
 
-<!-- js -->
+        <div class="popup-actions">
+            <button class="btn-batal" onclick="tutupPopupDelete()">Batal</button>
+            <button class="btn-simpan" style="background:#1C398E;" onclick="hapusAset()">Hapus</button>
+        </div>
+    </div>
+</div>
+
+<form id="formDeleteAset" method="POST" style="display:none;">
+    @csrf
+    @method('DELETE')
+</form>
+
 <script>
 // header user
 function togglePanel() {
     const panel = document.getElementById('userPanel');
     panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
     }
-
 // hari dan tanggal
 function updateDate() {
                 const now = new Date();
@@ -667,95 +691,119 @@ function updateDate() {
             }
 
             updateDate();
-                                // STATUS DROPDOWN LOGIC
-                                document.addEventListener("DOMContentLoaded", () => {
-                                const statusBadges = document.querySelectorAll(".status-badge");
+            let badgeAktif = null;
+let statusBaru = null;
+// === KLIK BADGE → buka dropdown ===
+document.querySelectorAll(".status-badge").forEach(badge => {
+    badge.addEventListener("click", function(e) {
+        e.stopPropagation();
 
-                                statusBadges.forEach(badge => {
-                                    badge.addEventListener("click", function () {
-                                        const wrapper = this.parentElement;
-                                        const dropdown = wrapper.querySelector(".status-dropdown");
+        badgeAktif = badge;
+        const current = badge.dataset.current;
+        const dropdown = badge.nextElementSibling;
+        // tentukan opsi berdasarkan status sekarang
+        let options = [];
 
-                                        // Tutup dropdown lain
-                                        document.querySelectorAll(".status-dropdown").forEach(d => {
-                                            if (d !== dropdown) d.style.display = "none";
-                                        });
+        if (current === "baik") {
+            options = ["Sedang Diperbaiki", "Rusak"];
+        } else if (current === "sedang diperbaiki") {
+            options = ["Baik", "Rusak"];
+        } else if (current === "rusak") {
+            options = ["Baik", "Sedang Diperbaiki"];
+        }
+        // reset dropdown
+        dropdown.innerHTML = "";
+        options.forEach(opt => {
+            dropdown.innerHTML += `<div data-new="${opt}">${opt}</div>`;
+        });
 
-                                        const current = this.dataset.current; 
-                                        let options = [];
+        dropdown.style.display = "block";
+// EVENT klik pilihan dalam dropdown → buka popup
+document.addEventListener("click", function(e) {
+    if (e.target.matches(".status-dropdown div")) {
+        statusBaru = e.target.dataset.new;   // set status baru
+        bukaPopup();
+    }
+});
+});
+});
 
-                                        // LOGIKA BARU SESUAI PERMINTAAN KAMU
-                                        if (current === "baik") {
-                                            options = ["Sedang Diperbaiki", "Rusak"];
-                                        } 
-                                        else if (current === "sedang diperbaiki") {
-                                            options = ["Baik", "Rusak"];
-                                        }
-                                        else if (current === "rusak") {
-                                            options = ["Baik", "Sedang Diperbaiki"];
-                                        }
-
-                                        dropdown.innerHTML = "";
-                                        options.forEach(opt => {
-                                            dropdown.innerHTML += `<div data-new="${opt}">${opt}</div>`;
-                                        });
-
-                                        dropdown.style.display = "block";
-
-// EVENT klik pilihan → buka popup, jangan update status dulu
-dropdown.querySelectorAll("div").forEach(optEl => {
-    optEl.addEventListener("click", () => {
-        const newStatus = optEl.dataset.new;
-
-        // simpan status & badge sementara
-        window.statusBaru = newStatus;
-        window.badgeAktif = badge;
-
-        // tampilkan popup
-        document.getElementById("popupCatatan").style.display = "flex";
-
-        // tutup dropdown
-        dropdown.style.display = "none";
+// TUTUP jika klik di luar dropdown
+document.addEventListener("click", function(e) {
+    document.querySelectorAll(".status-dropdown").forEach(dd => {
+        if (!dd.contains(e.target) && !dd.previousElementSibling.contains(e.target)) {
+            dd.style.display = "none";
+        }
     });
-});                                    });
-                                });
+});
 
-                                // Klik di luar dropdown → tutup
-                                document.addEventListener("click", function(e) {
-                                    if (!e.target.classList.contains("status-badge")) {
-                                        document.querySelectorAll(".status-dropdown").forEach(d => d.style.display = "none");
-                                    }
-                                });
-                                });
-                                function tutupPopup() {
+function bukaPopup() {
+    document.getElementById("popupCatatan").style.display = "flex";
+}
+
+function tutupPopup() {
     document.getElementById("popupCatatan").style.display = "none";
     document.getElementById("inputCatatan").value = "";
 }
 
+// === SIMPAN CATATAN DAN STATUS ===
 function simpanCatatan() {
-    const catatan = document.getElementById("inputCatatan").value.trim();
-    if (catatan === "") {
-        alert("Catatan tidak boleh kosong");
-        return;
+    const catatan = document.getElementById("inputCatatan").value;
+
+    fetch("{{ route('update.status') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({
+            idAset: badgeAktif.dataset.id,
+            statusBaru: statusBaru,
+            catatan: catatan
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+
+            // update badge di tampilan
+            badgeAktif.textContent = statusBaru.charAt(0).toUpperCase() + statusBaru.slice(1);
+            badgeAktif.dataset.current = statusBaru.toLowerCase();
+
+            // update warna badge
+            badgeAktif.classList.remove("status-baik","status-sedang","status-rusak");
+
+            if (statusBaru.toLowerCase() === "baik") {
+                badgeAktif.classList.add("status-baik");
+            } else if (statusBaru.toLowerCase() === "sedang diperbaiki") {
+                badgeAktif.classList.add("status-sedang");
+            } else {
+                badgeAktif.classList.add("status-rusak");
+            }
+
+            tutupPopup();
+        }
+    });
+}
+
+let idAsetDelete = null;
+
+function openPopupDelete(id) {
+    idAsetDelete = id;
+    document.getElementById('popupDelete').style.display = 'flex';
+}
+
+function tutupPopupDelete() {
+    document.getElementById('popupDelete').style.display = 'none';
+    idAsetDelete = null;
+}
+
+function hapusAset() {
+    if (idAsetDelete) {
+        const form = document.getElementById('formDeleteAset');
+        form.action = "/aset/delete/" + idAsetDelete; // sesuaikan dengan route
+        form.submit();
     }
-
-    const badge = window.badgeAktif;
-    const newStatus = window.statusBaru;
-
-    // Update teks badge
-    badge.textContent = newStatus;
-
-    // Update warna
-    badge.classList.remove("status-baik","status-sedang","status-rusak");
-    let low = newStatus.toLowerCase();
-
-    if (low === "baik") badge.classList.add("status-baik");
-    if (low === "rusak") badge.classList.add("status-rusak");
-    if (low === "sedang diperbaiki") badge.classList.add("status-sedang");
-
-    badge.dataset.current = low;
-
-    tutupPopup();
 }
 
 </script>

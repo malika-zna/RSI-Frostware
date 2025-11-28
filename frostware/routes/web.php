@@ -44,28 +44,12 @@ Route::get('/produksi/urutkan', [ProduksiController::class, 'ambilUrutanProduksi
 
 Route::post('/produksi/selesai/{idPesanan}', [ProduksiController::class, 'prosesSelesaiProduksi'])->name('produksi.selesai');
 
-Route::get('/editkelolaaset', function () {
-    return view('KelolaAset-can.dashboardModeEdit');
-})->name('EditKelolaAset');
-// Route ini akan memuat file view laporkankerusakanaset-fad.blade.php
-// Route::get('/asset', function () {
-//     return view('laporkankerusakanaset-fad');
-// });
+Route::post('/update-status', [AsetController::class, 'updateStatus'])->name('update.status');
 
-// Route::get('/kelolaaset', function () {
-//     return view('KelolaAset-can.dashboardAset');
-// })->name('kelolaaset');
+Route::delete('/aset/delete/{id}', [AsetController::class, 'destroy'])->name('aset.delete');
 
-// Route::get('/editkelolaaset', function () {
-//     return view('KelolaAset-can.dashboardModeEdit');
-// })->name('EditKelolaAset');
-
-Route::get('/editkelolaaset', [AsetController::class, 'dashboardModeEdit'])
+Route::get('/EditKelolaAset', [AsetController::class, 'dashboardModeEdit'])
     ->name('EditKelolaAset');
-
-Route::get('/deteletetabelaaset', function () {
-    return view('KelolaAset-can.popUpDeleteDaftar');
-})->name('DeleteDaftarAset');
 
 Route::get('/kelolapengirimanmjr', function () {
     return view('manajer.kelola-pengiriman');
@@ -89,5 +73,3 @@ Route::get('/beranda-pelanggan', [PesananController::class, 'index'])->name('ber
 Route::get('/beranda-pjkeuangan', function () {
     return view('beranda-pjkeuangan');
 })->name('beranda-pjkeuangan');
-
-

@@ -107,4 +107,30 @@ class AsetController extends Controller
         $daftarAset = Aset::all();
         return view('dashboard', compact('daftarAset'));
     }
+
+    public function updateStatus(Request $request) { $request->validate([ 'idAset' => 'required', 'statusBaru' => 'required', ]); // update aset $aset = Aset::findOrFail($request->idAset); $aset->status = $request->statusBaru; $aset->save(); // catat ke log aktivitas LogAktivitas::create([ 'idAset' => $aset->idAset, 'namaAset' => $aset->namaAset, 'status' => $request->statusBaru, 'catatan' => $request->catatan, 'riwayatUpdate' => now()->format("d/m/Y"), ]); return response()->json(['success' => true]); }
+
+}
+
+public function delete(Request $request)
+{
+    // validasi
+    $request->validate([
+        'idAset' => 'required'
+    ]);
+
+    // cari aset
+    $aset = Aset::where('idAset', $request->idAset)->first();
+
+    if (!$aset) {
+        return response()->json(['success' => false, 'message' => 'Aset tidak ditemukan'], 404);
+    }
+
+    // hapus aset
+    $aset->delete();
+
+    return response()->json(['success' => true]);
+}
+
+
 }
